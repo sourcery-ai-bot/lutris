@@ -294,8 +294,8 @@ class Runner:  # pylint: disable=too-many-public-methods
         )
         if Gtk.ResponseType.YES == dialog.result:
 
-            from lutris.gui.dialogs.runners import simple_downloader
             from lutris.gui.dialogs import ErrorDialog
+            from lutris.gui.dialogs.runners import simple_downloader
             try:
                 if hasattr(self, "get_version"):
                     version = self.get_version(use_default=False)  # pylint: disable=no-member
