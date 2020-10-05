@@ -72,7 +72,7 @@ requirements:
 style: isort autopep8  ## Format code
 
 isort:
-	$(PIPENV) run isort -y -rc lutris
+	$(PIPENV) run isort -y lutris
 
 autopep8:
 	$(PIPENV) run autopep8 --in-place --recursive --ignore E402 setup.py lutris
@@ -85,7 +85,7 @@ autopep8:
 check: isort-check flake8 pylint
 
 isort-check:
-	$(PIPENV) run isort -c -rc lutris
+	$(PIPENV) run isort -c lutris
 
 flake8:
 	$(PIPENV) run flake8 lutris
