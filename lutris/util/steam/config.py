@@ -7,6 +7,7 @@ from collections import OrderedDict
 from lutris.util import system
 from lutris.util.log import logger
 from lutris.util.steam.vdf import vdf_parse
+
 # Lutris Modules
 
 
