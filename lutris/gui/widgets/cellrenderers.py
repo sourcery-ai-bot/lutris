@@ -1,14 +1,13 @@
 # Standard Library
 from gettext import gettext as _
 
-# Third Party Libraries
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
+# Third Party Libraries
 
 
 class GridViewCellRendererText(Gtk.CellRendererText):
-
     """CellRendererText adjusted for grid view display, removes extra padding"""
 
     def __init__(self, width, *args, **kwargs):

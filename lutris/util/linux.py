@@ -11,18 +11,19 @@ import sys
 from collections import Counter
 from collections import defaultdict
 
-# Lutris Modules
 from lutris.util import system
 from lutris.util.disks import get_drive_for_path
 from lutris.util.graphics import drivers
 from lutris.util.graphics import glxinfo
 from lutris.util.graphics import vkquery
 from lutris.util.log import logger
+# Lutris Modules
 
 try:
     from distro import linux_distribution
 except ImportError:
-    logger.warning("Package 'distro' unavailable. Unable to read Linux distribution")
+    logger.warning(
+        "Package 'distro' unavailable. Unable to read Linux distribution")
     linux_distribution = None
 
 # Linux components used by lutris
@@ -88,7 +89,6 @@ SYSTEM_COMPONENTS = {
 
 
 class LinuxSystem:  # pylint: disable=too-many-public-methods
-
     """Global cache for system commands"""
 
     _cache = {}
@@ -167,11 +167,15 @@ class LinuxSystem:  # pylint: disable=too-many-public-methods
     def get_drives():
         """Return a list of drives with their filesystems"""
         try:
-            output = subprocess.check_output(["lsblk", "-f", "--json"]).decode()
+            output = subprocess.check_output(["lsblk", "-f",
+                                              "--json"]).decode()
         except subprocess.CalledProcessError as ex:
             logger.error("Failed to get drive information: %s", ex)
             return None
-        return [drive for drive in json.loads(output)["blockdevices"] if drive["fstype"] != "squashfs"]
+        return [
+            drive for drive in json.loads(output)["blockdevices"]
+            if drive["fstype"] != "squashfs"
+        ]
 
     @staticmethod
     def get_ram_info():
@@ -180,7 +184,7 @@ class LinuxSystem:  # pylint: disable=too-many-public-methods
         with open("/proc/meminfo") as meminfo:
             for line in meminfo.readlines():
                 key, value = line.split(":", 1)
-                mem[key.strip()] = value.strip('kB \n')
+                mem[key.strip()] = value.strip("kB \n")
         return mem
 
     @staticmethod
@@ -283,7 +287,9 @@ class LinuxSystem:  # pylint: disable=too-many-public-methods
 
     def get_lib_folders(self):
         """Return shared library folders, sorted by most used to least used"""
-        lib_folder_counter = Counter(lib.dirname for lib_list in self.shared_libraries.values() for lib in lib_list)
+        lib_folder_counter = Counter(
+            lib.dirname for lib_list in self.shared_libraries.values()
+            for lib in lib_list)
         return [path[0] for path in reversed(lib_folder_counter.most_common())]
 
     def iter_lib_folders(self):
@@ -298,7 +304,8 @@ class LinuxSystem:  # pylint: disable=too-many-public-methods
                 lib_paths = [lib_paths[0]]
             else:
                 # Ignore paths where 64-bit path is link to supposed 32-bit path
-                if os.path.realpath(lib_paths[0]) == os.path.realpath(lib_paths[1]):
+                if os.path.realpath(lib_paths[0]) == os.path.realpath(
+                        lib_paths[1]):
                     continue
             if all([os.path.exists(path) for path in lib_paths]):
                 if lib_paths[0] not in exported_lib_folders:
@@ -314,7 +321,8 @@ class LinuxSystem:  # pylint: disable=too-many-public-methods
             logger.error("Could not detect ldconfig on this system")
             return []
         try:
-            output = (subprocess.check_output([ldconfig, "-p"]).decode("utf-8", errors="ignore").split("\n"))
+            output = (subprocess.check_output([ldconfig, "-p"]).decode(
+                "utf-8", errors="ignore").split("\n"))
         except subprocess.CalledProcessError as ex:
             logger.error("Failed to get libraries from ldconfig: %s", ex)
             return []
@@ -358,11 +366,17 @@ class LinuxSystem:  # pylint: disable=too-many-public-methods
     def get_missing_requirement_libs(self, req):
         """Return a list of sets of missing libraries for each supported architecture"""
         required_libs = set(SYSTEM_COMPONENTS["LIBRARIES"][req])
-        return [list(required_libs - set(self._cache["LIBRARIES"][arch][req])) for arch in self.runtime_architectures]
+        return [
+            list(required_libs - set(self._cache["LIBRARIES"][arch][req]))
+            for arch in self.runtime_architectures
+        ]
 
     def get_missing_libs(self):
         """Return a dictionary of missing libraries"""
-        return {req: self.get_missing_requirement_libs(req) for req in self.requirements}
+        return {
+            req: self.get_missing_requirement_libs(req)
+            for req in self.requirements
+        }
 
     def is_feature_supported(self, feature):
         """Return whether the system has the necessary libs to support a feature"""
@@ -376,7 +390,6 @@ class LinuxSystem:  # pylint: disable=too-many-public-methods
 
 
 class SharedLibrary:
-
     """Representation of a Linux shared library"""
 
     default_arch = "i386"
@@ -391,7 +404,8 @@ class SharedLibrary:
         """Create a SharedLibrary instance from an output line from ldconfig"""
         lib_match = re.match(r"^(.*) \((.*)\) => (.*)$", ldconfig_line)
         if not lib_match:
-            raise ValueError("Received incorrect value for ldconfig line: %s" % ldconfig_line)
+            raise ValueError("Received incorrect value for ldconfig line: %s" %
+                             ldconfig_line)
         return cls(lib_match.group(1), lib_match.group(2), lib_match.group(3))
 
     @property
@@ -425,8 +439,13 @@ def gather_system_info():
     system_info = {}
     if drivers.is_nvidia():
         system_info["nvidia_driver"] = drivers.get_nvidia_driver_info()
-        system_info["nvidia_gpus"] = [drivers.get_nvidia_gpu_info(gpu_id) for gpu_id in drivers.get_nvidia_gpu_ids()]
-    system_info["gpus"] = [drivers.get_gpu_info(gpu) for gpu in drivers.get_gpus()]
+        system_info["nvidia_gpus"] = [
+            drivers.get_nvidia_gpu_info(gpu_id)
+            for gpu_id in drivers.get_nvidia_gpu_ids()
+        ]
+    system_info["gpus"] = [
+        drivers.get_gpu_info(gpu) for gpu in drivers.get_gpus()
+    ]
     system_info["env"] = dict(os.environ)
     system_info["missing_libs"] = LINUX_SYSTEM.get_missing_libs()
     system_info["cpus"] = LINUX_SYSTEM.get_cpus()
@@ -445,11 +464,13 @@ def gather_system_info_str():
     system_info_readable = {}
     # Add system information
     system_dict = {}
-    system_dict["OS"] = ' '.join(system_info["dist"])
+    system_dict["OS"] = " ".join(system_info["dist"])
     system_dict["Arch"] = system_info["arch"]
     system_dict["Kernel"] = system_info["kernel"]
-    system_dict["Desktop"] = system_info["env"].get("XDG_CURRENT_DESKTOP", "Not found")
-    system_dict["Display Server"] = system_info["env"].get("XDG_SESSION_TYPE", "Not found")
+    system_dict["Desktop"] = system_info["env"].get("XDG_CURRENT_DESKTOP",
+                                                    "Not found")
+    system_dict["Display Server"] = system_info["env"].get(
+        "XDG_SESSION_TYPE", "Not found")
     system_info_readable["System"] = system_dict
     # Add CPU information
     cpu_dict = {}
@@ -460,19 +481,23 @@ def gather_system_info_str():
     system_info_readable["CPU"] = cpu_dict
     # Add memory information
     ram_dict = {}
-    ram_dict["RAM"] = "%0.1f GB" % (float(system_info["ram"]["MemTotal"]) / 1024 / 1024)
-    ram_dict["Swap"] = "%0.1f GB" % (float(system_info["ram"]["SwapTotal"]) / 1024 / 1024)
+    ram_dict["RAM"] = "%0.1f GB" % (float(system_info["ram"]["MemTotal"]) /
+                                    1024 / 1024)
+    ram_dict["Swap"] = "%0.1f GB" % (float(system_info["ram"]["SwapTotal"]) /
+                                     1024 / 1024)
     system_info_readable["Memory"] = ram_dict
     # Add graphics information
     graphics_dict = {}
     if LINUX_SYSTEM.glxinfo:
         graphics_dict["Vendor"] = system_info["glxinfo"]["opengl_vendor"]
-        graphics_dict["OpenGL Renderer"] = system_info["glxinfo"]["opengl_renderer"]
-        graphics_dict["OpenGL Version"] = system_info["glxinfo"]["opengl_version"]
+        graphics_dict["OpenGL Renderer"] = system_info["glxinfo"][
+            "opengl_renderer"]
+        graphics_dict["OpenGL Version"] = system_info["glxinfo"][
+            "opengl_version"]
         graphics_dict["OpenGL Core"] = system_info["glxinfo"].get(
-            "opengl_core_profile_version", "OpenGL core unavailable"
-        )
-        graphics_dict["OpenGL ES"] = system_info["glxinfo"].get("opengl_es_profile_version", "OpenGL ES unavailable")
+            "opengl_core_profile_version", "OpenGL core unavailable")
+        graphics_dict["OpenGL ES"] = system_info["glxinfo"].get(
+            "opengl_es_profile_version", "OpenGL ES unavailable")
     else:
         graphics_dict["Vendor"] = "Unable to obtain glxinfo"
     # check Vulkan support
@@ -482,12 +507,12 @@ def gather_system_info_str():
         graphics_dict["Vulkan"] = "Not Supported"
     system_info_readable["Graphics"] = graphics_dict
 
-    output = ''
+    output = ""
     for section in system_info_readable:
-        output += '[{}]\n'.format(section)
+        output += "[{}]\n".format(section)
         dictionary = system_info_readable[section]
         for key in dictionary:
             tabs = " " * (16 - len(key))
-            output += '{}{}{}\n'.format(key + ":", tabs, dictionary[key])
-        output += '\n'
+            output += "{}{}{}\n".format(key + ":", tabs, dictionary[key])
+        output += "\n"
     return output

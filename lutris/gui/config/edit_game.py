@@ -1,15 +1,14 @@
 # Standard Library
 from gettext import gettext as _
 
-# Lutris Modules
 from lutris.gui.config import DIALOG_HEIGHT
 from lutris.gui.config import DIALOG_WIDTH
 from lutris.gui.config.common import GameDialogCommon
 from lutris.gui.dialogs import Dialog
+# Lutris Modules
 
 
 class EditGameConfigDialog(Dialog, GameDialogCommon):
-
     """Game config edit dialog."""
 
     def __init__(self, parent, game):

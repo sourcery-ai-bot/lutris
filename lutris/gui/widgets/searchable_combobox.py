@@ -5,12 +5,11 @@ from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
-# Lutris Modules
 from lutris.util.jobs import AsyncCall
+# Lutris Modules
 
 
 class SearchableCombobox(Gtk.Bin):
-
     """Combox box with autocompletion.
     Well fitted for large lists.
     """
@@ -34,7 +33,8 @@ class SearchableCombobox(Gtk.Bin):
         completion.set_match_func(self.search_store)
         completion.connect("match-selected", self.set_id_from_completion)
         entry = self.combobox.get_child()
-        entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "content-loading-symbolic")
+        entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY,
+                                      "content-loading-symbolic")
         entry.set_completion(completion)
 
         self.combobox.connect("changed", self.on_combobox_change)
@@ -58,7 +58,8 @@ class SearchableCombobox(Gtk.Bin):
     def search_store(self, _completion, string, _iter):
         """Return true if any word of a string is present in a row"""
         for word in string.split():
-            if word not in self.liststore[_iter][0].lower():  # search is always lower case
+            if (word not in self.liststore[_iter][0].lower()
+                ):  # search is always lower case
                 return False
         return True
 

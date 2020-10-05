@@ -3,7 +3,6 @@ import logging
 import os.path
 from gettext import gettext as _
 
-# Lutris Modules
 from lutris.config import LutrisConfig
 from lutris.gui.dialogs import ErrorDialog
 from lutris.gui.dialogs.download import DownloadDialog
@@ -11,11 +10,15 @@ from lutris.runners.runner import Runner
 from lutris.util import display
 from lutris.util import extract
 from lutris.util import system
+# Lutris Modules
 
 
 def get_resolutions():
     try:
-        screen_resolutions = [(resolution, resolution) for resolution in display.DISPLAY_MANAGER.get_resolutions()]
+        screen_resolutions = [
+            (resolution, resolution)
+            for resolution in display.DISPLAY_MANAGER.get_resolutions()
+        ]
     except OSError:
         screen_resolutions = []
     screen_resolutions.insert(0, (_("Desktop resolution"), "desktop"))
@@ -25,7 +28,8 @@ def get_resolutions():
 # pylint: disable=C0103
 class atari800(Runner):
     human_name = _("Atari800")
-    platforms = [_("Atari 8bit computers")]  # FIXME try to determine the actual computer used
+    platforms = [_("Atari 8bit computers")
+                 ]  # FIXME try to determine the actual computer used
     runner_executable = "atari800/bin/atari800"
     bios_url = "http://kent.dl.sourceforge.net/project/atari800/ROM/Original%20XL%20ROM/xf25.zip"
     description = _("Atari 400,800 and XL emulator")
@@ -36,21 +40,18 @@ class atari800(Runner):
         "osb_rom": "a3e8d617c95d08031fe1b20d541434b2",
         "5200_rom": "",
     }
-    game_options = [
-        {
-            "option":
-            "main_file",
-            "type":
-            "file",
-            "label":
-            _("ROM file"),
-            "help": _(
-                "The game data, commonly called a ROM image. \n"
-                "Supported rom formats: ATR, XFD, DCM, ATR.GZ, XFD.GZ "
-                "and PRO."
-            ),
-        }
-    ]
+    game_options = [{
+        "option":
+        "main_file",
+        "type":
+        "file",
+        "label":
+        _("ROM file"),
+        "help":
+        _("The game data, commonly called a ROM image. \n"
+          "Supported rom formats: ATR, XFD, DCM, ATR.GZ, XFD.GZ "
+          "and PRO."),
+    }]
 
     runner_options = [
         {
@@ -60,11 +61,10 @@ class atari800(Runner):
             "directory_chooser",
             "label":
             _("Bios location"),
-            "help": _(
-                "A folder containing the Atari 800 bios files.\n"
-                "They are provided by Lutris so you shouldn't have to "
-                "change this."
-            ),
+            "help":
+            _("A folder containing the Atari 800 bios files.\n"
+              "They are provided by Lutris so you shouldn't have to "
+              "change this."),
         },
         {
             "option":
@@ -99,7 +99,6 @@ class atari800(Runner):
     ]
 
     def install(self, version=None, downloader=None, callback=None):
-
         def on_runner_installed(*args):  # pylint: disable=unused-argument
             config_path = system.create_folder("~/.atari800")
             bios_archive = os.path.join(config_path, "atari800-bioses.zip")
@@ -139,10 +138,15 @@ class atari800(Runner):
         resolution = self.runner_config.get("resolution")
         if resolution:
             if resolution == "desktop":
-                width, height = display.DISPLAY_MANAGER.get_current_resolution()
+                width, height = display.DISPLAY_MANAGER.get_current_resolution(
+                )
             else:
                 width, height = resolution.split("x")
-            arguments += ["-fs-width", "%s" % width, "-fs-height", "%s" % height]
+            arguments += [
+                "-fs-width",
+                "%s" % width, "-fs-height",
+                "%s" % height
+            ]
 
         if self.runner_config.get("machine"):
             arguments.append("-%s" % self.runner_config["machine"])

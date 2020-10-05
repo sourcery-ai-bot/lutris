@@ -1,17 +1,16 @@
 # pylint: disable=wildcard-import, unused-wildcard-import, invalid-name
 # Vulkan detection by Patryk Obara (@dreamer)
-
 """Query Vulkan capabilities"""
 # Standard Library
-from ctypes import CDLL
-from ctypes import POINTER
-from ctypes import Structure
 from ctypes import byref
 from ctypes import c_char_p
 from ctypes import c_int32
 from ctypes import c_uint32
 from ctypes import c_void_p
+from ctypes import CDLL
+from ctypes import POINTER
 from ctypes import pointer
+from ctypes import Structure
 
 VkResult = c_int32  # enum (size == 4)
 VK_SUCCESS = 0
@@ -36,7 +35,6 @@ def vk_make_version(major, minor, patch):
 
 
 class VkApplicationInfo(Structure):
-
     """Python shim for struct VkApplicationInfo
 
     https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkApplicationInfo.html
@@ -63,7 +61,6 @@ class VkApplicationInfo(Structure):
 
 
 class VkInstanceCreateInfo(Structure):
-
     """Python shim for struct VkInstanceCreateInfo
 
     https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkInstanceCreateInfo.html

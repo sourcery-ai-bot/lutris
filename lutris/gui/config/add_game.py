@@ -9,7 +9,6 @@ from lutris.gui.dialogs import Dialog
 
 
 class AddGameDialog(Dialog, GameDialogCommon):
-
     """Add game dialog class."""
 
     def __init__(self, parent, game=None, runner=None):

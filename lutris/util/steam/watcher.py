@@ -4,12 +4,11 @@
 from gi.repository import Gio
 from gi.repository import GLib
 
-# Lutris Modules
 from lutris.util.log import logger
+# Lutris Modules
 
 
 class SteamWatcher:
-
     """Watches a Steam library folder and notify changes"""
 
     def __init__(self, steamapps_paths, callback=None):

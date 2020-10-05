@@ -2,12 +2,12 @@
 import os
 from gettext import gettext as _
 
-# Lutris Modules
 from lutris.runners.runner import Runner
 from lutris.util import display
 from lutris.util import system
 from lutris.util.log import logger
 from lutris.util.strings import split_arguments
+# Lutris Modules
 
 
 class zdoom(Runner):
@@ -30,11 +30,15 @@ class zdoom(Runner):
             "help": _("Command line arguments used when launching the game."),
         },
         {
-            "option": "files",
-            "type": "multiple",
-            "label": _("PWAD files"),
-            "help": _("Used to load one or more PWAD files which generally contain "
-                      "user-created levels."),
+            "option":
+            "files",
+            "type":
+            "multiple",
+            "label":
+            _("PWAD files"),
+            "help":
+            _("Used to load one or more PWAD files which generally contain "
+              "user-created levels."),
         },
         {
             "option": "warp",
@@ -46,7 +50,8 @@ class zdoom(Runner):
             "option": "savedir",
             "type": "directory_chooser",
             "label": _("Save path"),
-            "help": _("User-specified path where save files should be located."),
+            "help":
+            _("User-specified path where save files should be located."),
         },
     ]
     runner_options = [
@@ -60,7 +65,7 @@ class zdoom(Runner):
             "option": "4",
             "label": _("Pixel Quadrupling"),
             "type": "bool",
-            "default": False
+            "default": False,
         },
         {
             "option": "nostartup",
@@ -89,10 +94,10 @@ class zdoom(Runner):
             _("Config file"),
             "type":
             "file",
-            "help": _(
-                "Used to load a user-created configuration file. If specified, "
-                "the file must contain the wad directory list or launch will fail."
-            ),
+            "help":
+            _("Used to load a user-created configuration file. If specified, "
+              "the file must contain the wad directory list or launch will fail."
+              ),
         },
     ]
 
@@ -109,7 +114,8 @@ class zdoom(Runner):
 
     def prelaunch(self):
         if not system.LINUX_SYSTEM.get_soundfonts():
-            logger.warning("FluidSynth is not installed, you might not have any music")
+            logger.warning(
+                "FluidSynth is not installed, you might not have any music")
         return True
 
     def play(self):  # noqa: C901
@@ -118,7 +124,8 @@ class zdoom(Runner):
         resolution = self.runner_config.get("resolution")
         if resolution:
             if resolution == "desktop":
-                width, height = display.DISPLAY_MANAGER.get_current_resolution()
+                width, height = display.DISPLAY_MANAGER.get_current_resolution(
+                )
             else:
                 width, height = resolution.split("x")
             command.append("-width")
@@ -165,7 +172,10 @@ class zdoom(Runner):
 
         # Append the pwad files to load, if provided.
         files = self.game_config.get("files") or []
-        pwads = [f for f in files if f.lower().endswith(".wad") or f.lower().endswith(".pk3")]
+        pwads = [
+            f for f in files
+            if f.lower().endswith(".wad") or f.lower().endswith(".pk3")
+        ]
         deh = [f for f in files if f.lower().endswith(".deh")]
         bex = [f for f in files if f.lower().endswith(".bex")]
         if deh:

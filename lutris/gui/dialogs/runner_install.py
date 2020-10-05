@@ -1,18 +1,13 @@
 """Dialog used to install versions of a runner"""
 import gettext
-
-# Standard Library
-# pylint: disable=no-member
 import os
 import random
 from collections import defaultdict
 from gettext import gettext as _
 
-# Third Party Libraries
 from gi.repository import GLib
 from gi.repository import Gtk
 
-# Lutris Modules
 from lutris import api
 from lutris import settings
 from lutris.database.games import get_games_by_runner
@@ -25,11 +20,15 @@ from lutris.util import system
 from lutris.util.downloader import Downloader
 from lutris.util.extract import extract_archive
 from lutris.util.log import logger
+# Standard Library
+# pylint: disable=no-member
+# Third Party Libraries
+# Lutris Modules
 
 
 class RunnerInstallDialog(Dialog):
-
     """Dialog displaying available runner version and downloads them"""
+
     COL_VER = 0
     COL_ARCH = 1
     COL_URL = 2
@@ -47,7 +46,8 @@ class RunnerInstallDialog(Dialog):
 
         self.renderer_progress = Gtk.CellRendererProgress()
 
-        label = Gtk.Label.new(_("Waiting for response from %s") % (settings.SITE_URL))
+        label = Gtk.Label.new(
+            _("Waiting for response from %s") % (settings.SITE_URL))
         self.vbox.pack_start(label, False, False, 18)
 
         spinner = Gtk.Spinner(visible=True)
@@ -66,7 +66,9 @@ class RunnerInstallDialog(Dialog):
 
         self.runner_info = runner_info
         if not self.runner_info:
-            ErrorDialog(_("Unable to get runner versions. Check your internet connection."))
+            ErrorDialog(
+                _("Unable to get runner versions. Check your internet connection."
+                  ))
             return
 
         for child_widget in self.vbox.get_children():
@@ -75,14 +77,16 @@ class RunnerInstallDialog(Dialog):
 
         self.populate_store()
 
-        label = Gtk.Label.new(_("%s version management") % self.runner_info["name"])
+        label = Gtk.Label.new(
+            _("%s version management") % self.runner_info["name"])
         self.vbox.add(label)
         scrolled_window = Gtk.ScrolledWindow()
         treeview = self.get_treeview(self.runner_store)
         self.installing = {}
         self.connect("response", self.on_destroy)
 
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
+                                   Gtk.PolicyType.AUTOMATIC)
         scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
         scrolled_window.add(treeview)
 
@@ -106,7 +110,9 @@ class RunnerInstallDialog(Dialog):
         version_column.set_property("min-width", 80)
         treeview.append_column(version_column)
 
-        arch_column = Gtk.TreeViewColumn(None, renderer_text, text=self.COL_ARCH)
+        arch_column = Gtk.TreeViewColumn(None,
+                                         renderer_text,
+                                         text=self.COL_ARCH)
         arch_column.set_property("min-width", 50)
         treeview.append_column(arch_column)
 
@@ -121,7 +127,9 @@ class RunnerInstallDialog(Dialog):
         progress_column.set_property("resizable", True)
         treeview.append_column(progress_column)
 
-        usage_column = Gtk.TreeViewColumn(None, renderer_text, text=self.COL_USAGE)
+        usage_column = Gtk.TreeViewColumn(None,
+                                          renderer_text,
+                                          text=self.COL_USAGE)
         usage_column.set_property("min-width", 150)
         treeview.append_column(usage_column)
 
@@ -145,36 +153,43 @@ class RunnerInstallDialog(Dialog):
         """Return a ListStore populated with the runner versions"""
         version_usage = self.get_usage_stats()
         for version_info in reversed(self.runner_info["versions"]):
-            is_installed = os.path.exists(self.get_runner_path(version_info["version"], version_info["architecture"]))
-            games_using = version_usage.get("%(version)s-%(architecture)s" % version_info)
-            usage_summary = gettext.ngettext(
-                "In use by %d game",
-                "In use by %d games",
-                len(games_using)) % len(games_using) if games_using else _("Not in use")
-            self.runner_store.append(
-                [
-                    version_info["version"], version_info["architecture"], version_info["url"], is_installed, 0,
-                    usage_summary if is_installed else ""
-                ]
-            )
+            is_installed = os.path.exists(
+                self.get_runner_path(version_info["version"],
+                                     version_info["architecture"]))
+            games_using = version_usage.get("%(version)s-%(architecture)s" %
+                                            version_info)
+            usage_summary = (gettext.ngettext(
+                "In use by %d game", "In use by %d games", len(games_using)) %
+                             len(games_using)
+                             if games_using else _("Not in use"))
+            self.runner_store.append([
+                version_info["version"],
+                version_info["architecture"],
+                version_info["url"],
+                is_installed,
+                0,
+                usage_summary if is_installed else "",
+            ])
 
     def get_runner_path(self, version, arch):
         """Return the local path where the runner is/will be installed"""
-        return os.path.join(settings.RUNNER_DIR, self.runner, "{}-{}".format(version, arch))
+        return os.path.join(settings.RUNNER_DIR, self.runner,
+                            "{}-{}".format(version, arch))
 
     def get_dest_path(self, row):
         """Return temporary path where the runners should be downloaded to"""
-        return os.path.join(settings.CACHE_DIR, os.path.basename(row[self.COL_URL]))
+        return os.path.join(settings.CACHE_DIR,
+                            os.path.basename(row[self.COL_URL]))
 
     def on_installed_toggled(self, _widget, path):
         row = self.runner_store[path]
         if row[self.COL_VER] in self.installing:
-            confirm_dlg = QuestionDialog(
-                {
-                    "question": _("Do you want to cancel the download?"),
-                    "title": _("Download starting"),
-                }
-            )
+            confirm_dlg = QuestionDialog({
+                "question":
+                _("Do you want to cancel the download?"),
+                "title":
+                _("Download starting"),
+            })
             if confirm_dlg.result == confirm_dlg.YES:
                 self.cancel_install(row)
         elif row[self.COL_INSTALLED]:
@@ -221,7 +236,8 @@ class RunnerInstallDialog(Dialog):
         if percent_downloaded >= 1:
             row[self.COL_PROGRESS] = percent_downloaded
             self.renderer_progress.props.pulse = -1
-            self.renderer_progress.props.text = "%d %%" % int(percent_downloaded)
+            self.renderer_progress.props.text = "%d %%" % int(
+                percent_downloaded)
         else:
             row[self.COL_PROGRESS] = 1
             self.renderer_progress.props.pulse = random.randint(1, 100)
@@ -237,7 +253,8 @@ class RunnerInstallDialog(Dialog):
         """Handler called when a runner version is downloaded"""
         version = row[self.COL_VER]
         architecture = row[self.COL_ARCH]
-        logger.debug("Runner %s for %s has finished downloading", version, architecture)
+        logger.debug("Runner %s for %s has finished downloading", version,
+                     architecture)
         src = self.get_dest_path(row)
         dst = self.get_runner_path(version, architecture)
         jobs.AsyncCall(self.extract, self.on_extracted, src, dst, row)
@@ -251,7 +268,8 @@ class RunnerInstallDialog(Dialog):
     def on_extracted(self, row_info, error):
         """Called when a runner archive is extracted"""
         if error or not row_info:
-            ErrorDialog(_("Failed to retrieve the runner archive"), parent=self)
+            ErrorDialog(_("Failed to retrieve the runner archive"),
+                        parent=self)
             return
         src, row = row_info
         os.remove(src)
@@ -262,6 +280,7 @@ class RunnerInstallDialog(Dialog):
         if self.runner == "wine":
             logger.debug("Clearing wine version cache")
             from lutris.util.wine.wine import get_wine_versions
+
             get_wine_versions.cache_clear()
 
     def on_destroy(self, _dialog, _data=None):

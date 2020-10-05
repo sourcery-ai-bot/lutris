@@ -1,16 +1,15 @@
 """Window to show game logs"""
 from gettext import gettext as _
 
-# Third Party Libraries
 from gi.repository import Gdk
 from gi.repository import Gtk
 
-# Lutris Modules
 from lutris.gui.widgets.log_text_view import LogTextView
+# Third Party Libraries
+# Lutris Modules
 
 
 class LogWindow(Gtk.ApplicationWindow):
-
     def __init__(self, title=None, buffer=None, application=None):
         super().__init__(icon_name="lutris", application=application)
         self.set_title(title)
@@ -23,15 +22,19 @@ class LogWindow(Gtk.ApplicationWindow):
         self.vbox = Gtk.VBox(spacing=6)
         self.add(self.vbox)
 
-        scrolledwindow = Gtk.ScrolledWindow(hexpand=True, vexpand=True, child=self.logtextview)
+        scrolledwindow = Gtk.ScrolledWindow(hexpand=True,
+                                            vexpand=True,
+                                            child=self.logtextview)
         self.vbox.pack_start(scrolledwindow, True, True, 0)
 
         self.search_entry = Gtk.SearchEntry()
         self.search_entry.props.placeholder_text = _("Search...")
         self.search_entry.connect("stop-search", self.dettach_search_entry)
-        self.search_entry.connect("search-changed", self.logtextview.find_first)
+        self.search_entry.connect("search-changed",
+                                  self.logtextview.find_first)
         self.search_entry.connect("next-match", self.logtextview.find_next)
-        self.search_entry.connect("previous-match", self.logtextview.find_previous)
+        self.search_entry.connect("previous-match",
+                                  self.logtextview.find_previous)
 
         self.connect("key-press-event", self.on_key_press_event)
 
@@ -42,12 +45,12 @@ class LogWindow(Gtk.ApplicationWindow):
             self.search_entry.emit("stop-search")
             return
 
-        ctrl = (event.state & Gdk.ModifierType.CONTROL_MASK)
+        ctrl = event.state & Gdk.ModifierType.CONTROL_MASK
         if ctrl and event.keyval == Gdk.KEY_f:
             self.attach_search_entry()
             return
 
-        shift = (event.state & Gdk.ModifierType.SHIFT_MASK)
+        shift = event.state & Gdk.ModifierType.SHIFT_MASK
         if event.keyval == Gdk.KEY_Return:
             if shift:
                 self.search_entry.emit("previous-match")

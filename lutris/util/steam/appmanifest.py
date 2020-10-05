@@ -3,13 +3,13 @@
 import os
 import re
 
-# Lutris Modules
 from lutris.util.log import logger
 from lutris.util.steam.config import get_steamapps_paths
 from lutris.util.steam.vdf import vdf_parse
 from lutris.util.strings import slugify
 from lutris.util.system import fix_path_case
 from lutris.util.system import path_exists
+# Lutris Modules
 
 APP_STATE_FLAGS = [
     "Invalid",
@@ -38,7 +38,6 @@ APP_STATE_FLAGS = [
 
 
 class AppManifest:
-
     """Representation of an AppManifest file from Steam"""
 
     def __init__(self, appmanifest_path):
@@ -51,7 +50,8 @@ class AppManifest:
             with open(appmanifest_path, "r") as appmanifest_file:
                 self.appmanifest_data = vdf_parse(appmanifest_file, {})
         else:
-            logger.error("Path to AppManifest file %s doesn't exist", appmanifest_path)
+            logger.error("Path to AppManifest file %s doesn't exist",
+                         appmanifest_path)
 
     def __repr__(self):
         return "<AppManifest: %s>" % self.appmanifest_path
@@ -103,7 +103,8 @@ class AppManifest:
         """Absolute path of the installation directory"""
         if not self.installdir:
             return None
-        install_path = fix_path_case(os.path.join(self.steamapps_path, "common", self.installdir))
+        install_path = fix_path_case(
+            os.path.join(self.steamapps_path, "common", self.installdir))
         if install_path:
             return install_path
 
@@ -116,7 +117,8 @@ class AppManifest:
             return "linux"
         if self.steamapps_path in steamapps_paths["windows"]:
             return "windows"
-        raise ValueError("Can't find %s in %s" % (self.steamapps_path, steamapps_paths))
+        raise ValueError("Can't find %s in %s" %
+                         (self.steamapps_path, steamapps_paths))
 
     def get_runner_name(self):
         """Runner used by the Steam game"""
@@ -131,7 +133,8 @@ def get_appmanifest_from_appid(steamapps_path, appid):
         raise IOError("steamapps_path must be a valid directory")
     if not appid:
         raise ValueError("Missing mandatory appid")
-    appmanifest_path = os.path.join(steamapps_path, "appmanifest_%s.acf" % appid)
+    appmanifest_path = os.path.join(steamapps_path,
+                                    "appmanifest_%s.acf" % appid)
     if not path_exists(appmanifest_path):
         return None
     return AppManifest(appmanifest_path)
@@ -147,4 +150,7 @@ def get_path_from_appmanifest(steamapps_path, appid):
 
 def get_appmanifests(steamapps_path):
     """Return the list for all appmanifest files in a Steam library folder"""
-    return [f for f in os.listdir(steamapps_path) if re.match(r"^appmanifest_\d+.acf$", f)]
+    return [
+        f for f in os.listdir(steamapps_path)
+        if re.match(r"^appmanifest_\d+.acf$", f)
+    ]

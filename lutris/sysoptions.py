@@ -1,19 +1,18 @@
 """Options list for system config."""
 # Standard Library
 import glob
-
-# pylint: disable=invalid-name
 import os
 from collections import OrderedDict
 from gettext import gettext as _
 
-# Lutris Modules
 from lutris import runners
 from lutris.discord import DiscordPresence
 from lutris.util import system
 from lutris.util.display import DISPLAY_MANAGER
 from lutris.util.display import SCREEN_SAVER_INHIBITOR
 from lutris.util.display import USE_DRI_PRIME
+# pylint: disable=invalid-name
+# Lutris Modules
 
 VULKAN_DATA_DIRS = [
     "/usr/local/etc/vulkan",  # standard site-local location
@@ -22,7 +21,7 @@ VULKAN_DATA_DIRS = [
     "/usr/share/vulkan",  # standard location
     "/usr/lib/x86_64-linux-gnu/GL/vulkan",  # Flatpak GL extension
     "/usr/lib/i386-linux-gnu/GL/vulkan",  # Flatpak GL32 extension
-    "/opt/amdgpu-pro/etc/vulkan"  # AMD GPU Pro - TkG
+    "/opt/amdgpu-pro/etc/vulkan",  # AMD GPU Pro - TkG
 ]
 
 
@@ -92,7 +91,7 @@ system_options = [  # pylint: disable=invalid-name
         "label": _("Default installation folder"),
         "default": os.path.expanduser("~/Games"),
         "scope": ["runner", "system"],
-        "help": _("The default folder where you install your games.")
+        "help": _("The default folder where you install your games."),
     },
     {
         "option":
@@ -103,17 +102,23 @@ system_options = [  # pylint: disable=invalid-name
         _("Disable Lutris Runtime"),
         "default":
         False,
-        "help": _("The Lutris Runtime loads some libraries before running the "
-                  "game. Which can cause some incompatibilities in some cases. "
-                  "Check this option to disable it."),
+        "help":
+        _("The Lutris Runtime loads some libraries before running the "
+          "game. Which can cause some incompatibilities in some cases. "
+          "Check this option to disable it."),
     },
     {
-        "option": "prefer_system_libs",
-        "type": "bool",
-        "label": _("Prefer system libraries"),
-        "default": True,
-        "help": _("When the runtime is enabled, prioritize the system libraries"
-                  " over the provided ones."),
+        "option":
+        "prefer_system_libs",
+        "type":
+        "bool",
+        "label":
+        _("Prefer system libraries"),
+        "default":
+        True,
+        "help":
+        _("When the runtime is enabled, prioritize the system libraries"
+          " over the provided ones."),
     },
     {
         "option":
@@ -124,9 +129,10 @@ system_options = [  # pylint: disable=invalid-name
         _("Restore resolution on game exit"),
         "default":
         False,
-        "help": _("Some games don't restore your screen resolution when \n"
-                  "closed or when they crash. This is when this option comes \n"
-                  "into play to save your bacon."),
+        "help":
+        _("Some games don't restore your screen resolution when \n"
+          "closed or when they crash. This is when this option comes \n"
+          "into play to save your bacon."),
     },
     {
         "option": "single_cpu",
@@ -147,28 +153,42 @@ system_options = [  # pylint: disable=invalid-name
         _("Restore gamma on game exit"),
         "advanced":
         True,
-        "help": _("Some games don't correctly restores gamma on exit, making "
-                  "your display too bright. Select this option to correct it."),
+        "help":
+        _("Some games don't correctly restores gamma on exit, making "
+          "your display too bright. Select this option to correct it."),
     },
     {
-        "option": "disable_compositor",
-        "label": _("Disable desktop effects"),
-        "type": "bool",
-        "default": False,
-        "advanced": True,
-        "help": _("Disable desktop effects while game is running, "
-                  "reducing stuttering and increasing performance"),
+        "option":
+        "disable_compositor",
+        "label":
+        _("Disable desktop effects"),
+        "type":
+        "bool",
+        "default":
+        False,
+        "advanced":
+        True,
+        "help":
+        _("Disable desktop effects while game is running, "
+          "reducing stuttering and increasing performance"),
     },
     {
-        "option": "disable_screen_saver",
-        "label": _("Disable screen saver"),
-        "type": "bool",
-        "default": SCREEN_SAVER_INHIBITOR is not None,
-        "advanced": False,
-        "condition": SCREEN_SAVER_INHIBITOR is not None,
-        "help": _("Disable the screen saver while a game is running. "
-                  "Requires the screen saver's functionality "
-                  "to be exposed over DBus."),
+        "option":
+        "disable_screen_saver",
+        "label":
+        _("Disable screen saver"),
+        "type":
+        "bool",
+        "default":
+        SCREEN_SAVER_INHIBITOR is not None,
+        "advanced":
+        False,
+        "condition":
+        SCREEN_SAVER_INHIBITOR is not None,
+        "help":
+        _("Disable the screen saver while a game is running. "
+          "Requires the screen saver's functionality "
+          "to be exposed over DBus."),
     },
     {
         "option": "reset_pulse",
@@ -180,14 +200,21 @@ system_options = [  # pylint: disable=invalid-name
         "help": _("Restart PulseAudio before launching the game."),
     },
     {
-        "option": "pulse_latency",
-        "type": "bool",
-        "label": _("Reduce PulseAudio latency"),
-        "default": False,
-        "advanced": True,
-        "condition": system.find_executable("pulseaudio"),
-        "help": _("Set the environment variable PULSE_LATENCY_MSEC=60 "
-                  "to improve audio quality on some games"),
+        "option":
+        "pulse_latency",
+        "type":
+        "bool",
+        "label":
+        _("Reduce PulseAudio latency"),
+        "default":
+        False,
+        "advanced":
+        True,
+        "condition":
+        system.find_executable("pulseaudio"),
+        "help":
+        _("Set the environment variable PULSE_LATENCY_MSEC=60 "
+          "to improve audio quality on some games"),
     },
     {
         "option": "use_us_layout",
@@ -210,12 +237,13 @@ system_options = [  # pylint: disable=invalid-name
         _("Optimus launcher (NVIDIA Optimus laptops)"),
         "advanced":
         True,
-        "help": _("If you have installed the primus or bumblebee packages, "
-                  "select what launcher will run the game with the command, "
-                  "activating your NVIDIA graphic chip for high 3D "
-                  "performance. primusrun normally has better performance, but"
-                  "optirun/virtualgl works better for more games."
-                  "Primus VK provide vulkan support under bumblebee."),
+        "help":
+        _("If you have installed the primus or bumblebee packages, "
+          "select what launcher will run the game with the command, "
+          "activating your NVIDIA graphic chip for high 3D "
+          "performance. primusrun normally has better performance, but"
+          "optirun/virtualgl works better for more games."
+          "Primus VK provide vulkan support under bumblebee."),
     },
     {
         "option":
@@ -230,19 +258,28 @@ system_options = [  # pylint: disable=invalid-name
         _("Vulkan ICD loader"),
         "advanced":
         True,
-        "help": _("The ICD loader is a library that is placed between a Vulkan "
-                  "application and any number of Vulkan drivers, in order to support "
-                  "multiple drivers and the instance-level functionality that works "
-                  "across these drivers.")
+        "help":
+        _("The ICD loader is a library that is placed between a Vulkan "
+          "application and any number of Vulkan drivers, in order to support "
+          "multiple drivers and the instance-level functionality that works "
+          "across these drivers."),
     },
     {
-        "option": "mangohud",
-        "type": "bool",
-        "size": "small",
-        "label": _("FPS counter (MangoHud)"),
-        "advanced": False,
-        "condition": bool(system.find_executable("mangohud")),
-        "help": _("Display the game's FPS + other information. Requires MangoHud to be installed."),
+        "option":
+        "mangohud",
+        "type":
+        "bool",
+        "size":
+        "small",
+        "label":
+        _("FPS counter (MangoHud)"),
+        "advanced":
+        False,
+        "condition":
+        bool(system.find_executable("mangohud")),
+        "help":
+        _("Display the game's FPS + other information. Requires MangoHud to be installed."
+          ),
     },
     {
         "option": "fps_limit",
@@ -254,20 +291,32 @@ system_options = [  # pylint: disable=invalid-name
         "help": _("Limit the game's fps to desired number"),
     },
     {
-        "option": "aco",
-        "type": "bool",
-        "label": _("Enable ACO shader compiler"),
-        "condition": system.LINUX_SYSTEM.is_feature_supported("ACO"),
-        "help": _("Enable ACO shader compiler, improving performance in a lot of games. "
-                  "Requires Mesa 19.3 or later.")
+        "option":
+        "aco",
+        "type":
+        "bool",
+        "label":
+        _("Enable ACO shader compiler"),
+        "condition":
+        system.LINUX_SYSTEM.is_feature_supported("ACO"),
+        "help":
+        _("Enable ACO shader compiler, improving performance in a lot of games. "
+          "Requires Mesa 19.3 or later."),
     },
     {
-        "option": "gamemode",
-        "type": "bool",
-        "default": system.LINUX_SYSTEM.gamemode_available(),
-        "condition": system.LINUX_SYSTEM.gamemode_available,
-        "label": _("Enable Feral gamemode"),
-        "help": _("Request a set of optimisations be temporarily applied to the host OS"),
+        "option":
+        "gamemode",
+        "type":
+        "bool",
+        "default":
+        system.LINUX_SYSTEM.gamemode_available(),
+        "condition":
+        system.LINUX_SYSTEM.gamemode_available,
+        "label":
+        _("Enable Feral gamemode"),
+        "help":
+        _("Request a set of optimisations be temporarily applied to the host OS"
+          ),
     },
     {
         "option":
@@ -280,11 +329,12 @@ system_options = [  # pylint: disable=invalid-name
         True,
         "label":
         _("Enable NVIDIA Prime render offload"),
-        "help": _("If you have the latest NVIDIA driver and the properly patched xorg-server (see "
-                  "https://download.nvidia.com/XFree86/Linux-x86_64/435.17/README/primerenderoffload.html"
-                  "), you can launch a game on your NVIDIA GPU by toggling this switch. This will apply "
-                  "__NV_PRIME_RENDER_OFFLOAD=1 and "
-                  "__GLX_VENDOR_LIBRARY_NAME=nvidia environment variables.")
+        "help":
+        _("If you have the latest NVIDIA driver and the properly patched xorg-server (see "
+          "https://download.nvidia.com/XFree86/Linux-x86_64/435.17/README/primerenderoffload.html"
+          "), you can launch a game on your NVIDIA GPU by toggling this switch. This will apply "
+          "__NV_PRIME_RENDER_OFFLOAD=1 and "
+          "__GLX_VENDOR_LIBRARY_NAME=nvidia environment variables."),
     },
     {
         "option":
@@ -299,10 +349,11 @@ system_options = [  # pylint: disable=invalid-name
         _("Use discrete graphics"),
         "advanced":
         True,
-        "help": _("If you have open source graphic drivers (Mesa), selecting this "
-                  "option will run the game with the 'DRI_PRIME=1' environment variable, "
-                  "activating your discrete graphic chip for high 3D "
-                  "performance."),
+        "help":
+        _("If you have open source graphic drivers (Mesa), selecting this "
+          "option will run the game with the 'DRI_PRIME=1' environment variable, "
+          "activating your discrete graphic chip for high 3D "
+          "performance."),
     },
     {
         "option":
@@ -317,9 +368,10 @@ system_options = [  # pylint: disable=invalid-name
         "off",
         "advanced":
         True,
-        "help": _("Hint SDL 1.2 games to use a specific monitor when going "
-                  "fullscreen by setting the SDL_VIDEO_FULLSCREEN "
-                  "environment variable"),
+        "help":
+        _("Hint SDL 1.2 games to use a specific monitor when going "
+          "fullscreen by setting the SDL_VIDEO_FULLSCREEN "
+          "environment variable"),
     },
     {
         "option":
@@ -334,10 +386,11 @@ system_options = [  # pylint: disable=invalid-name
         "off",
         "advanced":
         True,
-        "help": _("Only keep the selected screen active while the game is "
-                  "running. \n"
-                  "This is useful if you have a dual-screen setup, and are \n"
-                  "having display issues when running a game in fullscreen."),
+        "help":
+        _("Only keep the selected screen active while the game is "
+          "running. \n"
+          "This is useful if you have a dual-screen setup, and are \n"
+          "having display issues when running a game in fullscreen."),
     },
     {
         "option": "resolution",
@@ -345,7 +398,8 @@ system_options = [  # pylint: disable=invalid-name
         "label": _("Switch resolution to"),
         "choices": get_resolution_choices,
         "default": "off",
-        "help": _("Switch to this screen resolution while the game is running."),
+        "help":
+        _("Switch to this screen resolution while the game is running."),
     },
     {
         "option": "terminal",
@@ -368,10 +422,11 @@ system_options = [  # pylint: disable=invalid-name
         system.get_default_terminal(),
         "advanced":
         True,
-        "help": _("The terminal emulator to be run with the previous option."
-                  "Choose from the list of detected terminal apps or enter "
-                  "the terminal's command or path."
-                  "Note: Not all terminal emulators are guaranteed to work."),
+        "help":
+        _("The terminal emulator to be run with the previous option."
+          "Choose from the list of detected terminal apps or enter "
+          "the terminal's command or path."
+          "Note: Not all terminal emulators are guaranteed to work."),
     },
     {
         "option": "env",
@@ -380,12 +435,17 @@ system_options = [  # pylint: disable=invalid-name
         "help": _("Environment variables loaded at run time"),
     },
     {
-        "option": "prefix_command",
-        "type": "string",
-        "label": _("Command prefix"),
-        "advanced": True,
-        "help": _("Command line instructions to add in front of the game's "
-                  "execution command."),
+        "option":
+        "prefix_command",
+        "type":
+        "string",
+        "label":
+        _("Command prefix"),
+        "advanced":
+        True,
+        "help":
+        _("Command line instructions to add in front of the game's "
+          "execution command."),
     },
     {
         "option": "manual_command",
@@ -425,10 +485,11 @@ system_options = [  # pylint: disable=invalid-name
         _("Include processes"),
         "advanced":
         True,
-        "help": _("What processes to include in process monitoring. "
-                  "This is to override the built-in exclude list.\n"
-                  "Space-separated list, processes including spaces "
-                  "can be wrapped in quotation marks."),
+        "help":
+        _("What processes to include in process monitoring. "
+          "This is to override the built-in exclude list.\n"
+          "Space-separated list, processes including spaces "
+          "can be wrapped in quotation marks."),
     },
     {
         "option":
@@ -439,11 +500,12 @@ system_options = [  # pylint: disable=invalid-name
         _("Exclude processes"),
         "advanced":
         True,
-        "help": _("What processes to exclude in process monitoring. "
-                  "For example background processes that stick around "
-                  "after the game has been closed.\n"
-                  "Space-separated list, processes including spaces "
-                  "can be wrapped in quotation marks."),
+        "help":
+        _("What processes to exclude in process monitoring. "
+          "For example background processes that stick around "
+          "after the game has been closed.\n"
+          "Space-separated list, processes including spaces "
+          "can be wrapped in quotation marks."),
     },
     {
         "option":
@@ -454,9 +516,10 @@ system_options = [  # pylint: disable=invalid-name
         _("Killswitch file"),
         "advanced":
         True,
-        "help": _("Path to a file which will stop the game when deleted \n"
-                  "(usually /dev/input/js0 to stop the game on joystick "
-                  "unplugging)"),
+        "help":
+        _("Path to a file which will stop the game when deleted \n"
+          "(usually /dev/input/js0 to stop the game on joystick "
+          "unplugging)"),
     },
     {
         "option":
@@ -467,8 +530,9 @@ system_options = [  # pylint: disable=invalid-name
         _("SDL2 gamepad mapping"),
         "advanced":
         True,
-        "help": _("SDL_GAMECONTROLLERCONFIG mapping string or path to a custom "
-                  "gamecontrollerdb.txt file containing mappings."),
+        "help":
+        _("SDL_GAMECONTROLLERCONFIG mapping string or path to a custom "
+          "gamecontrollerdb.txt file containing mappings."),
     },
     {
         "option":

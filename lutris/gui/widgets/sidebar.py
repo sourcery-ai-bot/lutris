@@ -25,6 +25,7 @@ GAMECOUNT = 4
 
 class SidebarRow(Gtk.ListBoxRow):
     """A row in the sidebar containing possible action buttons"""
+
     MARGIN = 9
     SPACING = 6
 
@@ -45,11 +46,15 @@ class SidebarRow(Gtk.ListBoxRow):
         self.btn_box = None
         self.runner = None
 
-        self.box = Gtk.Box(spacing=self.SPACING, margin_start=self.MARGIN, margin_end=self.MARGIN)
+        self.box = Gtk.Box(spacing=self.SPACING,
+                           margin_start=self.MARGIN,
+                           margin_end=self.MARGIN)
         self.add(self.box)
 
         if not icon:
-            icon = Gtk.Box(spacing=self.SPACING, margin_start=self.MARGIN, margin_end=self.MARGIN)
+            icon = Gtk.Box(spacing=self.SPACING,
+                           margin_start=self.MARGIN,
+                           margin_end=self.MARGIN)
         self.box.add(icon)
 
         self.box.add(
@@ -60,14 +65,15 @@ class SidebarRow(Gtk.ListBoxRow):
                 margin_top=self.SPACING,
                 margin_bottom=self.SPACING,
                 ellipsize=Pango.EllipsizeMode.END,
-            )
-        )
+            ))
 
 
 class RunnerSidebarRow(SidebarRow):
-
     def _create_button_box(self):
-        self.btn_box = Gtk.Box(spacing=3, no_show_all=True, valign=Gtk.Align.CENTER, homogeneous=True)
+        self.btn_box = Gtk.Box(spacing=3,
+                               no_show_all=True,
+                               valign=Gtk.Align.CENTER,
+                               homogeneous=True)
         self.box.add(self.btn_box)
 
         # Creation is delayed because only installed runners can be imported
@@ -81,10 +87,14 @@ class RunnerSidebarRow(SidebarRow):
                 self.on_manage_versions,
             ))
         if self.runner.runnable_alone:
-            entries.append(("media-playback-start-symbolic", _("Run"), self.runner.run))
-        entries.append(("emblem-system-symbolic", _("Configure"), self.on_configure_runner))
+            entries.append(
+                ("media-playback-start-symbolic", _("Run"), self.runner.run))
+        entries.append(("emblem-system-symbolic", _("Configure"),
+                        self.on_configure_runner))
         for entry in entries:
-            btn = Gtk.Button(tooltip_text=entry[1], relief=Gtk.ReliefStyle.NONE, visible=True)
+            btn = Gtk.Button(tooltip_text=entry[1],
+                             relief=Gtk.ReliefStyle.NONE,
+                             visible=True)
             image = Gtk.Image.new_from_icon_name(entry[0], Gtk.IconSize.MENU)
             image.show()
             btn.add(image)
@@ -123,15 +133,20 @@ class SidebarHeader(Gtk.Box):
             label="<b>{}</b>".format(name),
         )
         label.get_style_context().add_class("dim-label")
-        box = Gtk.Box(margin_start=9, margin_top=6, margin_bottom=6, margin_right=9)
+        box = Gtk.Box(margin_start=9,
+                      margin_top=6,
+                      margin_bottom=6,
+                      margin_right=9)
         box.add(label)
         self.add(box)
         if name == _("Runners"):
-            manage_runners_button = Gtk.Button.new_from_icon_name("emblem-system-symbolic", Gtk.IconSize.MENU)
+            manage_runners_button = Gtk.Button.new_from_icon_name(
+                "emblem-system-symbolic", Gtk.IconSize.MENU)
             manage_runners_button.props.action_name = "win.manage-runners"
             manage_runners_button.props.relief = Gtk.ReliefStyle.NONE
             manage_runners_button.set_margin_right(16)
-            manage_runners_button.get_style_context().add_class("sidebar-button")
+            manage_runners_button.get_style_context().add_class(
+                "sidebar-button")
             box.add(manage_runners_button)
         self.add(Gtk.Separator())
         self.show_all()
@@ -154,7 +169,8 @@ class LutrisSidebar(Gtk.ListBox):
         else:
             row_type, row_id = ("runner", "all")
 
-        GObject.add_emission_hook(RunnersDialog, "runner-installed", self.update)
+        GObject.add_emission_hook(RunnersDialog, "runner-installed",
+                                  self.update)
         GObject.add_emission_hook(RunnersDialog, "runner-removed", self.update)
         GObject.add_emission_hook(Game, "game-updated", self.update)
         GObject.add_emission_hook(Game, "game-removed", self.update)
@@ -166,27 +182,27 @@ class LutrisSidebar(Gtk.ListBox):
                 "running",
                 "dynamic_category",
                 _("Running"),
-                Gtk.Image.new_from_icon_name("media-playback-start-symbolic", Gtk.IconSize.MENU)
-            )
-        )
+                Gtk.Image.new_from_icon_name("media-playback-start-symbolic",
+                                             Gtk.IconSize.MENU),
+            ))
 
         self.add(
             SidebarRow(
                 "installed",
                 "dynamic_category",
                 _("Installed"),
-                Gtk.Image.new_from_icon_name("drive-harddisk-symbolic", Gtk.IconSize.MENU)
-            )
-        )
+                Gtk.Image.new_from_icon_name("drive-harddisk-symbolic",
+                                             Gtk.IconSize.MENU),
+            ))
 
         self.add(
             SidebarRow(
                 "favorite",
                 "category",
                 _("Favorites"),
-                Gtk.Image.new_from_icon_name("favorite-symbolic", Gtk.IconSize.MENU)
-            )
-        )
+                Gtk.Image.new_from_icon_name("favorite-symbolic",
+                                             Gtk.IconSize.MENU),
+            ))
 
         service_classes = services.get_services()
         for service_name in service_classes:
@@ -196,9 +212,9 @@ class LutrisSidebar(Gtk.ListBox):
                     service.id,
                     "service",
                     service.name,
-                    Gtk.Image.new_from_icon_name(service.icon, Gtk.IconSize.MENU)
-                )
-            )
+                    Gtk.Image.new_from_icon_name(service.icon,
+                                                 Gtk.IconSize.MENU),
+                ))
 
         all_row = RunnerSidebarRow(None, "runner", _("All"), None)
         self.add(all_row)
@@ -206,11 +222,19 @@ class LutrisSidebar(Gtk.ListBox):
             icon_name = runner_name.lower().replace(" ", "") + "-symbolic"
             icon = Gtk.Image.new_from_icon_name(icon_name, Gtk.IconSize.MENU)
             runner = runners.import_runner(runner_name)()
-            self.add(RunnerSidebarRow(runner_name, "runner", runner.human_name, icon, application=self.application))
+            self.add(
+                RunnerSidebarRow(
+                    runner_name,
+                    "runner",
+                    runner.human_name,
+                    icon,
+                    application=self.application,
+                ))
 
         self.add(SidebarRow(None, "platform", _("All"), None))
         for platform in self.platforms:
-            icon_name = (platform.lower().replace(" ", "").replace("/", "_") + "-symbolic")
+            icon_name = (platform.lower().replace(" ", "").replace("/", "_") +
+                         "-symbolic")
             icon = Gtk.Image.new_from_icon_name(icon_name, Gtk.IconSize.MENU)
             self.add(SidebarRow(platform, "platform", platform, icon))
 
@@ -224,7 +248,8 @@ class LutrisSidebar(Gtk.ListBox):
         self.show_all()
 
     def _filter_func(self, row):
-        if not row or not row.id or row.type in ("category", "dynamic_category", "service"):
+        if (not row or not row.id
+                or row.type in ("category", "dynamic_category", "service")):
             return True
         if row.type == "runner":
             if row.id is None:
@@ -237,7 +262,8 @@ class LutrisSidebar(Gtk.ListBox):
             return
         if not before:
             row.set_header(SidebarHeader(_("Library")))
-        elif before.type in ("category", "dynamic_category") and row.type == "service":
+        elif before.type in ("category",
+                             "dynamic_category") and row.type == "service":
             row.set_header(SidebarHeader(_("Sources")))
         elif before.type == "service" and row.type == "runner":
             row.set_header(SidebarHeader(_("Runners")))
@@ -245,7 +271,9 @@ class LutrisSidebar(Gtk.ListBox):
             row.set_header(SidebarHeader(_("Platforms")))
 
     def update(self, *_args):
-        self.installed_runners = [runner.name for runner in runners.get_installed()]
+        self.installed_runners = [
+            runner.name for runner in runners.get_installed()
+        ]
         self.active_platforms = games_db.get_used_platforms()
         self.invalidate_filter()
         return True
