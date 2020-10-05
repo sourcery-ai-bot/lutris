@@ -5,7 +5,7 @@ PYTHON:=$(shell which python3)
 PIP:=$(PYTHON) -m pip
 PIPENV_LOCK_ARGS:= --deploy --ignore-pipfile
 
-all: 
+all:
 	export GITBRANCH=master
 	debuild
 	debclean
