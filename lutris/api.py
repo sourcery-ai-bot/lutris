@@ -8,7 +8,8 @@ import urllib.parse
 import urllib.request
 
 from lutris import settings
-from lutris.util import http, system
+from lutris.util import http
+from lutris.util import system
 from lutris.util.log import logger
 
 API_KEY_FILE_PATH = os.path.join(settings.CACHE_DIR, "auth-token")
@@ -32,7 +33,10 @@ def read_api_key():
 
 def connect(username, password):
     """Connect to the Lutris API"""
-    credentials = urllib.parse.urlencode({"username": username, "password": password}).encode("utf-8")
+    credentials = urllib.parse.urlencode({
+        "username": username,
+        "password": password
+    }).encode("utf-8")
     login_url = settings.SITE_URL + "/api/accounts/token"
     try:
         request = urllib.request.urlopen(login_url, credentials, 10)
@@ -62,11 +66,13 @@ def get_user_info():
     if not credentials:
         return
     url = settings.SITE_URL + "/api/users/me"
-    request = http.Request(url, headers={"Authorization": "Token " + credentials["token"]})
+    request = http.Request(
+        url, headers={"Authorization": "Token " + credentials["token"]})
     response = request.get()
     account_info = response.json
     if not account_info:
-        logger.warning("Unable to fetch user info for %s", credentials["username"])
+        logger.warning("Unable to fetch user info for %s",
+                       credentials["username"])
     with open(USER_INFO_FILE_PATH, "w") as token_file:
         json.dump(account_info, token_file, indent=2)
 
@@ -138,7 +144,9 @@ def get_api_games(game_slugs=None, page=1, service=None):
             logger.error("No page found in %s", response_data["next"])
             break
         if service:
-            response_data = get_game_service_api_page(service, game_slugs, page=next_page)
+            response_data = get_game_service_api_page(service,
+                                                      game_slugs,
+                                                      page=next_page)
         else:
             response_data = get_game_api_page(game_slugs, page=next_page)
         if not response_data:
@@ -153,7 +161,8 @@ def search_games(query):
         return []
     query = query.lower().strip()[:32]
     url = "/api/games?%s" % urllib.parse.urlencode({"search": query})
-    response = http.Request(settings.SITE_URL + url, headers={"Content-Type": "application/json"})
+    response = http.Request(settings.SITE_URL + url,
+                            headers={"Content-Type": "application/json"})
     try:
         response.get()
     except http.HTTPError as ex:
@@ -166,7 +175,8 @@ def search_games(query):
 def get_bundle(bundle):
     """Retrieve a lutris bundle from the API"""
     url = "/api/bundles/%s" % bundle
-    response = http.Request(settings.SITE_URL + url, headers={"Content-Type": "application/json"})
+    response = http.Request(settings.SITE_URL + url,
+                            headers={"Content-Type": "application/json"})
     try:
         response.get()
     except http.HTTPError as ex:
