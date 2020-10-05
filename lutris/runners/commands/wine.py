@@ -14,13 +14,13 @@ from lutris.util.log import logger
 from lutris.util.strings import split_arguments
 from lutris.util.wine.cabinstall import CabInstaller
 from lutris.util.wine.prefix import WinePrefixManager
-from lutris.util.wine.wine import WINE_DEFAULT_ARCH
-from lutris.util.wine.wine import WINE_DIR
 from lutris.util.wine.wine import detect_arch
 from lutris.util.wine.wine import detect_prefix_arch
 from lutris.util.wine.wine import get_overrides_env
 from lutris.util.wine.wine import get_real_executable
 from lutris.util.wine.wine import use_lutris_runtime
+from lutris.util.wine.wine import WINE_DEFAULT_ARCH
+from lutris.util.wine.wine import WINE_DIR
 
 
 def set_regedit(

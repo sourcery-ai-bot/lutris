@@ -5,8 +5,8 @@ import time
 
 from lutris import settings
 from lutris import sysoptions
-from lutris.runners import InvalidRunner
 from lutris.runners import import_runner
+from lutris.runners import InvalidRunner
 from lutris.util.log import logger
 from lutris.util.system import path_exists
 from lutris.util.yaml import read_yaml_from_file

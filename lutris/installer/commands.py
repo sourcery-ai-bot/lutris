@@ -21,8 +21,8 @@ from lutris.util import system
 from lutris.util.fileio import EvilConfigParser
 from lutris.util.fileio import MultiOrderedDict
 from lutris.util.log import logger
-from lutris.util.wine.wine import WINE_DEFAULT_ARCH
 from lutris.util.wine.wine import get_wine_version_exe
+from lutris.util.wine.wine import WINE_DEFAULT_ARCH
 
 
 class CommandsMixin:
