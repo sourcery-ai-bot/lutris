@@ -38,6 +38,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from lutris.gui.dialogs import ErrorDialog
+
 # Third Party Libraries
 # Lutris Modules
 

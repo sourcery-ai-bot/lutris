@@ -14,6 +14,7 @@ from lutris.util.downloader import Downloader
 from lutris.util.extract import extract_archive
 from lutris.util.log import logger
 from lutris.util.system import LINUX_SYSTEM
+
 # Third Party Libraries
 # Lutris Modules
 

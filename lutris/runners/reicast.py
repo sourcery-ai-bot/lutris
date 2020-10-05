@@ -11,6 +11,7 @@ from lutris.gui.dialogs import NoticeDialog
 from lutris.runners.runner import Runner
 from lutris.util import joypad
 from lutris.util import system
+
 # Lutris Modules
 
 

@@ -7,6 +7,7 @@ from lutris.runners.commands.dosbox import dosexec  # NOQA pylint: disable=unuse
 from lutris.runners.commands.dosbox import makeconfig
 from lutris.runners.runner import Runner
 from lutris.util import system
+
 # Lutris Modules
 
 

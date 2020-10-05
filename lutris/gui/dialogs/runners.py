@@ -20,6 +20,7 @@ from lutris.gui.widgets.utils import ICON_SIZE
 from lutris.gui.widgets.utils import open_uri
 from lutris.util import datapath
 from lutris.util.log import logger
+
 # Third Party Libraries
 # Lutris Modules
 

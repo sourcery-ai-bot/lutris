@@ -9,6 +9,7 @@ from lutris.util.steam.vdf import vdf_parse
 from lutris.util.strings import slugify
 from lutris.util.system import fix_path_case
 from lutris.util.system import path_exists
+
 # Lutris Modules
 
 APP_STATE_FLAGS = [

@@ -16,6 +16,7 @@ from lutris.util.log import logger
 from lutris.util.strings import parse_version
 from lutris.util.strings import version_sort
 from lutris.util.wine import fsync
+
 # Lutris Modules
 
 WINE_DIR = os.path.join(settings.RUNNER_DIR, "wine")

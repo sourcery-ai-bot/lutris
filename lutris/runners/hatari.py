@@ -8,6 +8,7 @@ from lutris.gui.dialogs import FileDialog
 from lutris.gui.dialogs import QuestionDialog
 from lutris.runners.runner import Runner
 from lutris.util import system
+
 # Lutris Modules
 
 

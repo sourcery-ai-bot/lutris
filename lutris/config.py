@@ -11,6 +11,7 @@ from lutris.util.log import logger
 from lutris.util.system import path_exists
 from lutris.util.yaml import read_yaml_from_file
 from lutris.util.yaml import write_yaml_to_file
+
 # Lutris Modules
 
 

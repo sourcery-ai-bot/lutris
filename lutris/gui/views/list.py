@@ -19,6 +19,7 @@ from lutris.gui.views import COL_YEAR
 from lutris.gui.views import COLUMN_NAMES
 from lutris.gui.views.base import GameView
 from lutris.gui.views.store import sort_func
+
 # Third Party Libraries
 # pylint: disable=no-member
 # Lutris Modules

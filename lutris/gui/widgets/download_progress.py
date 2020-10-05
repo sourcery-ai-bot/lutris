@@ -7,6 +7,7 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from lutris.util.downloader import Downloader
+
 # Third Party Libraries
 # Lutris Modules
 

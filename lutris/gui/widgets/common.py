@@ -11,6 +11,7 @@ from lutris.gui.widgets.utils import get_stock_icon
 from lutris.util import system
 from lutris.util.linux import LINUX_SYSTEM
 from lutris.util.log import logger
+
 # Third Party Libraries
 # Lutris Modules
 

@@ -20,6 +20,7 @@ from lutris.util import system
 from lutris.util.downloader import Downloader
 from lutris.util.extract import extract_archive
 from lutris.util.log import logger
+
 # Standard Library
 # pylint: disable=no-member
 # Third Party Libraries

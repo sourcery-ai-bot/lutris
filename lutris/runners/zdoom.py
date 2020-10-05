@@ -7,6 +7,7 @@ from lutris.util import display
 from lutris.util import system
 from lutris.util.log import logger
 from lutris.util.strings import split_arguments
+
 # Lutris Modules
 
 

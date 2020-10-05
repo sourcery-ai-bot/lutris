@@ -18,6 +18,7 @@ from lutris.runners import import_runner
 from lutris.runners import InvalidRunner
 from lutris.util.jobs import AsyncCall
 from lutris.util.log import logger
+
 # Third Party Libraries
 # Lutris Modules
 

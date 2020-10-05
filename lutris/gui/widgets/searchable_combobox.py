@@ -6,6 +6,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from lutris.util.jobs import AsyncCall
+
 # Lutris Modules
 
 

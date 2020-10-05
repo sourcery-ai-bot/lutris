@@ -15,6 +15,7 @@ from lutris import runtime
 from lutris import settings
 from lutris.util import system
 from lutris.util.log import logger
+
 # Third Party Libraries
 # Lutris Modules
 

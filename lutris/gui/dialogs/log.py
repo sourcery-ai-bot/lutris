@@ -5,6 +5,7 @@ from gi.repository import Gdk
 from gi.repository import Gtk
 
 from lutris.gui.widgets.log_text_view import LogTextView
+
 # Third Party Libraries
 # Lutris Modules
 

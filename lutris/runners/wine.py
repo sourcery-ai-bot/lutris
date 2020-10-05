@@ -53,6 +53,7 @@ from lutris.util.wine.wine import POL_PATH
 from lutris.util.wine.wine import WINE_DIR
 from lutris.util.wine.wine import WINE_PATHS
 from lutris.util.wine.x360ce import X360ce
+
 # Lutris Modules
 
 MIN_SAFE_VERSION = "5.0"  # Wine installers must run with at least this version

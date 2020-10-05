@@ -9,6 +9,7 @@ from lutris.gui.dialogs import GtkBuilderDialog
 from lutris.gui.dialogs import QuestionDialog
 from lutris.util.system import is_removeable
 from lutris.util.system import reverse_expanduser
+
 # Third Party Libraries
 # Lutris Modules
 

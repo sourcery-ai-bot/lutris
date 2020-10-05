@@ -15,6 +15,7 @@ from lutris.util.steam.config import get_default_acf
 from lutris.util.steam.config import read_config
 from lutris.util.steam.vdf import to_vdf
 from lutris.util.strings import split_arguments
+
 # Lutris Modules
 
 

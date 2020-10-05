@@ -11,6 +11,7 @@ from lutris.util import system
 from lutris.util.display import DISPLAY_MANAGER
 from lutris.util.display import SCREEN_SAVER_INHIBITOR
 from lutris.util.display import USE_DRI_PRIME
+
 # pylint: disable=invalid-name
 # Lutris Modules
 

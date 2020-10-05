@@ -17,6 +17,7 @@ from lutris.util.graphics import drivers
 from lutris.util.graphics import glxinfo
 from lutris.util.graphics import vkquery
 from lutris.util.log import logger
+
 # Lutris Modules
 
 try:

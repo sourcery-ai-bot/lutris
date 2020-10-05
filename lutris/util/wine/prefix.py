@@ -8,6 +8,7 @@ from lutris.util.display import DISPLAY_MANAGER
 from lutris.util.log import logger
 from lutris.util.wine.registry import WineRegistry
 from lutris.util.xdgshortcuts import get_xdg_entry
+
 # Lutris Modules
 
 DESKTOP_KEYS = ["Desktop", "Personal", "My Music", "My Videos", "My Pictures"]

@@ -23,6 +23,7 @@ from lutris.util.steam.config import read_config
 from lutris.util.strings import split_arguments
 from lutris.util.wine.registry import WineRegistry
 from lutris.util.wine.wine import WINE_DEFAULT_ARCH
+
 # Lutris Modules
 
 STEAM_INSTALLER_URL = (
