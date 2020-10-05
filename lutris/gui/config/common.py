@@ -27,9 +27,9 @@ from lutris.gui.widgets.common import SlugEntry
 from lutris.gui.widgets.common import VBox
 from lutris.gui.widgets.log_text_view import LogTextView
 from lutris.gui.widgets.utils import BANNER_SIZE
+from lutris.gui.widgets.utils import ICON_SIZE
 from lutris.gui.widgets.utils import get_pixbuf
 from lutris.gui.widgets.utils import get_pixbuf_for_game
-from lutris.gui.widgets.utils import ICON_SIZE
 from lutris.runners import import_runner
 from lutris.util import resources
 from lutris.util import system

@@ -7,9 +7,7 @@ from gettext import gettext as _
 from lutris import settings
 from lutris.command import MonitoredCommand
 from lutris.runners import wine
-from lutris.runners.commands.wine import (
-    create_prefix,
-)  # noqa: F401 pylint: disable=unused-import
+from lutris.runners.commands.wine import create_prefix  # noqa: F401 pylint: disable=unused-import
 from lutris.runners.commands.wine import delete_registry_key
 from lutris.runners.commands.wine import install_cab_component
 from lutris.runners.commands.wine import set_regedit

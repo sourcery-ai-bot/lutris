@@ -15,10 +15,10 @@ from lutris.installer.errors import MissingGameDependency
 from lutris.installer.errors import ScriptingError
 from lutris.installer.installer import LutrisInstaller
 from lutris.installer.legacy import get_game_launcher
-from lutris.runners import import_runner
 from lutris.runners import InvalidRunner
 from lutris.runners import NonInstallableRunnerError
 from lutris.runners import RunnerInstallationError
+from lutris.runners import import_runner
 from lutris.runners import steam
 from lutris.runners import wine
 from lutris.util import system

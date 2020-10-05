@@ -14,9 +14,9 @@ from lutris.gui.dialogs import ErrorDialog
 from lutris.gui.dialogs import GtkBuilderDialog
 from lutris.gui.dialogs.download import simple_downloader
 from lutris.gui.dialogs.runner_install import RunnerInstallDialog
+from lutris.gui.widgets.utils import ICON_SIZE
 from lutris.gui.widgets.utils import get_builder_from_file
 from lutris.gui.widgets.utils import get_icon
-from lutris.gui.widgets.utils import ICON_SIZE
 from lutris.gui.widgets.utils import open_uri
 from lutris.util import datapath
 from lutris.util.log import logger

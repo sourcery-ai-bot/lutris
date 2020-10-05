@@ -5,6 +5,13 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository.GdkPixbuf import Pixbuf
 
+from lutris import settings
+from lutris.database import sql
+from lutris.gui.views.media_loader import MediaLoader
+from lutris.gui.views.store_item import StoreItem
+from lutris.gui.widgets.utils import get_pixbuf_for_game
+from lutris.util.strings import gtk_safe
+
 from . import COL_ICON
 from . import COL_ID
 from . import COL_INSTALLED
@@ -20,12 +27,6 @@ from . import COL_RUNNER
 from . import COL_RUNNER_HUMAN_NAME
 from . import COL_SLUG
 from . import COL_YEAR
-from lutris import settings
-from lutris.database import sql
-from lutris.gui.views.media_loader import MediaLoader
-from lutris.gui.views.store_item import StoreItem
-from lutris.gui.widgets.utils import get_pixbuf_for_game
-from lutris.util.strings import gtk_safe
 
 PGA_DB = settings.PGA_DB
 

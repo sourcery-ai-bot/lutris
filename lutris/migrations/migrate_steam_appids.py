@@ -1,6 +1,6 @@
 """Set service ID for Steam games"""
-from lutris.database.games import get_games
 from lutris.database.games import PGA_DB
+from lutris.database.games import get_games
 from lutris.database.games import sql
 
 
