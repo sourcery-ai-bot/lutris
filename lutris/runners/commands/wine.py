@@ -283,9 +283,8 @@ def wineexec(  # noqa: C901
     if not wine_path:
         raise RuntimeError("Wine is not installed")
 
-    if not working_dir:
-        if os.path.isfile(executable):
-            working_dir = os.path.dirname(executable)
+    if not working_dir and os.path.isfile(executable):
+        working_dir = os.path.dirname(executable)
 
     executable, _args, working_dir = get_real_executable(
         executable, working_dir)
@@ -299,11 +298,10 @@ def wineexec(  # noqa: C901
         wine_bin = winetricks_wine if winetricks_wine else wine_path
         create_prefix(prefix, wine_path=wine_bin, arch=arch)
 
-    wineenv = {"WINEARCH": arch}
-    if winetricks_wine:
-        wineenv["WINE"] = winetricks_wine
-    else:
-        wineenv["WINE"] = wine_path
+    wineenv = {
+        "WINEARCH": arch,
+        "WINE": winetricks_wine if winetricks_wine else wine_path,
+    }
 
     if prefix:
         wineenv["WINEPREFIX"] = prefix

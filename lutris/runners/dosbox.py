@@ -153,9 +153,7 @@ class dosbox(Runner):
 
         if main_file.endswith(".conf"):
             command.append("-conf")
-            command.append(main_file)
-        else:
-            command.append(main_file)
+        command.append(main_file)
         # Options
         if self.game_config.get("config_file"):
             command.append("-conf")

@@ -125,8 +125,7 @@ class pico8(Runner):
     @property
     def launch_args(self):
         if self.is_native:
-            args = [self.get_executable()]
-            args.append("-windowed")
+            args = [self.get_executable(), "-windowed"]
             args.append("0" if self.runner_config.get("fullscreen") else "1")
             if self.runner_config.get("splore"):
                 args.append("-splore")
@@ -249,9 +248,7 @@ class pico8(Runner):
         return True
 
     def play(self):
-        launch_info = {}
-        launch_info["env"] = self.get_env(os_env=False)
-
+        launch_info = {"env": self.get_env(os_env=False)}
         game_data = get_game_by_field(self.config.game_config_id, "configpath")
 
         command = self.launch_args

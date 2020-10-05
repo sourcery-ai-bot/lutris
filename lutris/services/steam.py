@@ -64,9 +64,7 @@ class SteamGame(ServiceGame):
             return False
         if appmanifest.steamid in cls.excluded_appids:
             return False
-        if re.match(r"^Proton \d*", appmanifest.name):
-            return False
-        return True
+        return not re.match(r"^Proton \d*", appmanifest.name)
 
 
 class SteamService(BaseService):

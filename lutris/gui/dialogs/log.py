@@ -51,8 +51,8 @@ class LogWindow(Gtk.ApplicationWindow):
             self.attach_search_entry()
             return
 
-        shift = event.state & Gdk.ModifierType.SHIFT_MASK
         if event.keyval == Gdk.KEY_Return:
+            shift = event.state & Gdk.ModifierType.SHIFT_MASK
             if shift:
                 self.search_entry.emit("previous-match")
             else:

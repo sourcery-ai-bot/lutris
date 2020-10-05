@@ -80,10 +80,7 @@ class ScriptInterpreter(GObject.Object, CommandsMixin):
         config = LutrisConfig(runner_slug=self.installer.runner)
         games_dir = config.system_config.get("game_path",
                                              os.path.expanduser("~"))
-        if self.service:
-            service_dir = self.service.id
-        else:
-            service_dir = ""
+        service_dir = self.service.id if self.service else ""
         return os.path.expanduser(
             os.path.join(games_dir, service_dir, self.installer.game_slug))
 
