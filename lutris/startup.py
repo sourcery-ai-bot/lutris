@@ -94,12 +94,11 @@ def check_driver():
             DontShowAgainDialog(
                 setting,
                 _("Your Nvidia driver is outdated."),
-                secondary_message=
-                _("You are currently running driver %s which does not "
-                  "fully support all features for Vulkan and DXVK games.\n"
-                  "Please upgrade your driver as described in our "
-                  "<a href='https://github.com/lutris/lutris/wiki/Installing-drivers'>"
-                  "installation guide</a>") % driver_info["nvrm"]["version"],
+                secondary_message=_("You are currently running driver %s which does not "
+                                    "fully support all features for Vulkan and DXVK games.\n"
+                                    "Please upgrade your driver as described in our "
+                                    "<a href='https://github.com/lutris/lutris/wiki/Installing-drivers'>"
+                                    "installation guide</a>") % driver_info["nvrm"]["version"],
             )
 
 
@@ -125,13 +124,12 @@ def check_libs(all_components=False):
             DontShowAgainDialog(
                 setting,
                 _("Missing vulkan libraries"),
-                secondary_message=
-                _("Lutris was unable to detect Vulkan support for "
-                  "the %s architecture.\n"
-                  "This will prevent many games and programs from working.\n"
-                  "To install it, please use the following guide: "
-                  "<a href='https://github.com/lutris/lutris/wiki/Installing-drivers'>"
-                  "Installing Graphics Drivers</a>") %
+                secondary_message=_("Lutris was unable to detect Vulkan support for "
+                                    "the %s architecture.\n"
+                                    "This will prevent many games and programs from working.\n"
+                                    "To install it, please use the following guide: "
+                                    "<a href='https://github.com/lutris/lutris/wiki/Installing-drivers'>"
+                                    "Installing Graphics Drivers</a>") %
                 _(" and ").join(missing_vulkan_libs),
             )
 

@@ -161,8 +161,8 @@ class RunnerInstallDialog(Dialog):
                                             version_info)
             usage_summary = (gettext.ngettext(
                 "In use by %d game", "In use by %d games", len(games_using)) %
-                             len(games_using)
-                             if games_using else _("Not in use"))
+                len(games_using)
+                if games_using else _("Not in use"))
             self.runner_store.append([
                 version_info["version"],
                 version_info["architecture"],
