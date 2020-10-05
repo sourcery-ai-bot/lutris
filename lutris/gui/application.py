@@ -23,36 +23,29 @@ import tempfile
 from gettext import gettext as _
 
 import gi
-from gi.repository import Gio
-from gi.repository import GLib
-from gi.repository import Gtk
+from gi.repository import Gio, GLib, Gtk
 
-from .lutriswindow import LutrisWindow
 from lutris import settings
 from lutris.api import parse_installer_url
 from lutris.command import exec_command
 from lutris.database import games as games_db
 from lutris.game import Game
-from lutris.gui.dialogs import ErrorDialog
-from lutris.gui.dialogs import InstallOrPlayDialog
+from lutris.gui.dialogs import ErrorDialog, InstallOrPlayDialog
 from lutris.gui.dialogs.issue import IssueReportWindow
 from lutris.gui.installerwindow import InstallerWindow
 from lutris.gui.widgets.status_icon import LutrisStatusIcon
 from lutris.installer import get_installers
 from lutris.migrations import migrate
-from lutris.startup import init_lutris
-from lutris.startup import run_all_checks
-from lutris.util import datapath
-from lutris.util import log
-from lutris.util.http import HTTPError
-from lutris.util.http import Request
+from lutris.startup import init_lutris, run_all_checks
+from lutris.util import datapath, log
+from lutris.util.http import HTTPError, Request
 from lutris.util.jobs import AsyncCall
 from lutris.util.log import logger
-from lutris.util.steam.appmanifest import AppManifest
-from lutris.util.steam.appmanifest import get_appmanifests
+from lutris.util.steam.appmanifest import AppManifest, get_appmanifests
 from lutris.util.steam.config import get_steamapps_paths
-from lutris.util.wine.dxvk import init_dxvk_versions
-from lutris.util.wine.dxvk import wait_for_dxvk_init
+from lutris.util.wine.dxvk import init_dxvk_versions, wait_for_dxvk_init
+
+from .lutriswindow import LutrisWindow
 
 gi.require_version("Gdk", "3.0")
 gi.require_version("Gtk", "3.0")
