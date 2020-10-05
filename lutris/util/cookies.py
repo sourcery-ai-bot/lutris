@@ -1,8 +1,8 @@
 # Standard Library
 import time
+from http.cookiejar import _warn_unhandled_exception
 from http.cookiejar import Cookie
 from http.cookiejar import MozillaCookieJar
-from http.cookiejar import _warn_unhandled_exception
 
 
 class WebkitCookieJar(MozillaCookieJar):

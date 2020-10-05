@@ -1,8 +1,8 @@
 """Handle Steam configuration"""
 # Standard Library
 import os
-from collections import OrderedDict
 from collections import defaultdict
+from collections import OrderedDict
 
 from lutris.util import system
 from lutris.util.log import logger

@@ -14,8 +14,8 @@ from lutris.gui.widgets.common import FileChooserEntry
 from lutris.gui.widgets.common import Label
 from lutris.gui.widgets.common import VBox
 from lutris.gui.widgets.searchable_combobox import SearchableCombobox
-from lutris.runners import InvalidRunner
 from lutris.runners import import_runner
+from lutris.runners import InvalidRunner
 from lutris.util.jobs import AsyncCall
 from lutris.util.log import logger
 
