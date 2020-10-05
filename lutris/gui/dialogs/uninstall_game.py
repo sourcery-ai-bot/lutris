@@ -2,12 +2,15 @@
 from gettext import gettext as _
 
 # Third Party Libraries
-from gi.repository import Gtk, Pango
+from gi.repository import Gtk
+from gi.repository import Pango
 
 # Lutris Modules
 from lutris.game import Game
-from lutris.gui.dialogs import GtkBuilderDialog, QuestionDialog
-from lutris.util.system import is_removeable, reverse_expanduser
+from lutris.gui.dialogs import GtkBuilderDialog
+from lutris.gui.dialogs import QuestionDialog
+from lutris.util.system import is_removeable
+from lutris.util.system import reverse_expanduser
 
 
 class UninstallGameDialog(GtkBuilderDialog):

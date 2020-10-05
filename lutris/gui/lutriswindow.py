@@ -4,9 +4,15 @@ import os
 from collections import namedtuple
 from gettext import gettext as _
 
-from gi.repository import Gdk, Gio, GLib, GObject, Gtk
+from gi.repository import Gdk
+from gi.repository import Gio
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
 
-from lutris import api, services, settings
+from lutris import api
+from lutris import services
+from lutris import settings
 from lutris.database import categories as categories_db
 from lutris.database import games as games_db
 from lutris.database.services import ServiceGameCollection

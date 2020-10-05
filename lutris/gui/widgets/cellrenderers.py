@@ -2,7 +2,9 @@
 from gettext import gettext as _
 
 # Third Party Libraries
-from gi.repository import GObject, Gtk, Pango
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Pango
 
 
 class GridViewCellRendererText(Gtk.CellRendererText):

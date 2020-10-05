@@ -27,7 +27,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from .lutriswindow import LutrisWindow
 from lutris import settings
 from lutris.api import parse_installer_url
 from lutris.command import exec_command
@@ -53,6 +52,8 @@ from lutris.util.steam.appmanifest import get_appmanifests
 from lutris.util.steam.config import get_steamapps_paths
 from lutris.util.wine.dxvk import init_dxvk_versions
 from lutris.util.wine.dxvk import wait_for_dxvk_init
+
+from .lutriswindow import LutrisWindow
 
 gi.require_version("Gdk", "3.0")
 gi.require_version("Gtk", "3.0")

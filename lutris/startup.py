@@ -3,13 +3,15 @@ import os
 import sqlite3
 from gettext import gettext as _
 
-from lutris import runners, settings
+from lutris import runners
+from lutris import settings
 from lutris.database.games import get_games
 from lutris.database.schema import syncdb
 from lutris.game import Game
 from lutris.gui.dialogs import DontShowAgainDialog
 from lutris.runners.json import load_json_runners
-from lutris.util.graphics import drivers, vkquery
+from lutris.util.graphics import drivers
+from lutris.util.graphics import vkquery
 from lutris.util.linux import LINUX_SYSTEM
 from lutris.util.log import logger
 from lutris.util.system import create_folder

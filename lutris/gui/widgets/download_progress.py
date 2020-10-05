@@ -2,7 +2,10 @@
 from gettext import gettext as _
 
 # Third Party Libraries
-from gi.repository import GLib, GObject, Gtk, Pango
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Pango
 
 # Lutris Modules
 from lutris.util.downloader import Downloader

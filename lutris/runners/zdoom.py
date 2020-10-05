@@ -4,7 +4,8 @@ from gettext import gettext as _
 
 # Lutris Modules
 from lutris.runners.runner import Runner
-from lutris.util import display, system
+from lutris.util import display
+from lutris.util import system
 from lutris.util.log import logger
 from lutris.util.strings import split_arguments
 

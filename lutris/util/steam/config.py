@@ -1,8 +1,8 @@
 """Handle Steam configuration"""
 # Standard Library
 import os
-from collections import defaultdict
 from collections import OrderedDict
+from collections import defaultdict
 
 from lutris.util import system
 from lutris.util.log import logger
@@ -53,7 +53,8 @@ def read_config(steam_data_dir):
 
 
 def get_steamapps_paths_for_platform(platform_name):
-    from lutris.runners import steam, winesteam  # pylint: disable=import-outside-toplevel
+    from lutris.runners import steam  # pylint: disable=import-outside-toplevel
+    from lutris.runners import winesteam
 
     runners = {"linux": steam.steam, "windows": winesteam.winesteam}
     runner = runners[platform_name]()

@@ -1,7 +1,8 @@
 """Steam game library watcher"""
 # Third Party Libraries
 # pylint: disable=too-few-public-methods
-from gi.repository import Gio, GLib
+from gi.repository import Gio
+from gi.repository import GLib
 
 # Lutris Modules
 from lutris.util.log import logger

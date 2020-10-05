@@ -10,7 +10,8 @@ from gettext import gettext as _
 from lutris import settings
 from lutris.gui.dialogs import NoticeDialog
 from lutris.runners.runner import Runner
-from lutris.util import joypad, system
+from lutris.util import joypad
+from lutris.util import system
 
 
 class reicast(Runner):

@@ -7,7 +7,9 @@ import urllib.parse
 import urllib.request
 from ssl import CertificateError
 
-from lutris.settings import PROJECT, SITE_URL, VERSION
+from lutris.settings import PROJECT
+from lutris.settings import SITE_URL
+from lutris.settings import VERSION
 from lutris.util import system
 from lutris.util.log import logger
 

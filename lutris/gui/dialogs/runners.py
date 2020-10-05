@@ -5,15 +5,21 @@ import os
 from gettext import gettext as _
 
 # Third Party Libraries
-from gi.repository import GObject, Gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 # Lutris Modules
-from lutris import runners, settings
+from lutris import runners
+from lutris import settings
 from lutris.gui.config.runner import RunnerConfigDialog
-from lutris.gui.dialogs import ErrorDialog, GtkBuilderDialog
+from lutris.gui.dialogs import ErrorDialog
+from lutris.gui.dialogs import GtkBuilderDialog
 from lutris.gui.dialogs.download import simple_downloader
 from lutris.gui.dialogs.runner_install import RunnerInstallDialog
-from lutris.gui.widgets.utils import ICON_SIZE, get_builder_from_file, get_icon, open_uri
+from lutris.gui.widgets.utils import ICON_SIZE
+from lutris.gui.widgets.utils import get_builder_from_file
+from lutris.gui.widgets.utils import get_icon
+from lutris.gui.widgets.utils import open_uri
 from lutris.util import datapath
 from lutris.util.log import logger
 

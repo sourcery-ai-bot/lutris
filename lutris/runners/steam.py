@@ -12,7 +12,8 @@ from lutris.runners.runner import Runner
 from lutris.util import system
 from lutris.util.log import logger
 from lutris.util.steam.appmanifest import get_path_from_appmanifest
-from lutris.util.steam.config import get_default_acf, read_config
+from lutris.util.steam.config import get_default_acf
+from lutris.util.steam.config import read_config
 from lutris.util.steam.vdf import to_vdf
 from lutris.util.strings import split_arguments
 

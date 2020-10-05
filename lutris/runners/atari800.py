@@ -8,7 +8,9 @@ from lutris.config import LutrisConfig
 from lutris.gui.dialogs import ErrorDialog
 from lutris.gui.dialogs.download import DownloadDialog
 from lutris.runners.runner import Runner
-from lutris.util import display, extract, system
+from lutris.util import display
+from lutris.util import extract
+from lutris.util import system
 
 
 def get_resolutions():

@@ -7,8 +7,11 @@ import time
 from gi.repository import GLib
 
 # Lutris Modules
-from lutris.settings import RUNTIME_DIR, RUNTIME_URL
-from lutris.util import http, jobs, system
+from lutris.settings import RUNTIME_DIR
+from lutris.settings import RUNTIME_URL
+from lutris.util import http
+from lutris.util import jobs
+from lutris.util import system
 from lutris.util.downloader import Downloader
 from lutris.util.extract import extract_archive
 from lutris.util.log import logger

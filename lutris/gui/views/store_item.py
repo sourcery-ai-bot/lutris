@@ -2,11 +2,13 @@
 import time
 
 from lutris.game import Game
-from lutris.gui.widgets.utils import get_pixbuf, get_pixbuf_for_game
+from lutris.gui.widgets.utils import get_pixbuf
+from lutris.gui.widgets.utils import get_pixbuf_for_game
 from lutris.runners import RUNNER_NAMES
 from lutris.util import system
 from lutris.util.log import logger
-from lutris.util.strings import get_formatted_playtime, gtk_safe
+from lutris.util.strings import get_formatted_playtime
+from lutris.util.strings import gtk_safe
 
 
 class StoreItem:

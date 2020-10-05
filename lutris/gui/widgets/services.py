@@ -1,7 +1,8 @@
 """Widget to connect to third party services"""
 from gettext import gettext as _
 
-from gi.repository import GLib, Gtk
+from gi.repository import GLib
+from gi.repository import Gtk
 
 from lutris import api
 from lutris.gui import dialogs

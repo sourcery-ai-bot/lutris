@@ -8,10 +8,15 @@ from gettext import gettext as _
 from lutris import settings
 from lutris.command import MonitoredCommand
 from lutris.runners import wine
-from lutris.runners.commands.wine import (  # noqa: F401 pylint: disable=unused-import
-    create_prefix, delete_registry_key, install_cab_component, set_regedit, set_regedit_file, winecfg, wineexec,
-    winekill, winetricks
-)
+from lutris.runners.commands.wine import create_prefix  # noqa: F401 pylint: disable=unused-import
+from lutris.runners.commands.wine import delete_registry_key
+from lutris.runners.commands.wine import install_cab_component
+from lutris.runners.commands.wine import set_regedit
+from lutris.runners.commands.wine import set_regedit_file
+from lutris.runners.commands.wine import winecfg
+from lutris.runners.commands.wine import wineexec
+from lutris.runners.commands.wine import winekill
+from lutris.runners.commands.wine import winetricks
 from lutris.util import system
 from lutris.util.log import logger
 from lutris.util.steam.appmanifest import get_path_from_appmanifest

@@ -2,9 +2,11 @@
 import os
 import shutil
 
-from gi.repository import Gio, GObject
+from gi.repository import Gio
+from gi.repository import GObject
 
-from lutris import api, settings
+from lutris import api
+from lutris import settings
 from lutris.database import sql
 from lutris.database.services import ServiceGameCollection
 from lutris.installer import fetch_script

@@ -13,8 +13,8 @@ from lutris.exceptions import UnavailableLibraries
 from lutris.gui import dialogs
 from lutris.runners import RunnerInstallationError
 from lutris.util import system
-from lutris.util.extract import extract_archive
 from lutris.util.extract import ExtractFailure
+from lutris.util.extract import extract_archive
 from lutris.util.http import Request
 from lutris.util.linux import LINUX_SYSTEM
 from lutris.util.log import logger

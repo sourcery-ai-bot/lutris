@@ -1,6 +1,8 @@
 """Store object for a list of games"""
 # pylint: disable=not-an-iterable
-from gi.repository import GLib, GObject, Gtk
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
 from gi.repository.GdkPixbuf import Pixbuf
 
 from lutris import settings
@@ -10,10 +12,21 @@ from lutris.gui.views.store_item import StoreItem
 from lutris.gui.widgets.utils import get_pixbuf_for_game
 from lutris.util.strings import gtk_safe
 
-from . import (
-    COL_ICON, COL_ID, COL_INSTALLED, COL_INSTALLED_AT, COL_INSTALLED_AT_TEXT, COL_LASTPLAYED, COL_LASTPLAYED_TEXT,
-    COL_NAME, COL_PLATFORM, COL_PLAYTIME, COL_PLAYTIME_TEXT, COL_RUNNER, COL_RUNNER_HUMAN_NAME, COL_SLUG, COL_YEAR
-)
+from . import COL_ICON
+from . import COL_ID
+from . import COL_INSTALLED
+from . import COL_INSTALLED_AT
+from . import COL_INSTALLED_AT_TEXT
+from . import COL_LASTPLAYED
+from . import COL_LASTPLAYED_TEXT
+from . import COL_NAME
+from . import COL_PLATFORM
+from . import COL_PLAYTIME
+from . import COL_PLAYTIME_TEXT
+from . import COL_RUNNER
+from . import COL_RUNNER_HUMAN_NAME
+from . import COL_SLUG
+from . import COL_YEAR
 
 PGA_DB = settings.PGA_DB
 

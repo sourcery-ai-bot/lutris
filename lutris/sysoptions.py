@@ -1,6 +1,7 @@
 """Options list for system config."""
 # Standard Library
 import glob
+
 # pylint: disable=invalid-name
 import os
 from collections import OrderedDict
@@ -10,7 +11,9 @@ from gettext import gettext as _
 from lutris import runners
 from lutris.discord import DiscordPresence
 from lutris.util import system
-from lutris.util.display import DISPLAY_MANAGER, SCREEN_SAVER_INHIBITOR, USE_DRI_PRIME
+from lutris.util.display import DISPLAY_MANAGER
+from lutris.util.display import SCREEN_SAVER_INHIBITOR
+from lutris.util.display import USE_DRI_PRIME
 
 VULKAN_DATA_DIRS = [
     "/usr/local/etc/vulkan",  # standard site-local location

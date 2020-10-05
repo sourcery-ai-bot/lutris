@@ -1,7 +1,9 @@
 """Extended combobox with search"""
 # Third Party Libraries
 # pylint: disable=unsubscriptable-object
-from gi.repository import GLib, GObject, Gtk
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
 
 # Lutris Modules
 from lutris.util.jobs import AsyncCall

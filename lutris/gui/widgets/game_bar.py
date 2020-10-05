@@ -1,12 +1,17 @@
 from datetime import datetime
 from gettext import gettext as _
 
-from gi.repository import Gio, GObject, Gtk
+from gi.repository import Gio
+from gi.repository import GObject
+from gi.repository import Gtk
 
-from lutris import runners, services
-from lutris.database.games import add_or_update, get_game_for_service
+from lutris import runners
+from lutris import services
+from lutris.database.games import add_or_update
+from lutris.database.games import get_game_for_service
 from lutris.game import Game
-from lutris.gui.widgets.utils import get_link_button, get_pixbuf_for_game
+from lutris.gui.widgets.utils import get_link_button
+from lutris.gui.widgets.utils import get_pixbuf_for_game
 from lutris.util.strings import gtk_safe
 
 

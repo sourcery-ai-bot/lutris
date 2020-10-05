@@ -2,7 +2,8 @@
 from gettext import gettext as _
 
 # Third Party Libraries
-from gi.repository import Gdk, Gtk
+from gi.repository import Gdk
+from gi.repository import Gtk
 
 # Lutris Modules
 from lutris.gui.widgets.log_text_view import LogTextView
