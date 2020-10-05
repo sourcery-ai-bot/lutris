@@ -119,10 +119,7 @@ class Game(GObject.Object):
     def is_favorite(self):
         """Return whether the game is in the user's favorites"""
         categories = categories_db.get_categories_in_game(self.id)
-        for category in categories:
-            if category == "favorite":
-                return True
-        return False
+        return "favorite" in categories
 
     def add_to_favorites(self):
         """Add the game to the 'favorite' category"""
@@ -368,11 +365,7 @@ class Game(GObject.Object):
             if not display:
                 logger.warning("No primary display set")
         else:
-            found = False
-            for output in outputs:
-                if output.name == display:
-                    found = True
-                    break
+            found = any(output.name == display for output in outputs)
             if not found:
                 logger.warning("Selected display %s not found", display)
                 display = None

@@ -262,10 +262,7 @@ def get_runtime_paths(version=None, prefer_system_libs=True, wine_path=None):
     ]
 
     if system.LINUX_SYSTEM.is_64_bit:
-        if version == "legacy":
-            lutris_runtime_path = "lib64"
-        else:
-            lutris_runtime_path = "%s-x86_64" % version
+        lutris_runtime_path = "lib64" if version == "legacy" else "%s-x86_64" % version
         runtime_paths += [
             lutris_runtime_path,
             "steam/amd64/lib/x86_64-linux-gnu",

@@ -88,13 +88,13 @@ class AppManifest:
     @property
     def states(self):
         """Return the states of a Steam game."""
-        states = []
         state_flags = self.app_state.get("StateFlags", 0)
         state_flags = bin(int(state_flags))[:1:-1]
-        for index, flag in enumerate(state_flags):
-            if flag == "1":
-                states.append(APP_STATE_FLAGS[index + 1])
-        return states
+        return [
+            APP_STATE_FLAGS[index + 1]
+            for index, flag in enumerate(state_flags)
+            if flag == "1"
+        ]
 
     def is_installed(self):
         """True if the game is fully installed"""

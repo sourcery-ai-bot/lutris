@@ -153,8 +153,8 @@ class LinuxSystem:  # pylint: disable=too-many-public-methods
     def get_cpus():
         """Parse the output of /proc/cpuinfo"""
         cpus = [{}]
-        cpu_index = 0
         with open("/proc/cpuinfo") as cpuinfo:
+            cpu_index = 0
             for line in cpuinfo.readlines():
                 if not line.strip():
                     cpu_index += 1
@@ -223,9 +223,7 @@ class LinuxSystem:  # pylint: disable=too-many-public-methods
         if system.find_executable("gamemoderun"):
             return True
         # This is for old versions of gamemode only
-        if self.is_feature_supported("GAMEMODE"):
-            return True
-        return False
+        return bool(self.is_feature_supported("GAMEMODE"))
 
     @property
     def is_flatpak(self):
@@ -308,12 +306,14 @@ class LinuxSystem:  # pylint: disable=too-many-public-methods
                 if os.path.realpath(lib_paths[0]) == os.path.realpath(
                         lib_paths[1]):
                     continue
-            if all([os.path.exists(path) for path in lib_paths]):
+            if all(os.path.exists(path) for path in lib_paths):
                 if lib_paths[0] not in exported_lib_folders:
                     yield lib_paths[0]
-                if len(lib_paths) != 1:
-                    if lib_paths[1] not in exported_lib_folders:
-                        yield lib_paths[1]
+                if (
+                    len(lib_paths) != 1
+                    and lib_paths[1] not in exported_lib_folders
+                ):
+                    yield lib_paths[1]
 
     def get_ldconfig_libs(self):
         """Return a list of available libraries, as returned by `ldconfig -p`."""
@@ -464,28 +464,33 @@ def gather_system_info_str():
     system_info = gather_system_info()
     system_info_readable = {}
     # Add system information
-    system_dict = {}
-    system_dict["OS"] = " ".join(system_info["dist"])
-    system_dict["Arch"] = system_info["arch"]
-    system_dict["Kernel"] = system_info["kernel"]
-    system_dict["Desktop"] = system_info["env"].get("XDG_CURRENT_DESKTOP",
-                                                    "Not found")
+    system_dict = {
+        "OS": " ".join(system_info["dist"]),
+        "Arch": system_info["arch"],
+        "Kernel": system_info["kernel"],
+        "Desktop": system_info["env"].get("XDG_CURRENT_DESKTOP", "Not found"),
+    }
+
     system_dict["Display Server"] = system_info["env"].get(
         "XDG_SESSION_TYPE", "Not found")
     system_info_readable["System"] = system_dict
     # Add CPU information
-    cpu_dict = {}
-    cpu_dict["Vendor"] = system_info["cpus"][0]["vendor_id"]
-    cpu_dict["Model"] = system_info["cpus"][0]["model name"]
-    cpu_dict["Physical cores"] = system_info["cpus"][0]["cpu cores"]
-    cpu_dict["Logical cores"] = system_info["cpus"][0]["siblings"]
+    cpu_dict = {
+        "Vendor": system_info["cpus"][0]["vendor_id"],
+        "Model": system_info["cpus"][0]["model name"],
+        "Physical cores": system_info["cpus"][0]["cpu cores"],
+        "Logical cores": system_info["cpus"][0]["siblings"],
+    }
+
     system_info_readable["CPU"] = cpu_dict
     # Add memory information
-    ram_dict = {}
-    ram_dict["RAM"] = "%0.1f GB" % (float(system_info["ram"]["MemTotal"]) /
-                                    1024 / 1024)
-    ram_dict["Swap"] = "%0.1f GB" % (float(system_info["ram"]["SwapTotal"]) /
-                                     1024 / 1024)
+    ram_dict = {
+        "RAM": "%0.1f GB"
+        % (float(system_info["ram"]["MemTotal"]) / 1024 / 1024),
+        "Swap": "%0.1f GB"
+        % (float(system_info["ram"]["SwapTotal"]) / 1024 / 1024),
+    }
+
     system_info_readable["Memory"] = ram_dict
     # Add graphics information
     graphics_dict = {}
@@ -509,9 +514,8 @@ def gather_system_info_str():
     system_info_readable["Graphics"] = graphics_dict
 
     output = ""
-    for section in system_info_readable:
+    for section, dictionary in system_info_readable.items():
         output += "[{}]\n".format(section)
-        dictionary = system_info_readable[section]
         for key in dictionary:
             tabs = " " * (16 - len(key))
             output += "{}{}{}\n".format(key + ":", tabs, dictionary[key])

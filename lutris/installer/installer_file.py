@@ -126,10 +126,7 @@ class InstallerFile:
         if not _cache_path:
             _cache_path = os.path.join(settings.CACHE_DIR, "installer")
         url_parts = urlparse(self.url)
-        if url_parts.netloc.endswith("gog.com"):
-            folder = "gog"
-        else:
-            folder = self.id
+        folder = "gog" if url_parts.netloc.endswith("gog.com") else self.id
         return os.path.join(_cache_path, self.game_slug, folder)
 
     def prepare(self):

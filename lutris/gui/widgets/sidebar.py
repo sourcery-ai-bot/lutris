@@ -164,11 +164,7 @@ class LutrisSidebar(Gtk.ListBox):
         self.runners = sorted(runners.__all__)
         self.platforms = sorted(platforms.__all__)
         self.categories = categories_db.get_categories()
-        if selected:
-            row_type, row_id = selected.split(":")
-        else:
-            row_type, row_id = ("runner", "all")
-
+        row_type, row_id = selected.split(":") if selected else ("runner", "all")
         GObject.add_emission_hook(RunnersDialog, "runner-installed",
                                   self.update)
         GObject.add_emission_hook(RunnersDialog, "runner-removed", self.update)
