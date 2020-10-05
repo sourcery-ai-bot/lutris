@@ -396,7 +396,7 @@ class fsuae(Runner):
             params.append("--governor_warning=0")
         if self.runner_config.get("scanlines"):
             params.append("--scanlines=1")
-        return params
+        return params 
 
     def play(self):
         return {"command": [self.get_executable()] + self.get_params() + self.insert_floppies()}
