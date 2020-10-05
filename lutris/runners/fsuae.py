@@ -4,6 +4,7 @@ from gettext import gettext as _
 
 from lutris.runners.runner import Runner
 from lutris.util.display import DISPLAY_MANAGER
+
 # Lutris Modules
 
 
