@@ -62,11 +62,7 @@ def get_steamapps_paths_for_platform(platform_name):
 
 def get_steamapps_paths(flat=False, platform=None):
     base_platforms = ["linux", "windows"]
-    if flat:
-        steamapps_paths = []
-    else:
-        steamapps_paths = defaultdict(list)
-
+    steamapps_paths = [] if flat else defaultdict(list)
     if platform:
         if platform not in base_platforms:
             raise ValueError("Illegal value for Steam platform: %s" % platform)
