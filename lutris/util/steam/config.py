@@ -1,12 +1,13 @@
 """Handle Steam configuration"""
 # Standard Library
 import os
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
+from collections import OrderedDict
 
-# Lutris Modules
 from lutris.util import system
 from lutris.util.log import logger
 from lutris.util.steam.vdf import vdf_parse
+# Lutris Modules
 
 
 def get_default_acf(appid, name):
@@ -44,7 +45,8 @@ def read_config(steam_data_dir):
     with open(config_filename, "r") as steam_config_file:
         config = vdf_parse(steam_config_file, {})
     try:
-        return get_entry_case_insensitive(config, ["InstallConfigStore", "Software", "Valve", "Steam"])
+        return get_entry_case_insensitive(
+            config, ["InstallConfigStore", "Software", "Valve", "Steam"])
     except KeyError as ex:
         logger.error("Steam config %s is empty: %s", config_filename, ex)
 
