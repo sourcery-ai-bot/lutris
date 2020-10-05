@@ -9,9 +9,7 @@ from gettext import gettext as _
 from lutris import runtime
 from lutris.exceptions import GameConfigError
 from lutris.gui.dialogs import FileDialog
-from lutris.runners.commands.wine import (
-    create_prefix,
-)  # noqa: F401 pylint: disable=unused-import
+from lutris.runners.commands.wine import create_prefix  # noqa: F401 pylint: disable=unused-import
 from lutris.runners.commands.wine import delete_registry_key
 from lutris.runners.commands.wine import eject_disc
 from lutris.runners.commands.wine import install_cab_component
@@ -33,8 +31,11 @@ from lutris.util.strings import parse_version
 from lutris.util.strings import split_arguments
 from lutris.util.wine import dxvk
 from lutris.util.wine import nine
-from lutris.util.wine.prefix import find_prefix
 from lutris.util.wine.prefix import WinePrefixManager
+from lutris.util.wine.prefix import find_prefix
+from lutris.util.wine.wine import POL_PATH
+from lutris.util.wine.wine import WINE_DIR
+from lutris.util.wine.wine import WINE_PATHS
 from lutris.util.wine.wine import detect_arch
 from lutris.util.wine.wine import display_vulkan_error
 from lutris.util.wine.wine import esync_display_limit_warning
@@ -51,9 +52,6 @@ from lutris.util.wine.wine import is_esync_limit_set
 from lutris.util.wine.wine import is_fsync_supported
 from lutris.util.wine.wine import is_version_esync
 from lutris.util.wine.wine import is_version_fsync
-from lutris.util.wine.wine import POL_PATH
-from lutris.util.wine.wine import WINE_DIR
-from lutris.util.wine.wine import WINE_PATHS
 from lutris.util.wine.x360ce import X360ce
 
 # Lutris Modules

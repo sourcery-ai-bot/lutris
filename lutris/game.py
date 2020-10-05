@@ -21,8 +21,8 @@ from lutris.exceptions import watch_lutris_errors
 from lutris.gui import dialogs
 from lutris.runner_interpreter import export_bash_script
 from lutris.runner_interpreter import get_launch_parameters
-from lutris.runners import import_runner
 from lutris.runners import InvalidRunner
+from lutris.runners import import_runner
 from lutris.runners import wine
 from lutris.settings import DEFAULT_DISCORD_CLIENT_ID
 from lutris.util import audio
@@ -30,11 +30,11 @@ from lutris.util import jobs
 from lutris.util import strings
 from lutris.util import system
 from lutris.util import xdgshortcuts
-from lutris.util.display import disable_compositing
 from lutris.util.display import DISPLAY_MANAGER
+from lutris.util.display import SCREEN_SAVER_INHIBITOR
+from lutris.util.display import disable_compositing
 from lutris.util.display import enable_compositing
 from lutris.util.display import restore_gamma
-from lutris.util.display import SCREEN_SAVER_INHIBITOR
 from lutris.util.graphics.xephyr import get_xephyr_command
 from lutris.util.graphics.xrandr import turn_off_except
 from lutris.util.linux import LINUX_SYSTEM
