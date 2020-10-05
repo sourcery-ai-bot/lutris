@@ -85,7 +85,7 @@ autopep8:
 check: isort-check flake8 pylint
 
 isort-check:
-	$(PIPENV) run isort -c lutris
+	$(PIPENV) run isort -c lutris/**/*.py
 
 flake8:
 	$(PIPENV) run flake8 lutris
