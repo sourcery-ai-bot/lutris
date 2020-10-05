@@ -60,7 +60,7 @@ class ConfigBox(VBox):
 
         help_box.show_all()
 
-    def generate_widgets(self, config_section):    # noqa: C901 # pylint: disable=too-many-branches,too-many-statements
+    def generate_widgets(self, config_section):  # noqa: C901 # pylint: disable=too-many-branches,too-many-statements
         """Parse the config dict and generates widget accordingly."""
         if not self.options:
             no_options_label = Label(_("No options available"))
@@ -434,7 +434,8 @@ class ConfigBox(VBox):
             # If path is relative, complete with game dir
             if not os.path.isabs(path):
                 path = os.path.expanduser(path)
-                if not os.path.isabs(path) and self.game and self.game.directory:
+                if not os.path.isabs(
+                        path) and self.game and self.game.directory:
                     path = os.path.join(self.game.directory, path)
             file_chooser.entry.set_text(path)
 

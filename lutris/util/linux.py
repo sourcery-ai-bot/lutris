@@ -309,10 +309,8 @@ class LinuxSystem:  # pylint: disable=too-many-public-methods
             if all(os.path.exists(path) for path in lib_paths):
                 if lib_paths[0] not in exported_lib_folders:
                     yield lib_paths[0]
-                if (
-                    len(lib_paths) != 1
-                    and lib_paths[1] not in exported_lib_folders
-                ):
+                if len(lib_paths
+                       ) != 1 and lib_paths[1] not in exported_lib_folders:
                     yield lib_paths[1]
 
     def get_ldconfig_libs(self):
@@ -485,10 +483,10 @@ def gather_system_info_str():
     system_info_readable["CPU"] = cpu_dict
     # Add memory information
     ram_dict = {
-        "RAM": "%0.1f GB"
-        % (float(system_info["ram"]["MemTotal"]) / 1024 / 1024),
-        "Swap": "%0.1f GB"
-        % (float(system_info["ram"]["SwapTotal"]) / 1024 / 1024),
+        "RAM":
+        "%0.1f GB" % (float(system_info["ram"]["MemTotal"]) / 1024 / 1024),
+        "Swap":
+        "%0.1f GB" % (float(system_info["ram"]["SwapTotal"]) / 1024 / 1024),
     }
 
     system_info_readable["Memory"] = ram_dict

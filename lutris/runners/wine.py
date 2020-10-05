@@ -220,8 +220,7 @@ class wine(Runner):
         def dxvk_vulkan_callback(widget, option, config):
             response = True
             if not is_vulkan_supported() and not thread_safe_call(
-                display_vulkan_error
-            ):
+                    display_vulkan_error):
                 response = False
             return widget, option, response
 

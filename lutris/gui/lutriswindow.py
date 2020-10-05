@@ -292,7 +292,8 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
     def sort_params(self):
         return [
             ("installed", "DESC"),
-            (self.view_sorting, "ASC" if self.view_sorting_ascending else "DESC"),
+            (self.view_sorting,
+             "ASC" if self.view_sorting_ascending else "DESC"),
         ]
 
     def get_running_games(self):
@@ -395,7 +396,9 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
             sql_filters["platform"] = self.filters["platform"]
         if self.filters.get("installed"):
             sql_filters["installed"] = "1"
-        searches = {"name": self.filters["text"]} if self.filters.get("text") else None
+        searches = {
+            "name": self.filters["text"]
+        } if self.filters.get("text") else None
         if not self.show_hidden_games:
             sql_excludes["hidden"] = 1
         return searches, sql_filters, sql_excludes

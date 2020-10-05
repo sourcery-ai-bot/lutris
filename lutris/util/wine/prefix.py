@@ -126,7 +126,7 @@ class WinePrefixManager:
         return desktop_folders or DEFAULT_DESKTOP_FOLDERS
 
     def desktop_integration(self, desktop_dir=None,
-                            restore=False):    # noqa: C901
+                            restore=False):  # noqa: C901
         """Overwrite desktop integration"""
         # pylint: disable=too-many-branches
         # TODO: reduce complexity (18)
@@ -136,7 +136,8 @@ class WinePrefixManager:
         user_dir = os.path.join(self.path, "drive_c/users/", user)
         desktop_folders = self.get_desktop_folders()
 
-        desktop_dir = os.path.expanduser(desktop_dir) if desktop_dir else user_dir
+        desktop_dir = os.path.expanduser(
+            desktop_dir) if desktop_dir else user_dir
         if system.path_exists(user_dir):
             # Replace or restore desktop integration symlinks
             for i, item in enumerate(desktop_folders):

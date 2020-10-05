@@ -103,7 +103,8 @@ class reicast(Runner):
         for (dev, joy_name) in joypad_devices:
             dev_id = re.findall(r"(\d+)", dev)[0]
             if name_counter[joy_name] > 1:
-                index = 1 if joy_name not in name_indexes else name_indexes[joy_name] + 1
+                index = (1 if joy_name not in name_indexes else
+                         name_indexes[joy_name] + 1)
                 name_indexes[joy_name] = index
             else:
                 index = 0

@@ -92,8 +92,7 @@ class AppManifest:
         state_flags = bin(int(state_flags))[:1:-1]
         return [
             APP_STATE_FLAGS[index + 1]
-            for index, flag in enumerate(state_flags)
-            if flag == "1"
+            for index, flag in enumerate(state_flags) if flag == "1"
         ]
 
     def is_installed(self):
