@@ -49,19 +49,20 @@ class GtkTemplateWarning(UserWarning):
     pass
 
 
-def _connect_func(builder, obj, signal_name, handler_name, connect_object,
-                  flags, cls):
+def _connect_func(builder, obj, signal_name, handler_name, connect_object, flags, cls):
     """Handles GtkBuilder signal connect events"""
 
-    extra = () if connect_object is None else (connect_object, )
+    extra = () if connect_object is None else (connect_object,)
     # The handler name refers to an attribute on the template instance,
     # so ask GtkBuilder for the template instance
     template_inst = builder.get_object(cls.__gtype_name__)
 
     if template_inst is None:  # This should never happen
-        errmsg = ("Internal error: cannot find template instance! obj: %s; "
-                  "signal: %s; handler: %s; connect_obj: %s; class: %s" %
-                  (obj, signal_name, handler_name, connect_object, cls))
+        errmsg = (
+            "Internal error: cannot find template instance! obj: %s; "
+            "signal: %s; handler: %s; connect_obj: %s; class: %s"
+            % (obj, signal_name, handler_name, connect_object, cls)
+        )
         warnings.warn(errmsg, GtkTemplateWarning)
         return
 
@@ -125,7 +126,8 @@ def _init_template(self, cls, base_init_template):
     if self.__class__ is not cls:
         raise TypeError(
             "Inheritance from classes with @GtkTemplate decorators "
-            "is not allowed at this time")
+            "is not allowed at this time"
+        )
 
     connected_signals = set()
     self.__connected_template_signals__ = connected_signals
@@ -142,14 +144,18 @@ def _init_template(self, cls, base_init_template):
             #      it's not currently possible for us to know which
             #      one is broken either -- but the stderr should show
             #      something useful with a Gtk-CRITICAL message)
-            raise AttributeError("A missing child widget was set using "
-                                 "GtkTemplate.Child and the entire "
-                                 "template is now broken (widgets: %s)" %
-                                 ", ".join(self.__gtemplate_widgets__))
+            raise AttributeError(
+                "A missing child widget was set using "
+                "GtkTemplate.Child and the entire "
+                "template is now broken (widgets: %s)"
+                % ", ".join(self.__gtemplate_widgets__)
+            )
 
     for name in self.__gtemplate_methods__.difference(connected_signals):
-        errmsg = ("Signal '%s' was declared with @GtkTemplate.Callback " +
-                  "but was not present in template") % name
+        errmsg = (
+            "Signal '%s' was declared with @GtkTemplate.Callback "
+            + "but was not present in template"
+        ) % name
         warnings.warn(errmsg, GtkTemplateWarning)
 
 
@@ -246,7 +252,9 @@ class _GtkTemplate:
         TODO: Alternatively, could wait until first class instantiation
               before registering templates? Would need a metaclass...
         """
-        _GtkTemplate.__ui_path__ = abspath(join(*path))  # pylint: disable=no-value-for-parameter
+        _GtkTemplate.__ui_path__ = abspath(
+            join(*path)
+        )  # pylint: disable=no-value-for-parameter
 
     def __init__(self, ui):
         self.ui = ui
@@ -265,7 +273,8 @@ class _GtkTemplate:
 
         try:
             template_bytes = Gio.resources_lookup_data(
-                self.ui, Gio.ResourceLookupFlags.NONE)
+                self.ui, Gio.ResourceLookupFlags.NONE
+            )
         except GLib.GError:
             ui = self.ui
             if isinstance(ui, (list, tuple)):

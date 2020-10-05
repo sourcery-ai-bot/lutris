@@ -25,7 +25,8 @@ DESKTOP_XDG = ["DESKTOP", "DOCUMENTS", "MUSIC", "VIDEOS", "PICTURES"]
 def is_prefix(path):
     """Return True if the path is prefix"""
     return os.path.isdir(os.path.join(path, "drive_c")) and os.path.exists(
-        os.path.join(path, "user.reg"))
+        os.path.join(path, "user.reg")
+    )
 
 
 def find_prefix(path):
@@ -76,10 +77,10 @@ class WinePrefixManager:
 
     def get_key_path(self, key):
         if key.startswith(self.hkcu_prefix):
-            return key[len(self.hkcu_prefix) + 1:]
+            return key[len(self.hkcu_prefix) + 1 :]
         raise ValueError(
-            "The key {} is currently not supported by WinePrefixManager".
-            format(key))
+            "The key {} is currently not supported by WinePrefixManager".format(key)
+        )
 
     def get_registry_key(self, key, subkey):
         registry = WineRegistry(self.get_registry_path(key))
@@ -104,8 +105,7 @@ class WinePrefixManager:
         key = self.hkcu_prefix + "/Software/Wine/DllOverrides"
         if mode.startswith("dis"):
             mode = ""
-        if mode not in ("builtin", "native", "builtin,native",
-                        "native,builtin", ""):
+        if mode not in ("builtin", "native", "builtin,native", "native,builtin", ""):
             logger.error("DLL override '%s' mode is not valid", mode)
             return
         self.set_registry_key(key, dll, mode)
@@ -115,18 +115,17 @@ class WinePrefixManager:
         desktop_folders = []
         for key in DESKTOP_KEYS:
             folder = self.get_registry_key(
-                self.hkcu_prefix +
-                "/Software/Microsoft/Windows/CurrentVersion/Explorer/Shell Folders",
+                self.hkcu_prefix
+                + "/Software/Microsoft/Windows/CurrentVersion/Explorer/Shell Folders",
                 key,
             )
             if not folder:
                 logger.warning("Couldn't load shell folder name for %s", key)
                 continue
-            desktop_folders.append(folder[folder.rfind("\\") + 1:])
+            desktop_folders.append(folder[folder.rfind("\\") + 1 :])
         return desktop_folders or DEFAULT_DESKTOP_FOLDERS
 
-    def desktop_integration(self, desktop_dir=None,
-                            restore=False):    # noqa: C901
+    def desktop_integration(self, desktop_dir=None, restore=False):  # noqa: C901
         """Overwrite desktop integration"""
         # pylint: disable=too-many-branches
         # TODO: reduce complexity (18)
@@ -178,8 +177,9 @@ class WinePrefixManager:
                         # The current code shouldn't allow that
                         # Just raise a exception with the values
                         raise RuntimeError(
-                            "Missing value desktop_dir=%s or item=%s" %
-                            (desktop_dir, item))
+                            "Missing value desktop_dir=%s or item=%s"
+                            % (desktop_dir, item)
+                        )
 
                     os.makedirs(src_path, exist_ok=True)
                     os.symlink(src_path, path)
@@ -213,8 +213,7 @@ class WinePrefixManager:
         path = self.hkcu_prefix + "/Software/Wine/Explorer"
         if enabled:
             self.set_registry_key(path, "Desktop", "WineDesktop")
-            default_resolution = "x".join(
-                DISPLAY_MANAGER.get_current_resolution())
+            default_resolution = "x".join(DISPLAY_MANAGER.get_current_resolution())
             logger.debug(
                 "Enabling wine virtual desktop with default resolution of %s",
                 default_resolution,

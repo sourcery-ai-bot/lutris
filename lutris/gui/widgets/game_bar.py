@@ -21,18 +21,12 @@ class GameBar(Gtk.Fixed):
     def __init__(self, db_game, game_actions):
         """Create the game bar with a database row"""
         super().__init__(visible=True)
-        GObject.add_emission_hook(Game, "game-start",
-                                  self.on_game_state_changed)
-        GObject.add_emission_hook(Game, "game-started",
-                                  self.on_game_state_changed)
-        GObject.add_emission_hook(Game, "game-stopped",
-                                  self.on_game_state_changed)
-        GObject.add_emission_hook(Game, "game-updated",
-                                  self.on_game_state_changed)
-        GObject.add_emission_hook(Game, "game-removed",
-                                  self.on_game_state_changed)
-        GObject.add_emission_hook(Game, "game-installed",
-                                  self.on_game_state_changed)
+        GObject.add_emission_hook(Game, "game-start", self.on_game_state_changed)
+        GObject.add_emission_hook(Game, "game-started", self.on_game_state_changed)
+        GObject.add_emission_hook(Game, "game-stopped", self.on_game_state_changed)
+        GObject.add_emission_hook(Game, "game-updated", self.on_game_state_changed)
+        GObject.add_emission_hook(Game, "game-removed", self.on_game_state_changed)
+        GObject.add_emission_hook(Game, "game-installed", self.on_game_state_changed)
 
         self.set_margin_bottom(12)
         self.game_actions = game_actions
@@ -79,8 +73,9 @@ class GameBar(Gtk.Fixed):
             self.put(self.get_playtime_label(), x_offset, y_offset)
 
         self.play_button = self.get_play_button()
-        self.put(self.play_button, self.play_button_position[0],
-                 self.play_button_position[1])
+        self.put(
+            self.play_button, self.play_button_position[0], self.play_button_position[1]
+        )
 
     def get_popover(self, buttons):
         """Return the popover widget containing a list of link buttons"""
@@ -95,22 +90,21 @@ class GameBar(Gtk.Fixed):
 
     def get_icon(self):
         """Return the game icon"""
-        icon = Gtk.Image.new_from_pixbuf(
-            get_pixbuf_for_game(self.game_slug, (32, 32)))
+        icon = Gtk.Image.new_from_pixbuf(get_pixbuf_for_game(self.game_slug, (32, 32)))
         icon.show()
         return icon
 
     def get_game_name_label(self):
         """Return the label with the game's title"""
         title_label = Gtk.Label(visible=True)
-        title_label.set_markup("<span font_desc='16'><b>%s</b></span>" %
-                               gtk_safe(self.game_name))
+        title_label.set_markup(
+            "<span font_desc='16'><b>%s</b></span>" % gtk_safe(self.game_name)
+        )
         return title_label
 
     def get_runner_button(self):
         icon_name = self.game.runner.name + "-symbolic"
-        runner_icon = Gtk.Image.new_from_icon_name(icon_name,
-                                                   Gtk.IconSize.MENU)
+        runner_icon = Gtk.Image.new_from_icon_name(icon_name, Gtk.IconSize.MENU)
         runner_icon.show()
         runner_button = Gtk.MenuButton()
         runner_button.set_image(runner_icon)
@@ -131,7 +125,8 @@ class GameBar(Gtk.Fixed):
         """Return the label containing the playtime info"""
         playtime_label = Gtk.Label(visible=True)
         playtime_label.set_markup(
-            _("Time played:\n<b>%s</b>") % self.game.formatted_playtime)
+            _("Time played:\n<b>%s</b>") % self.game.formatted_playtime
+        )
         return playtime_label
 
     def get_last_played_label(self):
@@ -139,7 +134,8 @@ class GameBar(Gtk.Fixed):
         last_played_label = Gtk.Label(visible=True)
         lastplayed = datetime.fromtimestamp(self.game.lastplayed)
         last_played_label.set_markup(
-            _("Last played:\n<b>%s</b>") % lastplayed.strftime("%x"))
+            _("Last played:\n<b>%s</b>") % lastplayed.strftime("%x")
+        )
         return last_played_label
 
     def get_service_button(self):
@@ -204,8 +200,7 @@ class GameBar(Gtk.Fixed):
     def get_runner_buttons(self):
         buttons = {}
         if self.game.runner_name and self.game.is_installed:
-            runner = runners.import_runner(self.game.runner_name)(
-                self.game.config)
+            runner = runners.import_runner(self.game.runner_name)(self.game.config)
             for entry in runner.context_menu_entries:
                 name, label, callback = entry
                 button = get_link_button(label)
@@ -221,19 +216,12 @@ class GameBar(Gtk.Fixed):
     def on_play_clicked(self, button):
         """Handler for launching service games"""
         service_runners = {
-            "xdg": {
-                "runner": "linux",
-                "slug": "desktopapp"
-            },
-            "steam": {
-                "runner": "steam",
-                "slug": "steam"
-            },
+            "xdg": {"runner": "linux", "slug": "desktopapp"},
+            "steam": {"runner": "steam", "slug": "steam"},
         }
         if self.service.id in service_runners:
             service_runner = service_runners[self.service.id]
-            self.launch_service_game(service_runner["runner"],
-                                     service_runner["slug"])
+            self.launch_service_game(service_runner["runner"], service_runner["slug"])
 
     def launch_service_game(self, runner, installer_slug):
         """For services that allow it, add the game to Lutris and launch it"""
