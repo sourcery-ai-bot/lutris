@@ -73,8 +73,7 @@ class GameDialogCommon:
     def build_scrolled_window(widget):
         """Return a scrolled window for containing config widgets"""
         scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
-                                   Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scrolled_window.add(widget)
         return scrolled_window
 
@@ -98,14 +97,12 @@ class GameDialogCommon:
         info_box = VBox()
 
         if self.game:
-            info_box.pack_start(self._get_banner_box(), False, False,
-                                6)  # Banner
+            info_box.pack_start(self._get_banner_box(), False, False, 6)  # Banner
 
         info_box.pack_start(self._get_name_box(), False, False, 6)  # Game name
 
         if self.game:
-            info_box.pack_start(self._get_slug_box(), False, False,
-                                6)  # Game id
+            info_box.pack_start(self._get_slug_box(), False, False, 6)  # Game id
 
         self.runner_box = self._get_runner_box()
         info_box.pack_start(self.runner_box, False, False, 6)  # Runner
@@ -122,13 +119,15 @@ class GameDialogCommon:
         cache_help_label = Gtk.Label(visible=True)
         cache_help_label.set_size_request(400, -1)
         cache_help_label.set_markup(
-            _("If provided, this location will be used by installers to cache "
-              "downloaded files locally for future re-use. \nIf left empty, the "
-              "installer files are discarded after the install completion."))
+            _(
+                "If provided, this location will be used by installers to cache "
+                "downloaded files locally for future re-use. \nIf left empty, the "
+                "installer files are discarded after the install completion."
+            )
+        )
         prefs_box.pack_start(cache_help_label, False, False, 6)
 
-        prefs_box.pack_start(self._get_hide_on_game_launch_box(), False, False,
-                             6)
+        prefs_box.pack_start(self._get_hide_on_game_launch_box(), False, False, 6)
 
         info_sw = self.build_scrolled_window(prefs_box)
         self._add_notebook_tab(info_sw, _("Lutris preferences"))
@@ -171,8 +170,7 @@ class GameDialogCommon:
 
     def _get_hide_on_game_launch_box(self):
         box = Gtk.Box(spacing=12, margin_right=12, margin_left=12)
-        checkbox = Gtk.CheckButton(
-            label=_("Minimize client when a game is launched"))
+        checkbox = Gtk.CheckButton(label=_("Minimize client when a game is launched"))
         if settings.read_setting("hide_client_on_game_start") == "True":
             checkbox.set_active(True)
         checkbox.connect("toggled", self._on_hide_client_change)
@@ -181,14 +179,14 @@ class GameDialogCommon:
 
     def _on_hide_client_change(self, widget):
         """Save setting for hiding the game on game launch"""
-        settings.write_setting("hide_client_on_game_start",
-                               widget.get_active())
+        settings.write_setting("hide_client_on_game_start", widget.get_active())
 
     def _on_cache_path_set(self, entry):
         if self.timer_id:
             GLib.source_remove(self.timer_id)
-        self.timer_id = GLib.timeout_add(1000, self.save_cache_setting,
-                                         entry.get_text())
+        self.timer_id = GLib.timeout_add(
+            1000, self.save_cache_setting, entry.get_text()
+        )
 
     def save_cache_setting(self, value):
         save_cache_path(value)
@@ -247,31 +245,30 @@ class GameDialogCommon:
 
         self.banner_button = Gtk.Button()
         self._set_image("banner")
-        self.banner_button.connect("clicked", self.on_custom_image_select,
-                                   "banner")
+        self.banner_button.connect("clicked", self.on_custom_image_select, "banner")
         banner_box.pack_start(self.banner_button, False, False, 0)
 
         reset_banner_button = Gtk.Button.new_from_icon_name(
-            "edit-clear", Gtk.IconSize.MENU)
+            "edit-clear", Gtk.IconSize.MENU
+        )
         reset_banner_button.set_relief(Gtk.ReliefStyle.NONE)
         reset_banner_button.set_tooltip_text(_("Remove custom banner"))
-        reset_banner_button.connect("clicked",
-                                    self.on_custom_image_reset_clicked,
-                                    "banner")
+        reset_banner_button.connect(
+            "clicked", self.on_custom_image_reset_clicked, "banner"
+        )
         banner_box.pack_start(reset_banner_button, False, False, 0)
 
         self.icon_button = Gtk.Button()
         self._set_image("icon")
-        self.icon_button.connect("clicked", self.on_custom_image_select,
-                                 "icon")
+        self.icon_button.connect("clicked", self.on_custom_image_select, "icon")
         banner_box.pack_start(self.icon_button, False, False, 0)
 
         reset_icon_button = Gtk.Button.new_from_icon_name(
-            "edit-clear", Gtk.IconSize.MENU)
+            "edit-clear", Gtk.IconSize.MENU
+        )
         reset_icon_button.set_relief(Gtk.ReliefStyle.NONE)
         reset_icon_button.set_tooltip_text(_("Remove custom icon"))
-        reset_icon_button.connect("clicked",
-                                  self.on_custom_image_reset_clicked, "icon")
+        reset_icon_button.connect("clicked", self.on_custom_image_reset_clicked, "icon")
         banner_box.pack_start(reset_icon_button, False, False, 0)
 
         return banner_box
@@ -326,7 +323,8 @@ class GameDialogCommon:
         for runner in runners.get_installed():
             description = runner.description
             runner_liststore.append(
-                ("%s (%s)" % (runner.human_name, description), runner.name))
+                ("%s (%s)" % (runner.human_name, description), runner.name)
+            )
         return runner_liststore
 
     def on_slug_change_clicked(self, widget):
@@ -362,8 +360,7 @@ class GameDialogCommon:
             self.game.runner_name = self.runner_name
             if not self.game.runner or self.game.runner.name != self.runner_name:
                 try:
-                    self.game.runner = runners.import_runner(
-                        self.runner_name)()
+                    self.game.runner = runners.import_runner(self.runner_name)()
                 except runners.InvalidRunner:
                     pass
             self.game_box = GameBox(self.lutris_config, self.game)
@@ -441,14 +438,16 @@ class GameDialogCommon:
         """Action called when runner drop down is changed."""
         new_runner_index = widget.get_active()
         if self.runner_index and new_runner_index != self.runner_index:
-            dlg = QuestionDialog({
-                "question":
-                _("Are you sure you want to change the runner for this game ? "
-                  "This will reset the full configuration for this game and "
-                  "is not reversible."),
-                "title":
-                _("Confirm runner change"),
-            })
+            dlg = QuestionDialog(
+                {
+                    "question": _(
+                        "Are you sure you want to change the runner for this game ? "
+                        "This will reset the full configuration for this game and "
+                        "is not reversible."
+                    ),
+                    "title": _("Confirm runner change"),
+                }
+            )
 
             if dlg.result == Gtk.ResponseType.YES:
                 self.runner_index = new_runner_index
@@ -472,11 +471,11 @@ class GameDialogCommon:
             if runner_name == self.runner_name:
                 logger.debug("Runner unchanged, not creating a new config")
                 return
-            logger.info("Creating new configuration with runner %s",
-                        runner_name)
+            logger.info("Creating new configuration with runner %s", runner_name)
             self.runner_name = runner_name
-            self.lutris_config = LutrisConfig(runner_slug=self.runner_name,
-                                              level="game")
+            self.lutris_config = LutrisConfig(
+                runner_slug=self.runner_name, level="game"
+            )
         self._rebuild_tabs()
         self.notebook.set_current_page(current_page)
 
@@ -501,16 +500,17 @@ class GameDialogCommon:
         if not self.name_entry.get_text():
             ErrorDialog(_("Please fill in the name"))
             return False
-        if (self.runner_name in ("steam", "winesteam")
-                and self.lutris_config.game_config.get("appid") is None):
+        if (
+            self.runner_name in ("steam", "winesteam")
+            and self.lutris_config.game_config.get("appid") is None
+        ):
             ErrorDialog(_("Steam AppId not provided"))
             return False
         invalid_fields = []
         runner_class = import_runner(self.runner_name)
         runner_instance = runner_class()
         for config in ["game", "runner"]:
-            for k, v in getattr(self.lutris_config,
-                                config + "_config").items():
+            for k, v in getattr(self.lutris_config, config + "_config").items():
                 option = runner_instance.find_option(config + "_options", k)
                 if option is None:
                     continue
@@ -523,8 +523,9 @@ class GameDialogCommon:
                         invalid_fields.append(option.get("label"))
         if invalid_fields:
             ErrorDialog(
-                _("The following fields have invalid values: ") +
-                ", ".join(invalid_fields))
+                _("The following fields have invalid values: ")
+                + ", ".join(invalid_fields)
+            )
             return False
         return True
 
@@ -532,7 +533,8 @@ class GameDialogCommon:
         """Save game info and destroy widget. Return True if success."""
         if not self.is_valid():
             logger.warning(
-                _("Current configuration is not valid, ignoring save request"))
+                _("Current configuration is not valid, ignoring save request")
+            )
             return False
         name = self.name_entry.get_text()
 
@@ -589,14 +591,14 @@ class GameDialogCommon:
             image_path = dialog.get_filename()
             if image_type == "banner":
                 self.game.has_custom_banner = True
-                dest_path = resources.get_icon_path(self.game.slug,
-                                                    icon_type=image_type)
+                dest_path = resources.get_icon_path(
+                    self.game.slug, icon_type=image_type
+                )
                 size = BANNER_SIZE
                 file_format = "jpeg"
             else:
                 self.game.has_custom_icon = True
-                dest_path = resources.get_icon_path(self.game.slug,
-                                                    icon_type="icon")
+                dest_path = resources.get_icon_path(self.game.slug, icon_type="icon")
                 size = ICON_SIZE
                 file_format = "png"
             pixbuf = get_pixbuf(image_path, size)
@@ -611,12 +613,10 @@ class GameDialogCommon:
     def on_custom_image_reset_clicked(self, _widget, image_type):
         if image_type == "banner":
             self.game.has_custom_banner = False
-            dest_path = resources.get_icon_path(self.game.slug,
-                                                icon_type="banner")
+            dest_path = resources.get_icon_path(self.game.slug, icon_type="banner")
         elif image_type == "icon":
             self.game.has_custom_icon = False
-            dest_path = resources.get_icon_path(self.game.slug,
-                                                icon_type="icon")
+            dest_path = resources.get_icon_path(self.game.slug, icon_type="icon")
         else:
             raise ValueError("Unsupported image type %s" % image_type)
         os.remove(dest_path)

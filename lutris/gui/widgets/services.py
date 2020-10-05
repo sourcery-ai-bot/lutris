@@ -39,18 +39,18 @@ class ServiceBar(Gtk.Box):
         self.refresh_button.connect("clicked", self.on_refresh_clicked)
         self.refresh_button.set_tooltip_text(_("Reload"))
         self.refresh_button.set_image(
-            Gtk.Image.new_from_icon_name("view-refresh-symbolic",
-                                         Gtk.IconSize.MENU))
+            Gtk.Image.new_from_icon_name("view-refresh-symbolic", Gtk.IconSize.MENU)
+        )
 
         button_box.pack_start(self.refresh_button, False, False, self.MARGIN)
         self.connect_button = Gtk.Button()
         self.connect_button.connect("clicked", self.on_connect_clicked)
         if self.service.online:
-            button_box.pack_start(self.connect_button, False, False,
-                                  self.MARGIN)
+            button_box.pack_start(self.connect_button, False, False, self.MARGIN)
         self.pack_start(button_box, False, False, 0)
         service_logo = get_icon(self.service.icon, size=(24, 24)) or Gtk.Label(
-            self.name)
+            self.name
+        )
         service_logo.show()
         self.pack_start(service_logo, True, True, 0)
 
@@ -85,16 +85,17 @@ class ServiceBar(Gtk.Box):
             self.refresh_button.hide()
         self.connect_button.set_tooltip_text(label)
         self.connect_button.set_image(
-            Gtk.Image.new_from_icon_name(icon_name, Gtk.IconSize.MENU))
+            Gtk.Image.new_from_icon_name(icon_name, Gtk.IconSize.MENU)
+        )
 
     def on_disconnect(self, *_args):
         """Callback from user disconnect"""
-        dlg = dialogs.QuestionDialog({
-            "question":
-            _("Do you want to log out from Lutris?"),
-            "title":
-            _("Log out?"),
-        })
+        dlg = dialogs.QuestionDialog(
+            {
+                "question": _("Do you want to log out from Lutris?"),
+                "title": _("Log out?"),
+            }
+        )
         if dlg.result != Gtk.ResponseType.YES:
             return
         api.disconnect()

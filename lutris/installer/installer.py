@@ -70,8 +70,7 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
         if self.service.id == "gog":
             return game_config.get("gogid") or installer.get("gogid")
         if self.service.id == "humblebundle":
-            return game_config.get("humbleid") or installer.get(
-                "humblestoreid")
+            return game_config.get("humbleid") or installer.get("humblestoreid")
 
     @property
     def script_pretty(self):
@@ -95,12 +94,13 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
         if self.runner in ("steam", "winesteam"):
             # Steam games installs in their steamapps directory
             return False
-        if (self.files or self.script.get("game", {}).get("gog")
-                or self.script.get("game", {}).get("prefix")):
+        if (
+            self.files
+            or self.script.get("game", {}).get("gog")
+            or self.script.get("game", {}).get("prefix")
+        ):
             return True
-        command_names = [
-            list(c.keys())[0] for c in self.script.get("installer", [])
-        ]
+        command_names = [list(c.keys())[0] for c in self.script.get("installer", [])]
         return "insert-disc" in command_names
 
     def get_errors(self):
@@ -117,13 +117,15 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
                 errors.append("Missing field '%s'" % field)
 
         # Check that libretro installers have a core specified
-        if self.runner == "libretro" and ("game" not in self.script or
-                                          "core" not in self.script["game"]):
+        if self.runner == "libretro" and (
+            "game" not in self.script or "core" not in self.script["game"]
+        ):
             errors.append("Missing libretro core in game section")
 
         # Check that Steam games have an AppID
         if self.runner in ("steam", "winesteam") and not self.script.get(
-                "game", {}).get("appid"):
+            "game", {}
+        ).get("appid"):
             errors.append("Missing appid for Steam game")
 
         # Check that installers don't contain both 'requires' and 'extends'
@@ -137,8 +139,8 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
         for index, file in enumerate(self.files):
             if file.url.startswith("N/A"):
                 logger.debug(
-                    "File %s detected as user provided, removing from files",
-                    file.id)
+                    "File %s detected as user provided, removing from files", file.id
+                )
                 self.files.pop(index)
                 installer_file_id = file.id
                 break
@@ -154,11 +156,9 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
         installer_file_id = self.pop_user_provided_file()
         if not installer_file_id:
             raise UnavailableGame("Installer has no user provided file")
-        installer_files = self.service.get_installer_files(
-            self, installer_file_id)
+        installer_files = self.service.get_installer_files(self, installer_file_id)
         if not installer_files:
-            raise UnavailableGame("Unable to get the game on %s" %
-                                  self.service.name)
+            raise UnavailableGame("Unable to get the game on %s" % self.service.name)
         for installer_file in installer_files:
             self.files.append(installer_file)
 
@@ -177,8 +177,7 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
                 config[key] = [self.interpreter._substitute(i) for i in value]
             elif isinstance(value, dict):
                 config[key] = {
-                    k: self.interpreter._substitute(v)
-                    for (k, v) in value.items()
+                    k: self.interpreter._substitute(v) for (k, v) in value.items()
                 }
             elif isinstance(value, bool):
                 config[key] = value
@@ -190,11 +189,10 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
         """Return the game configuration"""
         if self.requires:
             # Load the base game config
-            required_game = get_game_by_field(self.requires,
-                                              field="installer_slug")
+            required_game = get_game_by_field(self.requires, field="installer_slug")
             base_config = LutrisConfig(
-                runner_slug=self.runner,
-                game_config_id=required_game["configpath"])
+                runner_slug=self.runner, game_config_id=required_game["configpath"]
+            )
             config = base_config.game_level
         else:
             config = {"game": {}}
@@ -203,10 +201,10 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
         if "system" in self.script:
             config["system"] = self._substitute_config(self.script["system"])
         if self.runner in self.script and self.script[self.runner]:
-            config[self.runner] = self._substitute_config(
-                self.script[self.runner])
+            config[self.runner] = self._substitute_config(self.script[self.runner])
         launcher, launcher_config = self.get_game_launcher_config(
-            self.interpreter.game_files)
+            self.interpreter.game_files
+        )
         if launcher:
             config["game"][launcher] = launcher_config
 
@@ -214,21 +212,21 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
             try:
                 config["game"].update(self.script["game"])
             except ValueError:
-                raise ScriptingError("Invalid 'game' section",
-                                     self.script["game"])
+                raise ScriptingError("Invalid 'game' section", self.script["game"])
             config["game"] = self._substitute_config(config["game"])
             if AUTO_ELF_EXE in config["game"].get("exe", ""):
                 config["game"]["exe"] = find_linux_game_executable(
-                    self.interpreter.target_path, make_executable=True)
+                    self.interpreter.target_path, make_executable=True
+                )
             if AUTO_WIN32_EXE in config["game"].get("exe", ""):
                 config["game"]["exe"] = find_windows_game_executable(
-                    self.interpreter.target_path)
+                    self.interpreter.target_path
+                )
         return config
 
     def write_game_config(self):
         configpath = make_game_config_id(self.slug)
-        config_filename = os.path.join(settings.CONFIG_DIR,
-                                       "games/%s.yml" % configpath)
+        config_filename = os.path.join(settings.CONFIG_DIR, "games/%s.yml" % configpath)
         config = self.get_game_config()
         yaml_config = yaml.safe_dump(config, default_flow_style=False)
         with open(config_filename, "w") as config_file:
@@ -284,8 +282,9 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
             if launcher_value in game_files:
                 launcher_value = game_files[launcher_value]
             elif self.interpreter.target_path and os.path.exists(
-                    os.path.join(self.interpreter.target_path,
-                                 launcher_value)):
-                launcher_value = os.path.join(self.interpreter.target_path,
-                                              launcher_value)
+                os.path.join(self.interpreter.target_path, launcher_value)
+            ):
+                launcher_value = os.path.join(
+                    self.interpreter.target_path, launcher_value
+                )
         return launcher, launcher_value

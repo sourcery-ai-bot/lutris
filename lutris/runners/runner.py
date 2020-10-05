@@ -40,8 +40,7 @@ class Runner:  # pylint: disable=too-many-public-methods
         """Initialize runner."""
         self.config = config
         if config:
-            self.game_data = get_game_by_field(self.config.game_config_id,
-                                               "configpath")
+            self.game_data = get_game_by_field(self.config.game_config_id, "configpath")
         else:
             self.game_data = {}
 
@@ -139,16 +138,14 @@ class Runner:  # pylint: disable=too-many-public-methods
     def get_runner_options(self):
         runner_options = self.runner_options[:]
         if self.runner_executable:
-            runner_options.append({
-                "option":
-                "runner_executable",
-                "type":
-                "file",
-                "label":
-                _("Custom executable for the runner"),
-                "advanced":
-                True,
-            })
+            runner_options.append(
+                {
+                    "option": "runner_executable",
+                    "type": "file",
+                    "label": _("Custom executable for the runner"),
+                    "advanced": True,
+                }
+            )
         return runner_options
 
     def get_executable(self):
@@ -157,8 +154,7 @@ class Runner:  # pylint: disable=too-many-public-methods
             if os.path.isfile(runner_executable):
                 return runner_executable
         if not self.runner_executable:
-            raise ValueError("runner_executable not set for {}".format(
-                self.name))
+            raise ValueError("runner_executable not set for {}".format(self.name))
         return os.path.join(settings.RUNNER_DIR, self.runner_executable)
 
     def get_env(self, os_env=False):
@@ -168,8 +164,7 @@ class Runner:  # pylint: disable=too-many-public-methods
             env.update(os.environ.copy())
 
         # Override SDL2 controller configuration
-        sdl_gamecontrollerconfig = self.system_config.get(
-            "sdl_gamecontrollerconfig")
+        sdl_gamecontrollerconfig = self.system_config.get("sdl_gamecontrollerconfig")
         if sdl_gamecontrollerconfig:
             path = os.path.expanduser(sdl_gamecontrollerconfig)
             if system.path_exists(path):
@@ -180,7 +175,8 @@ class Runner:  # pylint: disable=too-many-public-methods
         # Set monitor to use for SDL 1 games
         if self.system_config.get("sdl_video_fullscreen"):
             env["SDL_VIDEO_FULLSCREEN_DISPLAY"] = self.system_config[
-                "sdl_video_fullscreen"]
+                "sdl_video_fullscreen"
+            ]
 
         # DRI Prime
         if self.system_config.get("dri_prime"):
@@ -220,7 +216,8 @@ class Runner:  # pylint: disable=too-many-public-methods
             if not ld_library_path:
                 ld_library_path = "$LD_LIBRARY_PATH"
             env["LD_LIBRARY_PATH"] = ":".join(
-                [runtime_ld_library_path, ld_library_path])
+                [runtime_ld_library_path, ld_library_path]
+            )
 
         # Apply user overrides at the end
         env.update(self.system_config.get("env") or {})
@@ -237,8 +234,9 @@ class Runner:  # pylint: disable=too-many-public-methods
             dict
 
         """
-        return runtime.get_env(prefer_system_libs=self.system_config.get(
-            "prefer_system_libs", True))
+        return runtime.get_env(
+            prefer_system_libs=self.system_config.get("prefer_system_libs", True)
+        )
 
     def prelaunch(self):
         """Run actions before running the game, override this method in runners"""
@@ -247,8 +245,7 @@ class Runner:  # pylint: disable=too-many-public-methods
             if lib in LINUX_SYSTEM.shared_libraries:
                 if self.arch:
                     if self.arch in [
-                            _lib.arch
-                            for _lib in LINUX_SYSTEM.shared_libraries[lib]
+                        _lib.arch for _lib in LINUX_SYSTEM.shared_libraries[lib]
                     ]:
                         available_libs.add(lib)
                 else:
@@ -296,13 +293,15 @@ class Runner:  # pylint: disable=too-many-public-methods
 
         Return success of runner installation.
         """
-        dialog = dialogs.QuestionDialog({
-            "question":
-            _("The required runner is not installed.\n"
-              "Do you wish to install it now?"),
-            "title":
-            _("Required runner unavailable"),
-        })
+        dialog = dialogs.QuestionDialog(
+            {
+                "question": _(
+                    "The required runner is not installed.\n"
+                    "Do you wish to install it now?"
+                ),
+                "title": _("Required runner unavailable"),
+            }
+        )
         if Gtk.ResponseType.YES == dialog.result:
 
             from lutris.gui.dialogs import ErrorDialog
@@ -310,7 +309,9 @@ class Runner:  # pylint: disable=too-many-public-methods
 
             try:
                 if hasattr(self, "get_version"):
-                    version = self.get_version(use_default=False)  # pylint: disable=no-member
+                    version = self.get_version(
+                        use_default=False
+                    )  # pylint: disable=no-member
                     self.install(downloader=simple_downloader, version=version)
                 else:
                     self.install(downloader=simple_downloader)
@@ -338,8 +339,7 @@ class Runner:  # pylint: disable=too-many-public-methods
             self.name,
             " (version: %s)" % version if version else "",
         )
-        request = Request("{}/api/runners/{}".format(settings.SITE_URL,
-                                                     self.name))
+        request = Request("{}/api/runners/{}".format(settings.SITE_URL, self.name))
         runner_info = request.get().json
         if not runner_info:
             logger.error("Failed to get runner information")
@@ -356,9 +356,7 @@ class Runner:  # pylint: disable=too-many-public-methods
             return versions_for_arch[0]
 
         if len(versions_for_arch) > 1:
-            default_version = [
-                v for v in versions_for_arch if v["default"] is True
-            ]
+            default_version = [v for v in versions_for_arch if v["default"] is True]
             if default_version:
                 return default_version[0]
         elif len(versions) == 1 and system.LINUX_SYSTEM.is_64_bit:
@@ -383,11 +381,10 @@ class Runner:  # pylint: disable=too-many-public-methods
         runner = self.get_runner_version(version)
         if not runner:
             raise RunnerInstallationError(
-                "Failed to retrieve {} ({}) information".format(
-                    self.name, version))
+                "Failed to retrieve {} ({}) information".format(self.name, version)
+            )
         if not downloader:
-            raise RuntimeError("Missing mandatory downloader for runner %s" %
-                               self)
+            raise RuntimeError("Missing mandatory downloader for runner %s" % self)
         opts = {"downloader": downloader, "callback": callback}
         if "wine" in self.name:
             opts["merge_single"] = True
@@ -422,22 +419,18 @@ class Runner:  # pylint: disable=too-many-public-methods
             },
         )
 
-    def extract(self,
-                archive=None,
-                dest=None,
-                merge_single=None,
-                callback=None):
+    def extract(self, archive=None, dest=None, merge_single=None, callback=None):
         if not system.path_exists(archive):
-            raise RunnerInstallationError(
-                "Failed to extract {}".format(archive))
+            raise RunnerInstallationError("Failed to extract {}".format(archive))
         try:
             extract_archive(archive, dest, merge_single=merge_single)
         except ExtractFailure as ex:
             logger.error(
-                "Failed to extract the archive %s file may be corrupt",
-                archive)
-            raise RunnerInstallationError("Failed to extract {}: {}".format(
-                archive, ex))
+                "Failed to extract the archive %s file may be corrupt", archive
+            )
+            raise RunnerInstallationError(
+                "Failed to extract {}: {}".format(archive, ex)
+            )
         os.remove(archive)
 
         if self.name == "wine":

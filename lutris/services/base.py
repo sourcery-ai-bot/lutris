@@ -51,8 +51,7 @@ class BaseService(GObject.Object):
             str(game["appid"]): game
             for game in ServiceGameCollection.get_for_service(self.id)
         }
-        lutris_games = api.get_api_games(list(service_games.keys()),
-                                         service=self.id)
+        lutris_games = api.get_api_games(list(service_games.keys()), service=self.id)
         for lutris_game in lutris_games:
             for provider_game in lutris_game["provider_games"]:
                 if provider_game["service"] != self.id:
@@ -60,10 +59,7 @@ class BaseService(GObject.Object):
                 service_game = service_games.get(provider_game["slug"])
                 if not service_game:
                     continue
-                conditions = {
-                    "appid": service_game["appid"],
-                    "service": self.id
-                }
+                conditions = {"appid": service_game["appid"], "service": self.id}
                 sql.db_update(
                     PGA_DB,
                     "service_games",
@@ -90,9 +86,9 @@ class BaseService(GObject.Object):
 
         if service_installers:
             application = Gio.Application.get_default()
-            application.show_installer_window(service_installers,
-                                              service=self,
-                                              appid=appid)
+            application.show_installer_window(
+                service_installers, service=self, appid=appid
+            )
 
 
 class OnlineService(BaseService):
@@ -140,8 +136,9 @@ class OnlineService(BaseService):
         """Load cookies from disk"""
         # logger.debug("Loading cookies from %s", self.cookies_path)
         if not os.path.exists(self.cookies_path):
-            logger.warning("No cookies found in %s, please authenticate first",
-                           self.cookies_path)
+            logger.warning(
+                "No cookies found in %s, please authenticate first", self.cookies_path
+            )
             return
         cookiejar = WebkitCookieJar(self.cookies_path)
         cookiejar.load()

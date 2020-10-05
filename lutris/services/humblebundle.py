@@ -120,9 +120,9 @@ class HumbleBundleService(OnlineService):
         if os.path.exists(cache_filename):
             with open(cache_filename) as cache_file:
                 return json.load(cache_file)
-        response = self.make_api_request(self.api_url +
-                                         "api/v1/order/%s?all_tpkds=true" %
-                                         gamekey)
+        response = self.make_api_request(
+            self.api_url + "api/v1/order/%s?all_tpkds=true" % gamekey
+        )
         if not os.path.exists(self.cache_path):
             os.makedirs(self.cache_path)
         with open(cache_filename, "w") as cache_file:
@@ -155,8 +155,7 @@ class HumbleBundleService(OnlineService):
         """Return all orders"""
         gamekeys = self.get_gamekeys_from_local_orders()
         if not gamekeys:
-            gamekeys = self.make_api_request(self.api_url +
-                                             "api/v1/user/order")
+            gamekeys = self.make_api_request(self.api_url + "api/v1/user/order")
         return [self.get_order(gamekey["gamekey"]) for gamekey in gamekeys]
 
     @staticmethod
@@ -187,8 +186,7 @@ class HumbleBundleService(OnlineService):
     def get_installer_files(self, installer, installer_file_id):
         """Replace the user provided file with download links from Humble Bundle"""
         try:
-            link = get_humble_download_link(installer.service_appid,
-                                            installer.runner)
+            link = get_humble_download_link(installer.service_appid, installer.runner)
         except Exception as ex:
             logger.exception("Failed to get Humble Bundle game: %s", ex)
             raise UnavailableGame
@@ -199,10 +197,7 @@ class HumbleBundleService(OnlineService):
             InstallerFile(
                 installer.game_slug,
                 installer_file_id,
-                {
-                    "url": link,
-                    "filename": filename
-                },
+                {"url": link, "filename": filename},
             )
         ]
 
@@ -228,11 +223,11 @@ class HumbleBundleService(OnlineService):
         logger.debug(details)
         system_config = {}
         if "linux" in platforms and self.platform_has_downloads(
-                details["downloads"], "linux"):
+            details["downloads"], "linux"
+        ):
             runner = "linux"
             game_config = {"exe": AUTO_ELF_EXE}
-            filename = self.get_filename_for_platform(details["downloads"],
-                                                      "linux")
+            filename = self.get_filename_for_platform(details["downloads"], "linux")
             if filename.lower().endswith(".sh"):
                 script = [
                     {
@@ -301,31 +296,18 @@ class HumbleBundleService(OnlineService):
                             "dst": "$CACHE",
                         }
                     },
-                    {
-                        "merge": {
-                            "src": "$CACHE/data/",
-                            "dst": "$GAMEDIR"
-                        }
-                    },
+                    {"merge": {"src": "$CACHE/data/", "dst": "$GAMEDIR"}},
                 ]
             else:
                 script = [{"extract": {"file": "humblegame"}}]
-                system_config = {
-                    "gamemode": "false"
-                }  # Unity games crash with gamemode
+                system_config = {"gamemode": "false"}  # Unity games crash with gamemode
         elif "windows" in platforms:
             runner = "wine"
             game_config = {"exe": AUTO_WIN32_EXE, "prefix": "$GAMEDIR"}
-            filename = self.get_filename_for_platform(details["downloads"],
-                                                      "windows")
+            filename = self.get_filename_for_platform(details["downloads"], "windows")
             if filename.lower().endswith(".zip"):
                 script = [
-                    {
-                        "task": {
-                            "name": "create_prefix",
-                            "prefix": "$GAMEDIR"
-                        }
-                    },
+                    {"task": {"name": "create_prefix", "prefix": "$GAMEDIR"}},
                     {
                         "extract": {
                             "file": "humblegame",
@@ -334,12 +316,7 @@ class HumbleBundleService(OnlineService):
                     },
                 ]
             else:
-                script = [{
-                    "task": {
-                        "name": "wineexec",
-                        "executable": "humblegame"
-                    }
-                }]
+                script = [{"task": {"name": "wineexec", "executable": "humblegame"}}]
         else:
             logger.warning("Unsupported platforms: %s", platforms)
             return {}
@@ -351,16 +328,12 @@ class HumbleBundleService(OnlineService):
             "runner": runner,
             "humbleid": db_game["appid"],
             "script": {
-                "game":
-                game_config,
-                "system":
-                system_config,
-                "files": [{
-                    "humblegame":
-                    "N/A:Select the installer from Humble Bundle"
-                }],
-                "installer":
-                script,
+                "game": game_config,
+                "system": system_config,
+                "files": [
+                    {"humblegame": "N/A:Select the installer from Humble Bundle"}
+                ],
+                "installer": script,
             },
         }
 
@@ -380,8 +353,11 @@ def pick_download_url_from_download_info(download_info):
         )
         sorted_downloads = []
         for _download in download_info["download_struct"]:
-            if ("deb" in _download["name"] or "rpm" in _download["name"]
-                    or "32" in _download["name"]):
+            if (
+                "deb" in _download["name"]
+                or "rpm" in _download["name"]
+                or "32" in _download["name"]
+            ):
                 sorted_downloads.append(_download)
             else:
                 sorted_downloads.insert(0, _download)
@@ -395,8 +371,9 @@ def get_humble_download_link(humbleid, runner):
     platform = runner if runner != "wine" else "windows"
     downloads = service.get_downloads(humbleid, platform)
     if not downloads:
-        logger.error("Game %s for %s not found in the Humble Bundle library",
-                     humbleid, platform)
+        logger.error(
+            "Game %s for %s not found in the Humble Bundle library", humbleid, platform
+        )
         return
     logger.info("Found %s download for %s", len(downloads), humbleid)
     download = downloads[0]
