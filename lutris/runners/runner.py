@@ -4,8 +4,7 @@ from gettext import gettext as _
 
 from gi.repository import Gtk
 
-from lutris import runtime
-from lutris import settings
+from lutris import runtime, settings
 from lutris.command import MonitoredCommand
 from lutris.config import LutrisConfig
 from lutris.database.games import get_game_by_field
@@ -13,8 +12,7 @@ from lutris.exceptions import UnavailableLibraries
 from lutris.gui import dialogs
 from lutris.runners import RunnerInstallationError
 from lutris.util import system
-from lutris.util.extract import extract_archive
-from lutris.util.extract import ExtractFailure
+from lutris.util.extract import ExtractFailure, extract_archive
 from lutris.util.http import Request
 from lutris.util.linux import LINUX_SYSTEM
 from lutris.util.log import logger
