@@ -40,7 +40,8 @@ def open_uri(uri):
     try:
         Gtk.show_uri(None, uri, Gdk.CURRENT_TIME)
     except GLib.Error as ex:
-        logger.exception("Failed to open URI %s: %s, falling back to xdg-open", uri, ex)
+        logger.exception("Failed to open URI %s: %s, falling back to xdg-open",
+                         uri, ex)
         system.execute(["xdg-open", uri])
 
 
@@ -63,7 +64,8 @@ def get_stock_icon(name, size):
     """Return a picxbuf from a stock icon name"""
     theme = Gtk.IconTheme.get_default()
     try:
-        return theme.load_icon(name, size, Gtk.IconLookupFlags.GENERIC_FALLBACK)
+        return theme.load_icon(name, size,
+                               Gtk.IconLookupFlags.GENERIC_FALLBACK)
     except GLib.GError:
         logger.error("Failed to read icon %s", name)
         return None
@@ -79,7 +81,8 @@ def get_icon(icon_name, icon_format="image", size=None, icon_type="runner"):
     icon_type -- Retrieve either a 'runner' or 'platform' icon (default 'runner')
     """
     filename = icon_name.lower().replace(" ", "") + ".png"
-    icon_path = os.path.join(settings.RUNTIME_DIR, "icons/hicolor/64x64/apps", filename)
+    icon_path = os.path.join(settings.RUNTIME_DIR, "icons/hicolor/64x64/apps",
+                             filename)
     if not os.path.exists(icon_path):
         logger.error("Unable to find icon '%s'", icon_path)
         return None
@@ -98,11 +101,9 @@ def get_icon(icon_name, icon_format="image", size=None, icon_type="runner"):
 def get_overlay(overlay_path, size):
     width, height = size
     transparent_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
-        overlay_path, width, height
-    )
+        overlay_path, width, height)
     transparent_pixbuf = transparent_pixbuf.scale_simple(
-        width, height, GdkPixbuf.InterpType.NEAREST
-    )
+        width, height, GdkPixbuf.InterpType.NEAREST)
     return transparent_pixbuf
 
 
@@ -116,7 +117,8 @@ def get_pixbuf_for_game(image_abspath, size, is_installed=True):
     # icon_path = resources.get_icon_path(game_slug)
     pixbuf = get_pixbuf(image_abspath, size, fallback=get_default_icon(size))
     if not is_installed:
-        unavailable_game_overlay = os.path.join(datapath.get(), "media/unavailable.png")
+        unavailable_game_overlay = os.path.join(datapath.get(),
+                                                "media/unavailable.png")
         transparent_pixbuf = get_overlay(unavailable_game_overlay, size).copy()
         pixbuf.composite(
             transparent_pixbuf,
@@ -152,7 +154,8 @@ def convert_to_background(background_path, target_size=(320, 1080)):
     coverart = coverart.crop((offset, 0, target_width + offset, image_height))
 
     # Resize canvas of coverart by putting transparent pixels on the bottom
-    coverart_bg = Image.new("RGBA", (target_width, target_height), (0, 0, 0, 0))
+    coverart_bg = Image.new("RGBA", (target_width, target_height),
+                            (0, 0, 0, 0))
     coverart_bg.paste(coverart, (0, 0, target_width, image_height))
 
     # Apply a tint to the base image
@@ -171,9 +174,9 @@ def image2pixbuf(image):
     """Converts a PIL Image to a GDK Pixbuf"""
     image_array = array.array("B", image.tobytes())
     width, height = image.size
-    return GdkPixbuf.Pixbuf.new_from_data(
-        image_array, GdkPixbuf.Colorspace.RGB, True, 8, width, height, width * 4
-    )
+    return GdkPixbuf.Pixbuf.new_from_data(image_array,
+                                          GdkPixbuf.Colorspace.RGB, True, 8,
+                                          width, height, width * 4)
 
 
 def get_builder_from_file(glade_file):

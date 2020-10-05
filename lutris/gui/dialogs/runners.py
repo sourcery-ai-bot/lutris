@@ -74,8 +74,7 @@ class RunnersDialog(GtkBuilderDialog):
         # Icon
         runner_icon = builder.get_object("runner_icon")
         runner_icon.set_from_pixbuf(
-            get_icon(runner_name, icon_format="pixbuf", size=ICON_SIZE)
-        )
+            get_icon(runner_name, icon_format="pixbuf", size=ICON_SIZE))
 
         # Label
         runner_name = builder.get_object("runner_name")
@@ -90,21 +89,17 @@ class RunnersDialog(GtkBuilderDialog):
 
         # Buttons
         self.versions_button = builder.get_object("manage_versions")
-        self.versions_button.connect(
-            "clicked", self.on_versions_clicked, runner, runner_label
-        )
+        self.versions_button.connect("clicked", self.on_versions_clicked,
+                                     runner, runner_label)
         self.install_button = builder.get_object("install_runner")
-        self.install_button.connect(
-            "clicked", self.on_install_clicked, runner, runner_label
-        )
+        self.install_button.connect("clicked", self.on_install_clicked, runner,
+                                    runner_label)
         self.remove_button = builder.get_object("remove_runner")
-        self.remove_button.connect(
-            "clicked", self.on_remove_clicked, runner, runner_label
-        )
+        self.remove_button.connect("clicked", self.on_remove_clicked, runner,
+                                   runner_label)
         self.configure_button = builder.get_object("configure_runner")
-        self.configure_button.connect(
-            "clicked", self.on_configure_clicked, runner, runner_label
-        )
+        self.configure_button.connect("clicked", self.on_configure_clicked,
+                                      runner, runner_label)
         self.set_button_display(runner)
 
         return hbox
@@ -138,8 +133,10 @@ class RunnersDialog(GtkBuilderDialog):
 
     def on_versions_clicked(self, widget, runner, runner_label):
         dlg_title = _("Manage %s versions") % runner.name
-        versions_dialog = RunnerInstallDialog(dlg_title, self.dialog, runner.name)
-        versions_dialog.connect("destroy", self.set_install_state, runner, runner_label)
+        versions_dialog = RunnerInstallDialog(dlg_title, self.dialog,
+                                              runner.name)
+        versions_dialog.connect("destroy", self.set_install_state, runner,
+                                runner_label)
 
     def on_install_clicked(self, widget, runner, runner_label):
         """Install a runner."""
@@ -149,8 +146,8 @@ class RunnersDialog(GtkBuilderDialog):
         try:
             runner.install(downloader=simple_downloader)
         except (
-            runners.RunnerInstallationError,
-            runners.NonInstallableRunnerError,
+                runners.RunnerInstallationError,
+                runners.NonInstallableRunnerError,
         ) as ex:
             ErrorDialog(ex.message, parent=self)
         if runner.is_installed():
@@ -159,7 +156,8 @@ class RunnersDialog(GtkBuilderDialog):
 
     def on_configure_clicked(self, widget, runner, runner_label):
         config_dialog = RunnerConfigDialog(runner, parent=self.dialog)
-        config_dialog.connect("destroy", self.set_install_state, runner, runner_label)
+        config_dialog.connect("destroy", self.set_install_state, runner,
+                              runner_label)
 
     def on_remove_clicked(self, widget, runner, runner_label):
         if not runner.is_installed():
@@ -168,35 +166,33 @@ class RunnersDialog(GtkBuilderDialog):
 
         if runner.multiple_versions:
             logger.info("Removing multiple versions")
-            builder = get_builder_from_file("runner-remove-all-versions-dialog.ui")
+            builder = get_builder_from_file(
+                "runner-remove-all-versions-dialog.ui")
             builder.connect_signals(self)
             remove_confirm_button = builder.get_object("remove_confirm_button")
-            remove_confirm_button.connect(
-                "clicked", self.on_remove_all_clicked, runner, runner_label
-            )
-            all_versions_label = builder.get_object("runner_all_versions_label")
-            all_versions_label.set_markup(
-                all_versions_label.get_label() % runner.human_name
-            )
+            remove_confirm_button.connect("clicked",
+                                          self.on_remove_all_clicked, runner,
+                                          runner_label)
+            all_versions_label = builder.get_object(
+                "runner_all_versions_label")
+            all_versions_label.set_markup(all_versions_label.get_label() %
+                                          runner.human_name)
             self.all_versions_dialog = builder.get_object(
-                "runner_remove_all_versions_dialog"
-            )
+                "runner_remove_all_versions_dialog")
             self.all_versions_dialog.set_parent(self.dialog)
             self.all_versions_dialog.show()
         else:
             builder = get_builder_from_file("runner-remove-confirm-dialog.ui")
             builder.connect_signals(self)
             remove_confirm_button = builder.get_object("remove_confirm_button")
-            remove_confirm_button.connect(
-                "clicked", self.on_remove_confirm_clicked, runner, runner_label
-            )
+            remove_confirm_button.connect("clicked",
+                                          self.on_remove_confirm_clicked,
+                                          runner, runner_label)
             runner_remove_label = builder.get_object("runner_remove_label")
-            runner_remove_label.set_markup(
-                runner_remove_label.get_label() % runner.human_name
-            )
+            runner_remove_label.set_markup(runner_remove_label.get_label() %
+                                           runner.human_name)
             self.remove_confirm_dialog = builder.get_object(
-                "runner_remove_confirm_dialog"
-            )
+                "runner_remove_confirm_dialog")
             self.remove_confirm_dialog.show()
 
     def on_remove_confirm_clicked(self, widget, runner, runner_label):

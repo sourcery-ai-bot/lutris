@@ -24,12 +24,12 @@ class UnauthorizedAccess(Exception):
 
 class Request:
     def __init__(
-        self,
-        url,
-        timeout=30,
-        stop_request=None,
-        headers=None,
-        cookies=None,
+            self,
+            url,
+            timeout=30,
+            stop_request=None,
+            headers=None,
+            cookies=None,
     ):
 
         if not url:
@@ -56,7 +56,8 @@ class Request:
         if headers is None:
             headers = {}
         if not isinstance(headers, dict):
-            raise TypeError("HTTP headers needs to be a dict ({})".format(headers))
+            raise TypeError(
+                "HTTP headers needs to be a dict ({})".format(headers))
         self.headers.update(headers)
         if cookies:
             cookie_processor = urllib.request.HTTPCookieProcessor(cookies)
@@ -70,7 +71,9 @@ class Request:
 
     def get(self, data=None):
         logger.debug("GET %s", self.url)
-        req = urllib.request.Request(url=self.url, data=data, headers=self.headers)
+        req = urllib.request.Request(url=self.url,
+                                     data=data,
+                                     headers=self.headers)
         try:
             if self.opener:
                 request = self.opener.open(req, timeout=self.timeout)
@@ -81,9 +84,11 @@ class Request:
                 raise UnauthorizedAccess("Access to %s denied" % self.url)
             raise HTTPError("Request to %s failed: %s" % (self.url, error))
         except (socket.timeout, urllib.error.URLError) as error:
-            raise HTTPError("Unable to connect to server %s: %s" % (self.url, error))
+            raise HTTPError("Unable to connect to server %s: %s" %
+                            (self.url, error))
         if request.getcode() > 200:
-            logger.debug("Server responded with status code %s", request.getcode())
+            logger.debug("Server responded with status code %s",
+                         request.getcode())
         try:
             self.total_size = int(request.info().get("Content-Length").strip())
         except AttributeError:
@@ -128,11 +133,8 @@ class Request:
             try:
                 return json.loads(self.text)
             except json.decoder.JSONDecodeError:
-                raise ValueError(
-                    "Invalid response ({}:{}): {}".format(
-                        self.url, self.status_code, self.text[:80]
-                    )
-                )
+                raise ValueError("Invalid response ({}:{}): {}".format(
+                    self.url, self.status_code, self.text[:80]))
         return {}
 
     @property

@@ -10,8 +10,8 @@ from lutris.gui.views import COL_ID
 class GameView:
     # pylint: disable=no-member
     __gsignals__ = {
-        "game-selected": (GObject.SIGNAL_RUN_FIRST, None, (str,)),
-        "game-activated": (GObject.SIGNAL_RUN_FIRST, None, (str,)),
+        "game-selected": (GObject.SIGNAL_RUN_FIRST, None, (str, )),
+        "game-activated": (GObject.SIGNAL_RUN_FIRST, None, (str, )),
         "remove-game": (GObject.SIGNAL_RUN_FIRST, None, ()),
     }
 
@@ -32,9 +32,8 @@ class GameView:
         view.current_path = view.get_path_at_pos(event.x, event.y)
         if view.current_path:
             view.select()
-            selected_id = self.get_selected_id(
-                self.get_model().get_iter(view.current_path)
-            )
+            selected_id = self.get_selected_id(self.get_model().get_iter(
+                view.current_path))
             game_row = self.game_store.get_row_by_id(selected_id)
             game_id = None
             if self.service:

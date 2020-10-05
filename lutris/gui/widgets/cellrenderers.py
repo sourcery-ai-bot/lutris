@@ -34,9 +34,7 @@ class CellRendererButton(Gtk.CellRenderer):
         self.layout = layout
 
     @staticmethod
-    def do_get_size(
-        widget, cell_area=None
-    ):  # pylint: disable=arguments-differ,unused-argument
+    def do_get_size(widget, cell_area=None):  # pylint: disable=arguments-differ,unused-argument
         height = 20
         max_width = 100
         if cell_area:
@@ -48,9 +46,7 @@ class CellRendererButton(Gtk.CellRenderer):
             )
         return 0, 0, max_width, height
 
-    def do_render(
-        self, cr, widget, bg_area, cell_area, flags
-    ):  # pylint: disable=arguments-differ,unused-argument
+    def do_render(self, cr, widget, bg_area, cell_area, flags):  # pylint: disable=arguments-differ,unused-argument
         context = widget.get_style_context()
         context.save()
         context.add_class(Gtk.STYLE_CLASS_BUTTON)

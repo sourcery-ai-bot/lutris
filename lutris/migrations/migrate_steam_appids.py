@@ -15,6 +15,9 @@ def migrate():
         sql.db_update(
             PGA_DB,
             "games",
-            {"service": "steam", "service_id": game["steamid"]},
+            {
+                "service": "steam",
+                "service_id": game["steamid"]
+            },
             {"id": game["id"]},
         )

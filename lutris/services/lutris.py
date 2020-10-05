@@ -89,11 +89,9 @@ class LutrisService(OnlineService):
         if not credentials:
             return []
         url = settings.SITE_URL + "/api/games/library/%s" % urllib.parse.quote(
-            credentials["username"]
-        )
+            credentials["username"])
         request = http.Request(
-            url, headers={"Authorization": "Token " + credentials["token"]}
-        )
+            url, headers={"Authorization": "Token " + credentials["token"]})
         try:
             response = request.get()
         except http.HTTPError as ex:

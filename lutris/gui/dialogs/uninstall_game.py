@@ -36,16 +36,16 @@ class UninstallGameDialog(GtkBuilderDialog):
         self.callback = callback
         runner = self.game.runner
 
-        self.substitute_label(
-            self.builder.get_object("description_label"), "game", self.game.name
-        )
+        self.substitute_label(self.builder.get_object("description_label"),
+                              "game", self.game.name)
 
         self.substitute_label(
             self.builder.get_object("remove_from_library_button"),
             "game",
             self.game.name,
         )
-        remove_contents_button = self.builder.get_object("remove_contents_button")
+        remove_contents_button = self.builder.get_object(
+            "remove_contents_button")
         if self.game.is_installed:
             path = self.game.directory or ""
             if hasattr(runner, "own_game_remove_method"):
@@ -81,28 +81,27 @@ class UninstallGameDialog(GtkBuilderDialog):
         widget.set_sensitive(False)
 
         remove_from_library_button = self.builder.get_object(
-            "remove_from_library_button"
-        )
+            "remove_from_library_button")
         remove_from_library = remove_from_library_button.get_active()
-        remove_contents_button = self.builder.get_object("remove_contents_button")
+        remove_contents_button = self.builder.get_object(
+            "remove_contents_button")
         remove_contents = remove_contents_button.get_active()
-        if remove_contents and not hasattr(self.game.runner, "no_game_remove_warning"):
+        if remove_contents and not hasattr(self.game.runner,
+                                           "no_game_remove_warning"):
             game_dir = self.game.directory.replace("&", "&amp;")
-            dlg = QuestionDialog(
-                {
-                    "question": _(
-                        "Are you sure you want to delete EVERYTHING under "
-                        "\n<b>%s</b>?\n (This can't be undone)"
-                    )
-                    % game_dir,
-                    "title": _("CONFIRM DANGEROUS OPERATION"),
-                }
-            )
+            dlg = QuestionDialog({
+                "question":
+                _("Are you sure you want to delete EVERYTHING under "
+                  "\n<b>%s</b>?\n (This can't be undone)") % game_dir,
+                "title":
+                _("CONFIRM DANGEROUS OPERATION"),
+            })
             if dlg.result != Gtk.ResponseType.YES:
                 widget.set_sensitive(True)
                 return
 
-        remove_from_library = self.game.remove(remove_from_library, remove_contents)
+        remove_from_library = self.game.remove(remove_from_library,
+                                               remove_contents)
         self.callback(self.game.id, remove_from_library)
 
         self.on_close()

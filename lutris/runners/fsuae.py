@@ -113,18 +113,21 @@ class fsuae(Runner):
     runner_executable = "fs-uae/fs-uae"
     game_options = [
         {
-            "option": "main_file",
-            "type": "file",
-            "label": _("Boot disk"),
-            "default_path": "game_path",
-            "help": _(
-                "The main floppy disk file with the game data. \n"
-                "FS-UAE supports floppy images in multiple file formats: "
-                "ADF, IPF, DMS are the most common. ADZ (compressed ADF) "
-                "and ADFs in zip files are a also supported.\n"
-                "Files ending in .hdf will be mounted as hard drives and "
-                "ISOs can be used for Amiga CD32 and CDTV models."
-            ),
+            "option":
+            "main_file",
+            "type":
+            "file",
+            "label":
+            _("Boot disk"),
+            "default_path":
+            "game_path",
+            "help":
+            _("The main floppy disk file with the game data. \n"
+              "FS-UAE supports floppy images in multiple file formats: "
+              "ADF, IPF, DMS are the most common. ADZ (compressed ADF) "
+              "and ADFs in zip files are a also supported.\n"
+              "Files ending in .hdf will be mounted as hard drives and "
+              "ISOs can be used for Amiga CD32 and CDTV models."),
         },
         {
             "option": "disks",
@@ -151,16 +154,18 @@ class fsuae(Runner):
             "help": _("Specify the Amiga model you want to emulate."),
         },
         {
-            "option": "kickstart_file",
-            "label": _("Kickstart ROMs location"),
-            "type": "file",
-            "help": _(
-                "Choose the folder containing original Amiga kickstart "
-                "ROMs. Refer to FS-UAE documentation to find how to "
-                "acquire them. Without these, FS-UAE uses a bundled "
-                "replacement ROM which is less compatible with Amiga "
-                "software."
-            ),
+            "option":
+            "kickstart_file",
+            "label":
+            _("Kickstart ROMs location"),
+            "type":
+            "file",
+            "help":
+            _("Choose the folder containing original Amiga kickstart "
+              "ROMs. Refer to FS-UAE documentation to find how to "
+              "acquire them. Without these, FS-UAE uses a bundled "
+              "replacement ROM which is less compatible with Amiga "
+              "software."),
         },
         {
             "option": "kickstart_ext_file",
@@ -169,16 +174,20 @@ class fsuae(Runner):
             "help": _("Location of extended Kickstart used for CD32"),
         },
         {
-            "option": "cpumodel",
-            "label": _("CPU"),
-            "type": "choice",
-            "choices": cpumodel_choices,
-            "default": "auto",
-            "help": _(
-                "Use this option to override the CPU model in the emulated Amiga. All Amiga"
-                "models imply a default CPU model, so you only need to use this option if"
-                "want to use another CPU."
-            ),
+            "option":
+            "cpumodel",
+            "label":
+            _("CPU"),
+            "type":
+            "choice",
+            "choices":
+            cpumodel_choices,
+            "default":
+            "auto",
+            "help":
+            _("Use this option to override the CPU model in the emulated Amiga. All Amiga"
+              "models imply a default CPU model, so you only need to use this option if"
+              "want to use another CPU."),
         },
         {
             "option": "fmemory",
@@ -186,65 +195,89 @@ class fsuae(Runner):
             "type": "choice",
             "choices": memory_choices,
             "default": "0",
-            "help": _("Specify how much Fast Memory the Amiga model should have."),
+            "help":
+            _("Specify how much Fast Memory the Amiga model should have."),
         },
         {
-            "option": "ziiimem",
-            "label": _("Zorro III RAM"),
-            "type": "choice",
-            "choices": zorroiii_choices,
-            "default": "0",
-            "help": _(
-                "Override the amount of Zorro III Fast memory, specified in KB. Must be a"
-                "multiple of 1024. The default value depends on [amiga_model]. Requires a"
-                "processor with 32-bit address bus, (use for example the A1200/020 model).."
-            ),
+            "option":
+            "ziiimem",
+            "label":
+            _("Zorro III RAM"),
+            "type":
+            "choice",
+            "choices":
+            zorroiii_choices,
+            "default":
+            "0",
+            "help":
+            _("Override the amount of Zorro III Fast memory, specified in KB. Must be a"
+              "multiple of 1024. The default value depends on [amiga_model]. Requires a"
+              "processor with 32-bit address bus, (use for example the A1200/020 model).."
+              ),
         },
         {
-            "option": "fdvolume",
-            "label": _("Floppy Drive Volume"),
-            "type": "choice",
-            "choices": flsound_choices,
-            "default": "0",
-            "help": _(
-                "Set volume to 0 to disable floppy drive clicks "
-                "when the drive is empty. Max volume is 100."
-            ),
+            "option":
+            "fdvolume",
+            "label":
+            _("Floppy Drive Volume"),
+            "type":
+            "choice",
+            "choices":
+            flsound_choices,
+            "default":
+            "0",
+            "help":
+            _("Set volume to 0 to disable floppy drive clicks "
+              "when the drive is empty. Max volume is 100."),
         },
         {
-            "option": "fdspeed",
-            "label": _("Floppy Drive Speed"),
-            "type": "choice",
-            "choices": flspeed_choices,
-            "default": "100",
-            "help": _(
-                "Set the speed of the emulated floppy drives, in percent. "
-                "For example, you can specify 800 to get an 8x increase in "
-                "speed. Use 0 to specify turbo mode. Turbo mode means that "
-                "all floppy operations complete immediately. The default is 100 for most models."
-            ),
+            "option":
+            "fdspeed",
+            "label":
+            _("Floppy Drive Speed"),
+            "type":
+            "choice",
+            "choices":
+            flspeed_choices,
+            "default":
+            "100",
+            "help":
+            _("Set the speed of the emulated floppy drives, in percent. "
+              "For example, you can specify 800 to get an 8x increase in "
+              "speed. Use 0 to specify turbo mode. Turbo mode means that "
+              "all floppy operations complete immediately. The default is 100 for most models."
+              ),
         },
         {
-            "option": "grafixcard",
-            "label": _("Graphics Card"),
-            "type": "choice",
-            "choices": gpucard_choices,
-            "default": "None",
-            "help": _(
-                "Use this option to enable a graphics card. This option is none by default, in "
-                "which case only chipset graphics (OCS/ECS/AGA) support is available."
-            ),
+            "option":
+            "grafixcard",
+            "label":
+            _("Graphics Card"),
+            "type":
+            "choice",
+            "choices":
+            gpucard_choices,
+            "default":
+            "None",
+            "help":
+            _("Use this option to enable a graphics card. This option is none by default, in "
+              "which case only chipset graphics (OCS/ECS/AGA) support is available."
+              ),
         },
         {
-            "option": "grafixmemory",
-            "label": _("Graphics Card RAM"),
-            "type": "choice",
-            "choices": gpumem_choices,
-            "default": "0",
-            "help": _(
-                "Override the amount of graphics memory on the graphics card. The 0 MB option is "
-                "not really valid, but exists for user interface reasons."
-            ),
+            "option":
+            "grafixmemory",
+            "label":
+            _("Graphics Card RAM"),
+            "type":
+            "choice",
+            "choices":
+            gpumem_choices,
+            "default":
+            "0",
+            "help":
+            _("Override the amount of graphics memory on the graphics card. The 0 MB option is "
+              "not really valid, but exists for user interface reasons."),
         },
         {
             "option": "gfx_fullscreen_amiga",
@@ -259,24 +292,30 @@ class fsuae(Runner):
             "default": False,
         },
         {
-            "option": "gamemode",
-            "label": _("Feral GameMode"),
-            "type": "bool",
-            "default": False,
-            "help": _(
-                "Automatically uses Feral GameMode daemon if available."
-                "set to true to disable the feature."
-            ),
+            "option":
+            "gamemode",
+            "label":
+            _("Feral GameMode"),
+            "type":
+            "bool",
+            "default":
+            False,
+            "help":
+            _("Automatically uses Feral GameMode daemon if available."
+              "set to true to disable the feature."),
         },
         {
-            "option": "govwarning",
-            "label": _("CPU governor warning"),
-            "type": "bool",
-            "default": False,
-            "help": _(
-                "Warn if running with a CPU governor other than performance."
-                "set to true to disable the warning."
-            ),
+            "option":
+            "govwarning",
+            "label":
+            _("CPU governor warning"),
+            "type":
+            "bool",
+            "default":
+            False,
+            "help":
+            _("Warn if running with a CPU governor other than performance."
+              "set to true to disable the warning."),
         },
         {
             "option": "bsdsocket",
@@ -285,14 +324,17 @@ class fsuae(Runner):
             "default": False,
         },
         {
-            "option": "scanlines",
-            "label": _("Scanlines display style"),
-            "type": "bool",
-            "default": False,
-            "help": _(
-                "Activates a display filter adding scanlines to imitate "
-                "the displays of yesteryear."
-            ),
+            "option":
+            "scanlines",
+            "label":
+            _("Scanlines display style"),
+            "type":
+            "bool",
+            "default":
+            False,
+            "help":
+            _("Activates a display filter adding scanlines to imitate "
+              "the displays of yesteryear."),
         },
     ]
 
@@ -306,7 +348,8 @@ class fsuae(Runner):
 
     def get_absolute_path(self, path):
         """Return the absolute path for a file"""
-        return path if os.path.isabs(path) else os.path.join(self.game_path, path)
+        return path if os.path.isabs(path) else os.path.join(
+            self.game_path, path)
 
     def insert_floppies(self):
         disks = []
@@ -326,10 +369,12 @@ class fsuae(Runner):
             disk_param = self.get_disk_param(disk_path)
             drives.append("--%s_%d=%s" % (disk_param, drive, disk_path))
             if disk_param == "floppy_drive":
-                floppy_images.append("--floppy_image_%d=%s" % (drive, disk_path))
+                floppy_images.append("--floppy_image_%d=%s" %
+                                     (drive, disk_path))
         cdrom_image = self.game_config.get("cdrom_image")
         if cdrom_image:
-            drives.append("--cdrom_drive_0=%s" % self.get_absolute_path(cdrom_image))
+            drives.append("--cdrom_drive_0=%s" %
+                          self.get_absolute_path(cdrom_image))
         return drives + floppy_images
 
     def get_disk_param(self, disk_path):
@@ -392,7 +437,6 @@ class fsuae(Runner):
 
     def play(self):
         return {
-            "command": [self.get_executable()]
-            + self.get_params()
-            + self.insert_floppies()
+            "command": [self.get_executable()] + self.get_params() +
+            self.insert_floppies()
         }

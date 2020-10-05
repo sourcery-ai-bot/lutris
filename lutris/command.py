@@ -25,8 +25,7 @@ def get_wrapper_script_location():
     wrapper_relpath = "share/lutris/bin/lutris-wrapper"
     candidates = [
         os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), "..")
-        ),
+            os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), "..")),
         os.path.dirname(os.path.dirname(settings.__file__)),
         "/usr",
         "/usr/local",
@@ -36,8 +35,7 @@ def get_wrapper_script_location():
         if os.path.isfile(wrapper_abspath):
             return wrapper_abspath
     raise FileNotFoundError(
-        "Couldn't find lutris-wrapper script in any of the expected locations"
-    )
+        "Couldn't find lutris-wrapper script in any of the expected locations")
 
 
 WRAPPER_SCRIPT = get_wrapper_script_location()
@@ -49,16 +47,16 @@ class MonitoredCommand:
     fallback_cwd = "/tmp"
 
     def __init__(
-        self,
-        command,
-        runner=None,
-        env=None,
-        term=None,
-        cwd=None,
-        include_processes=None,
-        exclude_processes=None,
-        log_buffer=None,
-        title=None,
+            self,
+            command,
+            runner=None,
+            env=None,
+            term=None,
+            cwd=None,
+            include_processes=None,
+            exclude_processes=None,
+            log_buffer=None,
+            title=None,
     ):  # pylint: disable=too-many-arguments
         self.ready_state = True
         self.env = self.get_environment(env)
@@ -95,17 +93,12 @@ class MonitoredCommand:
     def wrapper_command(self):
         """Return launch arguments for the wrapper script"""
 
-        return (
-            [
-                WRAPPER_SCRIPT,
-                self._title,
-                str(len(self.include_processes)),
-                str(len(self.exclude_processes)),
-            ]
-            + self.include_processes
-            + self.exclude_processes
-            + self.command
-        )
+        return ([
+            WRAPPER_SCRIPT,
+            self._title,
+            str(len(self.include_processes)),
+            str(len(self.exclude_processes)),
+        ] + self.include_processes + self.exclude_processes + self.command)
 
     def set_log_buffer(self, log_buffer):
         """Attach a TextBuffer to this command enables the buffer handler"""
@@ -158,9 +151,8 @@ class MonitoredCommand:
 
         # make stdout nonblocking.
         fileno = self.game_process.stdout.fileno()
-        fcntl.fcntl(
-            fileno, fcntl.F_SETFL, fcntl.fcntl(fileno, fcntl.F_GETFL) | os.O_NONBLOCK
-        )
+        fcntl.fcntl(fileno, fcntl.F_SETFL,
+                    fcntl.fcntl(fileno, fcntl.F_GETFL) | os.O_NONBLOCK)
 
         self.stdout_monitor = GLib.io_add_watch(
             self.game_process.stdout,
@@ -225,21 +217,16 @@ class MonitoredCommand:
         game is quit.
         """
         script_path = os.path.join(settings.CACHE_DIR, "run_in_term.sh")
-        exported_environment = "\n".join(
-            'export %s="%s" ' % (key, value) for key, value in self.env.items()
-        )
+        exported_environment = "\n".join('export %s="%s" ' % (key, value)
+                                         for key, value in self.env.items())
         command = " ".join(['"%s"' % token for token in self.wrapper_command])
         with open(script_path, "w") as script_file:
             script_file.write(
-                dedent(
-                    """#!/bin/sh
+                dedent("""#!/bin/sh
                 cd "%s"
                 %s
                 exec %s
-                """
-                    % (self.cwd, exported_environment, command)
-                )
-            )
+                """ % (self.cwd, exported_environment, command)))
             os.chmod(script_path, 0o744)
         return self.execute_process([self.terminal, "-e", script_path])
 

@@ -23,17 +23,19 @@ class LogWindow(Gtk.ApplicationWindow):
         self.vbox = Gtk.VBox(spacing=6)
         self.add(self.vbox)
 
-        scrolledwindow = Gtk.ScrolledWindow(
-            hexpand=True, vexpand=True, child=self.logtextview
-        )
+        scrolledwindow = Gtk.ScrolledWindow(hexpand=True,
+                                            vexpand=True,
+                                            child=self.logtextview)
         self.vbox.pack_start(scrolledwindow, True, True, 0)
 
         self.search_entry = Gtk.SearchEntry()
         self.search_entry.props.placeholder_text = _("Search...")
         self.search_entry.connect("stop-search", self.dettach_search_entry)
-        self.search_entry.connect("search-changed", self.logtextview.find_first)
+        self.search_entry.connect("search-changed",
+                                  self.logtextview.find_first)
         self.search_entry.connect("next-match", self.logtextview.find_next)
-        self.search_entry.connect("previous-match", self.logtextview.find_previous)
+        self.search_entry.connect("previous-match",
+                                  self.logtextview.find_previous)
 
         self.connect("key-press-event", self.on_key_press_event)
 

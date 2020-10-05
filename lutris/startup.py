@@ -50,8 +50,7 @@ def init_lutris():
     except sqlite3.DatabaseError:
         raise RuntimeError(
             "Failed to open database file in %s. Try renaming this file and relaunch Lutris"
-            % settings.PGA_DB
-        )
+            % settings.PGA_DB)
 
 
 def check_driver():
@@ -60,9 +59,8 @@ def check_driver():
     if drivers.is_nvidia():
         driver_info = drivers.get_nvidia_driver_info()
         # pylint: disable=logging-format-interpolation
-        logger.info(
-            "Using {vendor} drivers {version} for {arch}".format(**driver_info["nvrm"])
-        )
+        logger.info("Using {vendor} drivers {version} for {arch}".format(
+            **driver_info["nvrm"]))
         gpus = drivers.get_nvidia_gpu_ids()
         for gpu_id in gpus:
             gpu_info = drivers.get_nvidia_gpu_info(gpu_id)
@@ -86,9 +84,7 @@ def check_driver():
         try:
             logger.info(
                 "GPU: {PCI_ID} {PCI_SUBSYS_ID} ({DRIVER} drivers)".format(
-                    **drivers.get_gpu_info(card)
-                )
-            )
+                    **drivers.get_gpu_info(card)))
         except KeyError:
             logger.error("Unable to get GPU information from '%s'", card)
 
@@ -98,14 +94,12 @@ def check_driver():
             DontShowAgainDialog(
                 setting,
                 _("Your Nvidia driver is outdated."),
-                secondary_message=_(
-                    "You are currently running driver %s which does not "
-                    "fully support all features for Vulkan and DXVK games.\n"
-                    "Please upgrade your driver as described in our "
-                    "<a href='https://github.com/lutris/lutris/wiki/Installing-drivers'>"
-                    "installation guide</a>"
-                )
-                % driver_info["nvrm"]["version"],
+                secondary_message=
+                _("You are currently running driver %s which does not "
+                  "fully support all features for Vulkan and DXVK games.\n"
+                  "Please upgrade your driver as described in our "
+                  "<a href='https://github.com/lutris/lutris/wiki/Installing-drivers'>"
+                  "installation guide</a>") % driver_info["nvrm"]["version"],
             )
 
 
@@ -122,7 +116,8 @@ def check_libs(all_components=False):
             for lib in missing_libs[req][index]:
                 if req == "VULKAN":
                     missing_vulkan_libs.append(arch)
-                logger.error("%s %s missing (needed by %s)", arch, lib, req.lower())
+                logger.error("%s %s missing (needed by %s)", arch, lib,
+                             req.lower())
 
     if missing_vulkan_libs:
         setting = "dismiss-missing-vulkan-library-warning"
@@ -130,22 +125,22 @@ def check_libs(all_components=False):
             DontShowAgainDialog(
                 setting,
                 _("Missing vulkan libraries"),
-                secondary_message=_(
-                    "Lutris was unable to detect Vulkan support for "
-                    "the %s architecture.\n"
-                    "This will prevent many games and programs from working.\n"
-                    "To install it, please use the following guide: "
-                    "<a href='https://github.com/lutris/lutris/wiki/Installing-drivers'>"
-                    "Installing Graphics Drivers</a>"
-                )
-                % _(" and ").join(missing_vulkan_libs),
+                secondary_message=
+                _("Lutris was unable to detect Vulkan support for "
+                  "the %s architecture.\n"
+                  "This will prevent many games and programs from working.\n"
+                  "To install it, please use the following guide: "
+                  "<a href='https://github.com/lutris/lutris/wiki/Installing-drivers'>"
+                  "Installing Graphics Drivers</a>") %
+                _(" and ").join(missing_vulkan_libs),
             )
 
 
 def check_vulkan():
     """Reports if Vulkan is enabled on the system"""
     if not vkquery.is_vulkan_supported():
-        logger.warning("Vulkan is not available or your system isn't Vulkan capable")
+        logger.warning(
+            "Vulkan is not available or your system isn't Vulkan capable")
 
 
 def fill_missing_platforms():
