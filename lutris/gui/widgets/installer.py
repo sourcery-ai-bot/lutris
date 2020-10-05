@@ -165,7 +165,7 @@ class InstallerFileBox(Gtk.VBox):
     def is_ready(self):
         """Whether the file is ready to be downloaded / fetched from its provider"""
         return bool(self.provider not in ("user", "pga") or system.path_exists(
-                self.installer_file.dest_file))
+            self.installer_file.dest_file))
 
     def get_download_progress(self):
         """Return the widget for the download progress bar"""

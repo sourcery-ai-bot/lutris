@@ -325,7 +325,7 @@ class GOGService(OnlineService):
             url = link["url"] if isinstance(link, dict) else link
             filename = link["filename"]
             if filename.lower().endswith(
-                (".exe", ".sh")) and not file_id_provided:
+                    (".exe", ".sh")) and not file_id_provided:
                 file_id = installer_file_id
                 file_id_provided = True
             else:
