@@ -144,25 +144,23 @@ class GameStore(GObject.Object):
     def add_game(self, db_game):
         """Add a PGA game to the store"""
         game = StoreItem(db_game, self.service_media)
-        self.store.append(
-            (
-                str(game.id),
-                game.slug,
-                game.name,
-                game.get_pixbuf(),
-                game.year,
-                game.runner,
-                game.runner_text,
-                gtk_safe(game.platform),
-                game.lastplayed,
-                game.lastplayed_text,
-                game.installed,
-                game.installed_at,
-                game.installed_at_text,
-                game.playtime,
-                game.playtime_text,
-            )
-        )
+        self.store.append((
+            str(game.id),
+            game.slug,
+            game.name,
+            game.get_pixbuf(),
+            game.year,
+            game.runner,
+            game.runner_text,
+            gtk_safe(game.platform),
+            game.lastplayed,
+            game.lastplayed_text,
+            game.installed,
+            game.installed_at,
+            game.installed_at_text,
+            game.playtime,
+            game.playtime_text,
+        ))
 
     def set_service_media(self, service_media):
         """Change the icon type"""
@@ -184,7 +182,10 @@ class GameStore(GObject.Object):
         games = sql.filtered_query(
             PGA_DB,
             "service_games",
-            filters=({"service": self.service_media.service, "appid": appid}),
+            filters=({
+                "service": self.service_media.service,
+                "appid": appid
+            }),
         )
         for game in games:
             GLib.idle_add(self.update, game)
