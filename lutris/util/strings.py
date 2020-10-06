@@ -7,6 +7,7 @@ import unicodedata
 import uuid
 
 from lutris.util.log import logger
+
 # Lutris Modules
 
 NO_PLAYTIME = "Never played"
@@ -103,10 +104,9 @@ def unpack_dependencies(string):
     dependencies = [dep.strip() for dep in string.split(",") if dep.strip()]
     for index, dependency in enumerate(dependencies):
         if "|" in dependency:
-            dependencies[index] = tuple([
-                option.strip() for option in dependency.split("|")
-                if option.strip()
-            ])
+            dependencies[index] = tuple(option.strip()
+                                        for option in dependency.split("|")
+                                        if option.strip())
     return [dependency for dependency in dependencies if dependency]
 
 
@@ -126,11 +126,8 @@ def get_formatted_playtime(playtime):
 
     hours = math.floor(playtime)
 
-    if hours:
-        hours_text = "%d hour%s" % (hours, "s" if hours > 1 else "")
-    else:
-        hours_text = ""
-
+    hours_text = "%d hour%s" % (hours,
+                                "s" if hours > 1 else "") if hours else ""
     minutes = int((playtime - hours) * 60)
     if minutes:
         minutes_text = "%d minute%s" % (minutes, "s" if minutes > 1 else "")
