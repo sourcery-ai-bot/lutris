@@ -113,10 +113,7 @@ class residualvm(Runner):
         game_list_start = False
         for game in game_list:
             if game_list_start:
-                if len(game) > 1:
-                    dir_limit = game.index(" ")
-                else:
-                    dir_limit = None
+                dir_limit = game.index(" ") if len(game) > 1 else None
                 if dir_limit is not None:
                     game_dir = game[0:dir_limit]
                     game_name = game[dir_limit + 1:len(game)].strip()

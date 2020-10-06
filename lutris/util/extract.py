@@ -225,9 +225,7 @@ def check_inno_exe(path):
         return False  # Can't find innoextract
     command = [_innoextract_path, "-i", path]
     return_code = subprocess.call(command)
-    if return_code != 0:
-        return False
-    return True
+    return return_code == 0
 
 
 def decompress_gog(file_path, destination_path):

@@ -152,9 +152,7 @@ class scummvm(Runner):
         for arg in split_arguments(args):
             command.append(arg)
         command.append(self.game_config.get("game_id"))
-        launch_info = {"command": command, "ld_library_path": self.libs_dir}
-
-        return launch_info
+        return {"command": command, "ld_library_path": self.libs_dir}
 
     def get_game_list(self):
         """Return the entire list of games supported by ScummVM."""
@@ -165,10 +163,7 @@ class scummvm(Runner):
         game_list_start = False
         for game in game_list:
             if game_list_start:
-                if len(game) > 1:
-                    dir_limit = game.index(" ")
-                else:
-                    dir_limit = None
+                dir_limit = game.index(" ") if len(game) > 1 else None
                 if dir_limit is not None:
                     game_dir = game[0:dir_limit]
                     game_name = game[dir_limit + 1:len(game)].strip()

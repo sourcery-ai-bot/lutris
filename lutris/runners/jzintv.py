@@ -65,10 +65,10 @@ class jzintv(Runner):
 
         selected_resolution = self.runner_config.get("resolution")
         if selected_resolution:
-            arguments = arguments + ["-z%s" % selected_resolution]
+            arguments += ["-z%s" % selected_resolution]
 
         if self.runner_config.get("fullscreen"):
-            arguments = arguments + ["-f"]
+            arguments += ["-f"]
 
         bios_path = self.runner_config.get("bios_path", "")
         if system.path_exists(bios_path):

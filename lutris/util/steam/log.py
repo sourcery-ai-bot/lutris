@@ -17,10 +17,9 @@ def _get_last_content_log(steam_data_dir):
                 # Strip old logs
                 if line == "\r\n" and logfile.readline() == "\r\n":
                     log = []
-                    line = logfile.readline()
                 else:
                     log.append(line)
-                    line = logfile.readline()
+                line = logfile.readline()
     except IOError:
         return []
     return log

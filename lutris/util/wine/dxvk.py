@@ -32,7 +32,7 @@ def init_dxvk_versions():
         except Exception as ex:  # pylint: disable= broad-except
             logger.error(ex)
             internet_available = False
-        dxvk_versions = list()
+        dxvk_versions = []
         with open(versions_path, "r") as dxvk_tags:
             dxvk_json = json.load(dxvk_tags)
             for x in dxvk_json:

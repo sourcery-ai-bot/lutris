@@ -220,10 +220,8 @@ class GOGService(OnlineService):
 
         total_pages = 1
         games = []
-        page = 1
-        while page <= total_pages:
+        for page in range(1, total_pages + 1):
             products_response = self.get_products_page(page=page)
-            page += 1
             total_pages = products_response["totalPages"]
             games += products_response["products"]
         with open(self.cache_path, "w") as gog_cache:
@@ -280,10 +278,7 @@ class GOGService(OnlineService):
         available_platforms = {installer["os"] for installer in gog_installers}
         # If it's a Linux game, also filter out Windows games
         if "linux" in available_platforms:
-            if runner == "linux":
-                filter_os = "windows"
-            else:
-                filter_os = "linux"
+            filter_os = "windows" if runner == "linux" else "linux"
             gog_installers = [installer for installer in gog_installers if installer["os"] != filter_os]
 
         # Keep only the english installer until we have locale detection
@@ -301,10 +296,7 @@ class GOGService(OnlineService):
         files = []
         file_id_provided = False  # Only assign installer_file_id once
         for index, link in enumerate(links):
-            if isinstance(link, dict):
-                url = link["url"]
-            else:
-                url = link
+            url = link["url"] if isinstance(link, dict) else link
             filename = link["filename"]
             if filename.lower().endswith((".exe", ".sh")) and not file_id_provided:
                 file_id = installer_file_id

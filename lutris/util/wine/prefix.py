@@ -112,7 +112,7 @@ class WinePrefixManager:
             desktop_folders.append(folder[folder.rfind("\\") + 1:])
         return desktop_folders or DEFAULT_DESKTOP_FOLDERS
 
-    def desktop_integration(self, desktop_dir=None, restore=False):  # noqa: C901
+    def desktop_integration(self, desktop_dir=None, restore=False):    # noqa: C901
         """Overwrite desktop integration"""
         # pylint: disable=too-many-branches
         # TODO: reduce complexity (18)
@@ -122,11 +122,7 @@ class WinePrefixManager:
         user_dir = os.path.join(self.path, "drive_c/users/", user)
         desktop_folders = self.get_desktop_folders()
 
-        if desktop_dir:
-            desktop_dir = os.path.expanduser(desktop_dir)
-        else:
-            desktop_dir = user_dir
-
+        desktop_dir = os.path.expanduser(desktop_dir) if desktop_dir else user_dir
         if system.path_exists(user_dir):
             # Replace or restore desktop integration symlinks
             for i, item in enumerate(desktop_folders):
@@ -215,8 +211,8 @@ class WinePrefixManager:
         """Sets the desktop size if one is given but do not reset the key if
         one isn't.
         """
-        path = self.hkcu_prefix + "/Software/Wine/Explorer/Desktops"
         if desktop_size:
+            path = self.hkcu_prefix + "/Software/Wine/Explorer/Desktops"
             self.set_registry_key(path, "WineDesktop", desktop_size)
 
     def use_xvid_mode(self, enabled):

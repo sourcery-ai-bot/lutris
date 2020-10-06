@@ -102,11 +102,10 @@ class DiscordPresence(object):
 
     def clear_discord_rich_presence(self):
         """Dispatch a request to Discord to clear presence"""
-        if self.rpc_enabled:
-            if self.connect():
-                try:
-                    logger.info('Attempting to clear Discord status.')
-                    self.rpc_client.clear()
-                except PyPresenceException as ex:
-                    logger.error("Unable to clear Discord: %s", ex)
-                    self.disconnect()
+        if self.rpc_enabled and self.connect():
+            try:
+                logger.info('Attempting to clear Discord status.')
+                self.rpc_client.clear()
+            except PyPresenceException as ex:
+                logger.error("Unable to clear Discord: %s", ex)
+                self.disconnect()

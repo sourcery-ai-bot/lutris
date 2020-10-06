@@ -48,11 +48,7 @@ class GtkTemplateWarning(UserWarning):
 def _connect_func(builder, obj, signal_name, handler_name, connect_object, flags, cls):
     """Handles GtkBuilder signal connect events"""
 
-    if connect_object is None:
-        extra = ()
-    else:
-        extra = (connect_object, )
-
+    extra = () if connect_object is None else (connect_object, )
     # The handler name refers to an attribute on the template instance,
     # so ask GtkBuilder for the template instance
     template_inst = builder.get_object(cls.__gtype_name__)

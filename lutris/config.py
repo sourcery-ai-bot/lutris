@@ -61,11 +61,7 @@ class LutrisConfig:
 
     def __init__(self, runner_slug=None, game_config_id=None, level=None):
         self.game_config_id = game_config_id
-        if runner_slug:
-            self.runner_slug = str(runner_slug)
-        else:
-            self.runner_slug = runner_slug
-
+        self.runner_slug = str(runner_slug) if runner_slug else runner_slug
         # Cascaded config sections (for reading)
         self.game_config = {}
         self.runner_config = {}
@@ -241,4 +237,4 @@ class LutrisConfig:
                     runner = runner()
 
                 options = getattr(runner, attribute_name)
-        return dict((opt["option"], opt) for opt in options)
+        return {opt["option"]: opt for opt in options}

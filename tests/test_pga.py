@@ -128,11 +128,11 @@ class TestMigration(DatabaseTester):
 
     def test_cant_add_existing_field(self):
         self.create_table()
-        field = {
-            'name': 'name',
-            'type': 'TEXT'
-        }
         with self.assertRaises(OperationalError):
+            field = {
+                'name': 'name',
+                'type': 'TEXT'
+            }
             sql.add_field(TEST_PGA_PATH, self.tablename, field)
 
     def test_cant_create_empty_table(self):

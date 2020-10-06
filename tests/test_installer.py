@@ -37,16 +37,16 @@ class TestScriptInterpreter(TestCase):
         self.assertFalse(interpreter.installer.get_errors())
 
     def test_move_requires_src_and_dst(self):
-        script = {
-            'foo': 'bar',
-            'script': {},
-            'name': 'missing_runner',
-            'game_slug': 'missing-runner',
-            'slug': 'some-slug',
-            'runner': 'linux',
-            'version': 'bar-baz'
-        }
         with self.assertRaises(ScriptingError):
+            script = {
+                'foo': 'bar',
+                'script': {},
+                'name': 'missing_runner',
+                'game_slug': 'missing-runner',
+                'slug': 'some-slug',
+                'runner': 'linux',
+                'version': 'bar-baz'
+            }
             interpreter = ScriptInterpreter(script, None)
             interpreter._get_move_paths({})
 

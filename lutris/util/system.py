@@ -171,7 +171,7 @@ def substitute(string_template, variables):
     # We support dashes in identifiers but they are not valid in python
     # identifers, which is a requirement for the templating engine we use
     # Replace the dashes with underscores in the mapping and template
-    variables = dict((k.replace("-", "_"), v) for k, v in variables.items())
+    variables = {k.replace("-", "_"): v for k, v in variables.items()}
     for identifier in identifiers:
         string_template = string_template.replace("${}".format(identifier), "${}".format(identifier.replace("-", "_")))
 

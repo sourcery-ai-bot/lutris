@@ -308,7 +308,7 @@ def _get_screen_saver_inhibitor():
         path = "/org/freedesktop/ScreenSaver"
     interface = name
     try:
-        return DBusScreenSaverInhibitor(name, path, interface)
+        return DBusScreenSaverInhibitor(interface, path, interface)
     except GLib.Error as err:
         logger.error("Error during creation of DBusScreenSaverInhibitor: %s", err.message)  # pylint: disable=no-member
         return None

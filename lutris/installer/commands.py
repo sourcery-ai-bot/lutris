@@ -46,10 +46,7 @@ class CommandsMixin:
             params = [params]
         for param in params:
             if isinstance(param, tuple):
-                param_present = False
-                for key in param:
-                    if key in command_data:
-                        param_present = True
+                param_present = any(key in command_data for key in param)
                 if not param_present:
                     raise ScriptingError(
                         "One of %s parameter is mandatory for the %s command" % (" or ".join(param), command_name),
@@ -221,10 +218,7 @@ class CommandsMixin:
         return "STOP"
 
     def _find_matching_disc(self, _widget, requires, extra_path=None):
-        if extra_path:
-            drives = [extra_path]
-        else:
-            drives = disks.get_mounted_discs()
+        drives = [extra_path] if extra_path else disks.get_mounted_discs()
         for drive in drives:
             required_abspath = os.path.join(drive, requires)
             required_abspath = system.fix_path_case(required_abspath)
@@ -293,10 +287,7 @@ class CommandsMixin:
                 logger.info("Destination file exists, skipping")
                 return
         try:
-            if self._is_cached_file(src):
-                action = shutil.copy
-            else:
-                action = shutil.move
+            action = shutil.copy if self._is_cached_file(src) else shutil.move
             self._killable_process(action, src, dst)
         except shutil.Error:
             raise ScriptingError("Can't move %s \nto destination %s" % (src, dst))

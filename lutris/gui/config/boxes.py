@@ -53,7 +53,7 @@ class ConfigBox(VBox):
 
         help_box.show_all()
 
-    def generate_widgets(self, config_section):  # noqa: C901 # pylint: disable=too-many-branches,too-many-statements
+    def generate_widgets(self, config_section):    # noqa: C901 # pylint: disable=too-many-branches,too-many-statements
         """Parse the config dict and generates widget accordingly."""
         if not self.options:
             no_options_label = Label(_("No options available"))
@@ -75,9 +75,8 @@ class ConfigBox(VBox):
 
         # Go thru all options.
         for option in self.options:
-            if "scope" in option:
-                if config_section not in option["scope"]:
-                    continue
+            if "scope" in option and config_section not in option["scope"]:
+                continue
             option_key = option["option"]
             value = self.config.get(option_key)
             default = option.get("default")
@@ -145,7 +144,7 @@ class ConfigBox(VBox):
             if option.get("advanced"):
                 hbox.get_style_context().add_class("advanced")
                 show_advanced = settings.read_setting("show_advanced_options")
-                if not show_advanced == "True":
+                if show_advanced != "True":
                     hbox.set_no_show_all(True)
             hbox.pack_start(self.wrapper, True, True, 0)
             self.pack_start(hbox, False, False, 0)
@@ -405,9 +404,8 @@ class ConfigBox(VBox):
             # If path is relative, complete with game dir
             if not os.path.isabs(path):
                 path = os.path.expanduser(path)
-                if not os.path.isabs(path):
-                    if self.game and self.game.directory:
-                        path = os.path.join(self.game.directory, path)
+                if not os.path.isabs(path) and self.game and self.game.directory:
+                    path = os.path.join(self.game.directory, path)
             file_chooser.entry.set_text(path)
 
         file_chooser.set_valign(Gtk.Align.CENTER)
@@ -478,10 +476,7 @@ class ConfigBox(VBox):
         vbox.pack_end(button, False, False, 0)
 
         if value:
-            if isinstance(value, str):
-                self.files = [value]
-            else:
-                self.files = value
+            self.files = [value] if isinstance(value, str) else value
         else:
             self.files = []
         self.files_list_store = Gtk.ListStore(str)

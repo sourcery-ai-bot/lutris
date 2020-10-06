@@ -58,8 +58,11 @@ class XDGService(BaseService):
     @property
     def lutris_games(self):
         """Iterates through Lutris games imported from XDG"""
-        for game in get_games_where(runner=XDGGame.runner, installer_slug=XDGGame.installer_slug, installed=1):
-            yield game
+        yield from get_games_where(
+            runner=XDGGame.runner,
+            installer_slug=XDGGame.installer_slug,
+            installed=1,
+        )
 
     @classmethod
     def _is_importable(cls, app):
@@ -84,9 +87,13 @@ class XDGService(BaseService):
             return False
 
         # contains a blacklisted category
-        if bool([category for category in categories if category in map(str.lower, cls.ignored_categories)]):
-            return False
-        return True
+        return not bool(
+            [
+                category
+                for category in categories
+                if category in map(str.lower, cls.ignored_categories)
+            ]
+        )
 
     def load(self):
         """Return the list of games stored in the XDG menu."""

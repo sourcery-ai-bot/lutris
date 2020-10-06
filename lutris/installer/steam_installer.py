@@ -51,10 +51,7 @@ class SteamInstaller(GObject.Object):
 
         self.appid = appid
         self.path = path
-        if runner_id == "$WINESTEAM":
-            self.platform = "windows"
-        else:
-            self.platform = "linux"
+        self.platform = "windows" if runner_id == "$WINESTEAM" else "linux"
 
     @property
     def runner(self):

@@ -157,12 +157,10 @@ class InstallerFileBox(Gtk.VBox):
     @property
     def is_ready(self):
         """Whether the file is ready to be downloaded / fetched from its provider"""
-        if (
-                self.provider in ("user", "pga")
-                and not system.path_exists(self.installer_file.dest_file)
-        ):
-            return False
-        return True
+        return bool(
+            self.provider not in ("user", "pga")
+            or system.path_exists(self.installer_file.dest_file)
+        )
 
     def get_download_progress(self):
         """Return the widget for the download progress bar"""
@@ -296,23 +294,23 @@ class InstallerFileBox(Gtk.VBox):
 
     def get_file_provider_label(self):
         """Return the label displayed before the download starts"""
-        if self.provider == "user":
-            box = Gtk.VBox(spacing=6)
-            location_entry = FileChooserEntry(
-                self.installer_file.human_url,
-                Gtk.FileChooserAction.OPEN,
-                path=None
-            )
-            location_entry.entry.connect("changed", self.on_location_changed)
-            location_entry.show()
-            box.pack_start(location_entry, False, False, 0)
-            if self.installer_file.uses_pga_cache(create=True):
-                cache_option = Gtk.CheckButton(_("Cache file for future installations"))
-                cache_option.set_active(self.cache_to_pga)
-                cache_option.connect("toggled", self.on_user_file_cached)
-                box.pack_start(cache_option, False, False, 0)
-            return box
-        return InstallerLabel(gtk_safe(self.installer_file.human_url), wrap=False)
+        if self.provider != "user":
+            return InstallerLabel(gtk_safe(self.installer_file.human_url), wrap=False)
+        box = Gtk.VBox(spacing=6)
+        location_entry = FileChooserEntry(
+            self.installer_file.human_url,
+            Gtk.FileChooserAction.OPEN,
+            path=None
+        )
+        location_entry.entry.connect("changed", self.on_location_changed)
+        location_entry.show()
+        box.pack_start(location_entry, False, False, 0)
+        if self.installer_file.uses_pga_cache(create=True):
+            cache_option = Gtk.CheckButton(_("Cache file for future installations"))
+            cache_option.set_active(self.cache_to_pga)
+            cache_option.connect("toggled", self.on_user_file_cached)
+            box.pack_start(cache_option, False, False, 0)
+        return box
 
     def get_widgets(self):
         """Return the widget with the source of the file and a way to change its source"""

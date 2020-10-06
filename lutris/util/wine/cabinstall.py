@@ -78,10 +78,7 @@ class CabInstaller:
         name = attrs["name"]
         value = attrs["value"]
         value_type = attrs["valueType"]
-        if not name.strip():
-            name = "@"
-        else:
-            name = '"%s"' % name
+        name = "@" if not name.strip() else '"%s"' % name
         name = self.replace_variables(name, arch)
         if value_type == "REG_BINARY":
             value = re.findall("..", value)
@@ -112,10 +109,9 @@ class CabInstaller:
             value = '"%s"' % value
         if value:
             value = self.replace_variables(value, arch)
-            if self.strip_dlls:
-                if ".dll" in value:
-                    value = value.lower().replace("c:\\\\windows\\\\system32\\\\", "")
-                    value = value.lower().replace("c:\\\\windows\\\\syswow64\\\\", "")
+            if self.strip_dlls and ".dll" in value:
+                value = value.lower().replace("c:\\\\windows\\\\system32\\\\", "")
+                value = value.lower().replace("c:\\\\windows\\\\syswow64\\\\", "")
         return name, value
 
     def get_registry_from_manifest(self, file_name):

@@ -17,8 +17,7 @@ class db_cursor(object):
 
     def __enter__(self):
         self.db_conn = sqlite3.connect(self.db_path)
-        cursor = self.db_conn.cursor()
-        return cursor
+        return self.db_conn.cursor()
 
     def __exit__(self, _type, value, traceback):
         self.db_conn.commit()
@@ -81,10 +80,7 @@ def db_delete(db_path, table, field, value):
 
 
 def db_select(db_path, table, fields=None, condition=None):
-    if fields:
-        columns = ", ".join(fields)
-    else:
-        columns = "*"
+    columns = ", ".join(fields) if fields else "*"
     with db_cursor(db_path) as cursor:
         query = "SELECT {} FROM {}"
         if condition:
@@ -96,7 +92,7 @@ def db_select(db_path, table, fields=None, condition=None):
             else:
                 condition_value = (condition_value, )
                 where_condition = " where {}=?"
-            query = query + where_condition
+            query += where_condition
             query = query.format(columns, table, condition_field)
             params = condition_value
         else:

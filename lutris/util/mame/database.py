@@ -37,11 +37,10 @@ def is_game(machine):
 
 def has_software_list(machine):
     """Return True if the machine has an associated software list"""
-    _has_software_list = False
-    for elem in machine:
-        if elem.tag == "device_ref" and elem.attrib["name"] == "software_list":
-            _has_software_list = True
-    return _has_software_list
+    return any(
+        elem.tag == "device_ref" and elem.attrib["name"] == "software_list"
+        for elem in machine
+    )
 
 
 def is_system(machine):

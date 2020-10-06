@@ -314,9 +314,7 @@ def is_version_fsync(path):
             return True
 
     wine_ver = str(subprocess.check_output([path, "--version"])).lower()
-    if "fsync" in wine_ver:
-        return True
-    return False
+    return "fsync" in wine_ver
 
 
 def get_real_executable(windows_executable, working_dir=None):

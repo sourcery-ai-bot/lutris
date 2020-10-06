@@ -125,7 +125,7 @@ class WineRegistry:
             elif current_key:
                 if add_next_to_value:
                     additional_values.append(line)
-                elif not add_next_to_value:
+                else:
                     if additional_values:
                         additional_values = "\n".join(additional_values)
                         current_key.add_to_last(additional_values)
@@ -283,10 +283,7 @@ class WineRegistryKey:
             else:
                 content += "#{}={}\n".format(key, value)
         for key, value in self.subkeys.items():
-            if key == "default":
-                key = "@"
-            else:
-                key = '"{}"'.format(key)
+            key = "@" if key == "default" else '"{}"'.format(key)
             content += "{}={}\n".format(key, value)
         return content
 

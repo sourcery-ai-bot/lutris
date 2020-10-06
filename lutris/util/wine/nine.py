@@ -35,13 +35,13 @@ class NineManager:
         basic check for presence of d3dadapter9 library in 'd3d' subdirectory
         of system library directory
         """
-        for mesa_file in NineManager.mesa_files:
-            if not any(
-                [os.path.exists(os.path.join(lib, "d3d", mesa_file)) for lib in system.LINUX_SYSTEM.iter_lib_folders()]
-            ):
-                return False
-
-        return True
+        return all(
+            any(
+                os.path.exists(os.path.join(lib, "d3d", mesa_file))
+                for lib in system.LINUX_SYSTEM.iter_lib_folders()
+            )
+            for mesa_file in NineManager.mesa_files
+        )
 
     @staticmethod
     def nine_is_installed():
@@ -49,16 +49,13 @@ class NineManager:
 
         check 'wine/fakedlls' subdirectory of system library directory for Nine binaries
         """
-        for nine_file in NineManager.nine_files:
-            if not any(
-                [
-                    os.path.exists(os.path.join(lib, "wine/fakedlls", nine_file))
-                    for lib in system.LINUX_SYSTEM.iter_lib_folders()
-                ]
-            ):
-                return False
-
-        return True
+        return all(
+            any(
+                os.path.exists(os.path.join(lib, "wine/fakedlls", nine_file))
+                for lib in system.LINUX_SYSTEM.iter_lib_folders()
+            )
+            for nine_file in NineManager.nine_files
+        )
 
     @staticmethod
     def is_available():
@@ -84,14 +81,12 @@ class NineManager:
         ):
             return False
 
-        if self.wine_arch == "win64":
-            if not all(
-                system.path_exists(os.path.join(self.get_system_path("x64"), nine_file))
-                for nine_file in self.nine_files
-            ):
-                return False
-
-        return True
+        return self.wine_arch != "win64" or all(
+            system.path_exists(
+                os.path.join(self.get_system_path("x64"), nine_file)
+            )
+            for nine_file in self.nine_files
+        )
 
     def prepare_prefix(self):
         for nine_file in NineManager.nine_files:
@@ -101,16 +96,19 @@ class NineManager:
                 if (os.path.exists(nine_file_path) and CabInstaller.get_arch_from_dll(nine_file_path) == "win32"):
                     shutil.copy(nine_file_path, self.get_system_path("x32"))
 
-                if self.wine_arch == "win64":
-                    if (os.path.exists(nine_file_path) and CabInstaller.get_arch_from_dll(nine_file_path) == "win64"):
-                        shutil.copy(nine_file_path, self.get_system_path("x64"))
+                if self.wine_arch == "win64" and (
+                    os.path.exists(nine_file_path)
+                    and CabInstaller.get_arch_from_dll(nine_file_path) == "win64"
+                ):
+                    shutil.copy(nine_file_path, self.get_system_path("x64"))
 
             if not os.path.exists(os.path.join(self.get_system_path("x32"), nine_file)):
                 raise NineUnavailable("could not install " + nine_file + " (x32)")
 
-            if self.wine_arch == "win64":
-                if not os.path.exists(os.path.join(self.get_system_path("x64"), nine_file)):
-                    raise NineUnavailable("could not install " + nine_file + " (x64)")
+            if self.wine_arch == "win64" and not os.path.exists(
+                os.path.join(self.get_system_path("x64"), nine_file)
+            ):
+                raise NineUnavailable("could not install " + nine_file + " (x64)")
 
     def move_dll(self, backup):
         """ Backup or restore dll used by Gallium Nine"""
