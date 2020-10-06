@@ -4,6 +4,7 @@ import struct
 
 from lutris.util.gamecontrollerdb import GameControllerDB
 from lutris.util.log import logger
+
 # Lutris Modules
 
 try:
