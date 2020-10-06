@@ -35,11 +35,13 @@ def get_system_choices(include_year=True):
     """Return list of systems for inclusion in dropdown"""
     if not system.path_exists(MAME_XML_PATH, exclude_empty=True):
         AsyncCall(write_mame_xml, notify_mame_xml)
-        logger.warning("MAME XML generation launched in the background, not returning anything this time")
+        logger.warning(
+            "MAME XML generation launched in the background, not returning anything this time"
+        )
         return []
     for system_id, info in sorted(
-        get_supported_systems(MAME_XML_PATH).items(),
-        key=lambda sys: (sys[1]["manufacturer"], sys[1]["description"]),
+            get_supported_systems(MAME_XML_PATH).items(),
+            key=lambda sys: (sys[1]["manufacturer"], sys[1]["description"]),
     ):
         if info["description"].startswith(info["manufacturer"]):
             template = ""
@@ -54,7 +56,6 @@ def get_system_choices(include_year=True):
 
 
 class mame(Runner):  # pylint: disable=invalid-name
-
     """MAME runner"""
 
     human_name = _("MAME")
@@ -78,12 +79,15 @@ class mame(Runner):  # pylint: disable=invalid-name
             "type": "choice_with_search",
             "label": _("Machine"),
             "choices": get_system_choices,
-            "help": _("The emulated machine.")
+            "help": _("The emulated machine."),
         },
         {
-            "option": "device",
-            "type": "choice_with_entry",
-            "label": _("Storage type"),
+            "option":
+            "device",
+            "type":
+            "choice_with_entry",
+            "label":
+            _("Storage type"),
             "choices": [
                 (_("Floppy disk"), "flop"),
                 (_("Floppy drive 1"), "flop1"),
@@ -121,11 +125,15 @@ class mame(Runner):  # pylint: disable=invalid-name
             "help": _("Command line arguments used when launching the game"),
         },
         {
-            "option": "autoboot_command",
-            "type": "string",
-            "label": _("Autoboot command"),
-            "help": _("Autotype this command when the system has started,"
-                      "an enter keypress is automatically added."),
+            "option":
+            "autoboot_command",
+            "type":
+            "string",
+            "label":
+            _("Autoboot command"),
+            "help":
+            _("Autotype this command when the system has started,"
+              "an enter keypress is automatically added."),
         },
         {
             "option": "autoboot_delay",
@@ -133,19 +141,21 @@ class mame(Runner):  # pylint: disable=invalid-name
             "label": _("Delay before entering autoboot command"),
             "min": 0,
             "max": 120,
-        }
+        },
     ]
 
     runner_options = [
         {
-            "option": "rompath",
-            "type": "directory_chooser",
-            "label": _("ROM/BIOS path"),
-            "help": _(
-                "Choose the folder containing ROMs and BIOS files.\n"
-                "These files contain code from the original hardware "
-                "necessary to the emulation."
-            ),
+            "option":
+            "rompath",
+            "type":
+            "directory_chooser",
+            "label":
+            _("ROM/BIOS path"),
+            "help":
+            _("Choose the folder containing ROMs and BIOS files.\n"
+              "These files contain code from the original hardware "
+              "necessary to the emulation."),
         },
         {
             "option": "fullscreen",
@@ -154,9 +164,12 @@ class mame(Runner):  # pylint: disable=invalid-name
             "default": True,
         },
         {
-            "option": "video",
-            "type": "choice",
-            "label": _("Video backend"),
+            "option":
+            "video",
+            "type":
+            "choice",
+            "label":
+            _("Video backend"),
             "choices": (
                 (_("Auto"), ""),
                 ("OpenGL", "opengl"),
@@ -164,22 +177,31 @@ class mame(Runner):  # pylint: disable=invalid-name
                 ("SDL2", "accel"),
                 (_("Software"), "soft"),
             ),
-            "default": "",
+            "default":
+            "",
         },
         {
-            "option": "waitvsync",
-            "type": "bool",
-            "label": _("Wait for VSync"),
+            "option":
+            "waitvsync",
+            "type":
+            "bool",
+            "label":
+            _("Wait for VSync"),
             "help":
             _("Enable waiting for  the  start  of  VBLANK  before "
               "flipping  screens; reduces tearing effects."),
-            "advanced": True,
-            "default": False,
+            "advanced":
+            True,
+            "default":
+            False,
         },
         {
-            "option": "uimodekey",
-            "type": "choice_with_entry",
-            "label": _("Menu mode key"),
+            "option":
+            "uimodekey",
+            "type":
+            "choice_with_entry",
+            "label":
+            _("Menu mode key"),
             "choices": [
                 (_("Scroll Lock"), "SCRLOCK"),
                 (_("Num Lock"), "NUMLOCK"),
@@ -192,10 +214,13 @@ class mame(Runner):  # pylint: disable=invalid-name
                 (_("Right Super"), "RWIN"),
                 (_("Left Super"), "LWIN"),
             ],
-            "default": "SCRLOCK",
-            "advanced": True,
-            "help": _("Key to switch between Full Keyboard Mode and "
-                      "Partial Keyboard Mode (default: Scroll Lock)"),
+            "default":
+            "SCRLOCK",
+            "advanced":
+            True,
+            "help":
+            _("Key to switch between Full Keyboard Mode and "
+              "Partial Keyboard Mode (default: Scroll Lock)"),
         },
     ]
 
@@ -207,16 +232,19 @@ class mame(Runner):  # pylint: disable=invalid-name
     def platforms(self):
         if self._platforms:
             return self.platforms
-        self._platforms = [choice[0] for choice in get_system_choices(include_year=False)]
+        self._platforms = [
+            choice[0] for choice in get_system_choices(include_year=False)
+        ]
         self._platforms += [_("Arcade"), _("Nintendo Game & Watch")]
         return self._platforms
 
     def install(self, version=None, downloader=None, callback=None):
-
         def on_runner_installed(*args):
             AsyncCall(write_mame_xml, notify_mame_xml)
 
-        super().install(version=version, downloader=downloader, callback=on_runner_installed)
+        super().install(version=version,
+                        downloader=downloader,
+                        callback=on_runner_installed)
 
     def write_xml_list(self):
         """Write the full game list in XML to disk"""
@@ -235,7 +263,10 @@ class mame(Runner):  # pylint: disable=invalid-name
         if selected_platform:
             return self.platforms[int(selected_platform)]
         if self.game_config.get("machine"):
-            machine_mapping = {choice[1]: choice[0] for choice in get_system_choices(include_year=False)}
+            machine_mapping = {
+                choice[1]: choice[0]
+                for choice in get_system_choices(include_year=False)
+            }
             return machine_mapping[self.game_config["machine"]]
         rom_file = os.path.basename(self.game_config.get("main_file", ""))
         if rom_file.startswith("gnw_"):
@@ -249,14 +280,20 @@ class mame(Runner):  # pylint: disable=invalid-name
             except OSError:
                 pass
             subprocess.Popen(
-                [self.get_executable(), "-createconfig", "-inipath", self.config_dir],
+                [
+                    self.get_executable(), "-createconfig", "-inipath",
+                    self.config_dir
+                ],
                 stdout=subprocess.PIPE,
-                cwd=self.working_dir
+                cwd=self.working_dir,
             )
         return True
 
     def play(self):
-        command = [self.get_executable(), "-skip_gameinfo", "-inipath", self.config_dir]
+        command = [
+            self.get_executable(), "-skip_gameinfo", "-inipath",
+            self.config_dir
+        ]
         if self.runner_config.get("video"):
             command += ["-video", self.runner_config["video"]]
         if not self.runner_config.get("fullscreen"):
@@ -273,7 +310,13 @@ class mame(Runner):  # pylint: disable=invalid-name
             command.append(self.game_config["machine"])
             device = self.game_config.get("device")
             if not device:
-                return {'error': "CUSTOM", "text": "No device is set for machine %s" % self.game_config["machine"]}
+                return {
+                    "error":
+                    "CUSTOM",
+                    "text":
+                    "No device is set for machine %s" %
+                    self.game_config["machine"],
+                }
             rom = self.game_config["main_file"]
             command += ["-" + device, rom]
         else:
@@ -282,13 +325,19 @@ class mame(Runner):  # pylint: disable=invalid-name
                 rompath = self.runner_config.get("rompath")
             rom = os.path.basename(self.game_config.get("main_file"))
             if not rompath:
-                return {'error': 'PATH_NOT_SET', 'path': 'rompath'}
+                return {"error": "PATH_NOT_SET", "path": "rompath"}
             command += ["-rompath", rompath, rom]
 
         if self.game_config.get("autoboot_command"):
-            command += ["-autoboot_command", self.game_config["autoboot_command"] + "\\n"]
+            command += [
+                "-autoboot_command",
+                self.game_config["autoboot_command"] + "\\n",
+            ]
             if self.game_config.get("autoboot_delay"):
-                command += ["-autoboot_delay", str(self.game_config["autoboot_delay"])]
+                command += [
+                    "-autoboot_delay",
+                    str(self.game_config["autoboot_delay"])
+                ]
 
         for arg in split_arguments(self.game_config.get("args")):
             command.append(arg)

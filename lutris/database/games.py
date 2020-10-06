@@ -11,28 +11,30 @@ PGA_DB = settings.PGA_DB
 _SERVICE_CACHE = {}
 
 
-def get_games(
-    searches=None,
-    filters=None,
-    excludes=None,
-    sorts=None
-):
-    return sql.filtered_query(PGA_DB, "games", searches=searches, filters=filters, excludes=excludes, sorts=sorts)
+def get_games(searches=None, filters=None, excludes=None, sorts=None):
+    return sql.filtered_query(
+        PGA_DB,
+        "games",
+        searches=searches,
+        filters=filters,
+        excludes=excludes,
+        sorts=sorts,
+    )
 
 
 def get_games_where(**conditions):
     """
-        Query games table based on conditions
+    Query games table based on conditions
 
-        Args:
-            conditions (dict): named arguments with each field matches its desired value.
-            Special values for field names can be used:
-                <field>__isnull will return rows where `field` is NULL if the value is True
-                <field>__not will invert the condition using `!=` instead of `=`
-                <field>__in will match rows for every value of `value`, which should be an iterable
+    Args:
+        conditions (dict): named arguments with each field matches its desired value.
+        Special values for field names can be used:
+            <field>__isnull will return rows where `field` is NULL if the value is True
+            <field>__not will invert the condition using `!=` instead of `=`
+            <field>__in will match rows for every value of `value`, which should be an iterable
 
-        Returns:
-            list: Rows matching the query
+    Returns:
+        list: Rows matching the query
 
     """
     query = "select * from games"
@@ -43,17 +45,21 @@ def get_games_where(**conditions):
         if extra_conditions:
             extra_condition = extra_conditions[0]
             if extra_condition == "isnull":
-                condition_fields.append("{} is {} null".format(field, "" if value else "not"))
+                condition_fields.append("{} is {} null".format(
+                    field, "" if value else "not"))
             if extra_condition == "not":
                 condition_fields.append("{} != ?".format(field))
                 condition_values.append(value)
             if extra_condition == "in":
                 if not hasattr(value, "__iter__"):
-                    raise ValueError("Value should be an iterable (%s given)" % value)
+                    raise ValueError("Value should be an iterable (%s given)" %
+                                     value)
                 if len(value) > 999:
-                    raise ValueError("SQLite limnited to a maximum of 999 parameters.")
+                    raise ValueError(
+                        "SQLite limnited to a maximum of 999 parameters.")
                 if value:
-                    condition_fields.append("{} in ({})".format(field, ", ".join("?" * len(value)) or ""))
+                    condition_fields.append("{} in ({})".format(
+                        field, ", ".join("?" * len(value)) or ""))
                     condition_values = list(chain(condition_values, value))
         else:
             condition_fields.append("{} = ?".format(field))
@@ -73,17 +79,18 @@ def get_games_by_ids(game_ids):
     # bypass that limitation, divide the query in chunks
     size = 999
     return list(
-        chain.from_iterable(
-            [
-                get_games_where(id__in=list(game_ids)[page * size:page * size + size])
-                for page in range(math.ceil(len(game_ids) / size))
-            ]
-        )
-    )
+        chain.from_iterable([
+            get_games_where(id__in=list(game_ids)[page * size:page * size +
+                                                  size])
+            for page in range(math.ceil(len(game_ids) / size))
+        ]))
 
 
 def get_game_for_service(service, appid):
-    existing_games = get_games(filters={"service_id": appid, "service": service})
+    existing_games = get_games(filters={
+        "service_id": appid,
+        "service": service
+    })
     if existing_games:
         return existing_games[0]
 
@@ -92,7 +99,10 @@ def get_service_games(service):
     """Return the list of all installed games for a service"""
     if service not in _SERVICE_CACHE:
         _SERVICE_CACHE[service] = [
-            game["service_id"] for game in get_games(filters={"service": service, "installed": "1"})
+            game["service_id"] for game in get_games(filters={
+                "service": service,
+                "installed": "1"
+            })
         ]
     return _SERVICE_CACHE[service]
 
@@ -134,13 +144,13 @@ def add_game(name, **game_data):
 
 def add_games_bulk(games):
     """
-        Add a list of games to the PGA database.
-        The dicts must have an identical set of keys.
+    Add a list of games to the PGA database.
+    The dicts must have an identical set of keys.
 
-        Args:
-            games (list): list of games in dict format
-        Returns:
-            list: List of inserted game ids
+    Args:
+        games (list): list of games in dict format
+    Returns:
+        list: List of inserted game ids
     """
     return [sql.db_insert(PGA_DB, "games", game) for game in games]
 
@@ -167,7 +177,8 @@ def get_matching_game(params):
         game = get_game_by_field(params["id"], "id")
         if game:
             return game["id"]
-        logger.warning("Game ID %s provided but couldn't be matched", params["id"])
+        logger.warning("Game ID %s provided but couldn't be matched",
+                       params["id"])
     slug = params.get("slug") or slugify(params.get("name"))
     if not slug:
         raise ValueError("Can't add or update without an identifier")
@@ -176,7 +187,8 @@ def get_matching_game(params):
             if game["configpath"] == params.get("configpath"):
                 return game["id"]
         else:
-            if (game["runner"] == params.get("runner") or not all([params.get("runner"), game["runner"]])):
+            if game["runner"] == params.get("runner") or not all(
+                [params.get("runner"), game["runner"]]):
                 return game["id"]
     return None
 
@@ -187,13 +199,18 @@ def delete_game(game_id):
 
 
 def set_uninstalled(game_id):
-    sql.db_update(PGA_DB, "games", {"installed": 0, "runner": ""}, {"id": game_id})
+    sql.db_update(PGA_DB, "games", {
+        "installed": 0,
+        "runner": ""
+    }, {"id": game_id})
 
 
 def get_used_runners():
     """Return a list of the runners in use by installed games."""
     with sql.db_cursor(PGA_DB) as cursor:
-        query = "select distinct runner from games where runner is not null order by runner"
+        query = (
+            "select distinct runner from games where runner is not null order by runner"
+        )
         rows = cursor.execute(query)
         results = rows.fetchall()
     return [result[0] for result in results if result[0]]

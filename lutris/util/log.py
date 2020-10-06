@@ -1,5 +1,4 @@
 """Utility module for creating an application wide logger."""
-import logging
 import logging.handlers
 import os
 import sys
@@ -14,15 +13,20 @@ if not os.path.isdir(CACHE_DIR):
     os.makedirs(CACHE_DIR)
 
 # Formatters
-FILE_FORMATTER = logging.Formatter("[%(levelname)s:%(asctime)s:%(module)s]: %(message)s")
+FILE_FORMATTER = logging.Formatter(
+    "[%(levelname)s:%(asctime)s:%(module)s]: %(message)s")
 
 SIMPLE_FORMATTER = logging.Formatter("%(asctime)s: %(message)s")
 
-DEBUG_FORMATTER = logging.Formatter("%(levelname)-8s %(asctime)s [%(module)s.%(funcName)s:%(lineno)s]:%(message)s")
+DEBUG_FORMATTER = logging.Formatter(
+    "%(levelname)-8s %(asctime)s [%(module)s.%(funcName)s:%(lineno)s]:%(message)s"
+)
 
 # Log file setup
 LOG_FILENAME = os.path.join(CACHE_DIR, "lutris.log")
-loghandler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=20971520, backupCount=5)
+loghandler = logging.handlers.RotatingFileHandler(LOG_FILENAME,
+                                                  maxBytes=20971520,
+                                                  backupCount=5)
 loghandler.setFormatter(FILE_FORMATTER)
 
 logger = logging.getLogger(__name__)

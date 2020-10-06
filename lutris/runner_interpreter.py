@@ -53,11 +53,14 @@ def get_launch_parameters(runner, gameplay_info):
         if strangle_cmd:
             launch_arguments = [strangle_cmd, fps_limit] + launch_arguments
         else:
-            logger.warning("libstrangle is not available on this system, FPS limiter disabled")
+            logger.warning(
+                "libstrangle is not available on this system, FPS limiter disabled"
+            )
 
     prefix_command = system_config.get("prefix_command") or ""
     if prefix_command:
-        launch_arguments = (shlex.split(os.path.expandvars(prefix_command)) + launch_arguments)
+        launch_arguments = (shlex.split(os.path.expandvars(prefix_command)) +
+                            launch_arguments)
 
     single_cpu = system_config.get("single_cpu") or False
     if single_cpu:
@@ -83,10 +86,12 @@ def get_launch_parameters(runner, gameplay_info):
         ld_library_path = env.get("LD_LIBRARY_PATH")
         if not ld_library_path:
             ld_library_path = "$LD_LIBRARY_PATH"
-        env["LD_LIBRARY_PATH"] = ":".join([game_ld_libary_path, ld_library_path])
+        env["LD_LIBRARY_PATH"] = ":".join(
+            [game_ld_libary_path, ld_library_path])
 
     # Feral gamemode
-    gamemode = system_config.get("gamemode") and LINUX_SYSTEM.gamemode_available()
+    gamemode = system_config.get(
+        "gamemode") and LINUX_SYSTEM.gamemode_available()
     if gamemode and system.find_executable("gamemoderun"):
         launch_arguments.insert(0, "gamemoderun")
 
@@ -101,7 +106,7 @@ def export_bash_script(runner, gameplay_info, script_path):
     script_content = "#!/bin/bash\n\n\n"
     script_content += "# Environment variables\n\n"
     for env_var in env:
-        script_content += "export %s=\"%s\"\n" % (env_var, env[env_var])
+        script_content += 'export %s="%s"\n' % (env_var, env[env_var])
     script_content += "\n\n# Command\n\n"
     script_content += shlex.quote(" ".join(command))
     with open(script_path, "w") as script_file:

@@ -2,7 +2,8 @@
 # pylint: disable=no-member
 from gi.repository import Gtk
 
-from lutris.gui.views import COL_ICON, COL_NAME
+from lutris.gui.views import COL_ICON
+from lutris.gui.views import COL_NAME
 from lutris.gui.views.base import GameView
 from lutris.gui.widgets.cellrenderers import GridViewCellRendererText
 
@@ -25,7 +26,7 @@ class GameGridView(Gtk.IconView, GameView):
         self.set_column_spacing(1)
         self.set_pixbuf_column(COL_ICON)
         self.set_item_padding(1)
-        self.cell_width = (max(service_media.size[0], self.min_width))
+        self.cell_width = max(service_media.size[0], self.min_width)
         self.cell_renderer = GridViewCellRendererText(self.cell_width)
         self.pack_end(self.cell_renderer, False)
         self.add_attribute(self.cell_renderer, "markup", COL_NAME)

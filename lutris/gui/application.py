@@ -23,11 +23,10 @@ import tempfile
 from gettext import gettext as _
 
 import gi
-gi.require_version("Gdk", "3.0")
-gi.require_version("Gtk", "3.0")
-gi.require_version("GnomeDesktop", "3.0")
-
-from gi.repository import Gio, GLib, Gtk, GObject
+from gi.repository import Gio
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from .lutriswindow import LutrisWindow
 from lutris import settings
@@ -54,6 +53,10 @@ from lutris.util.steam.appmanifest import AppManifest
 from lutris.util.steam.appmanifest import get_appmanifests
 from lutris.util.steam.config import get_steamapps_paths
 from lutris.util.wine.dxvk import init_dxvk_versions
+
+gi.require_version("Gdk", "3.0")
+gi.require_version("Gtk", "3.0")
+gi.require_version("GnomeDesktop", "3.0")
 
 gi.require_version("Gdk", "3.0")
 gi.require_version("Gtk", "3.0")
