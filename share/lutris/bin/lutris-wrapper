@@ -3,23 +3,22 @@
 Starts a game in a contained process tree, waits for the game to start,
 gently tries to close other game processes when the main game has exited.
 """
-
+import ctypes
+import logging
 import os
+import signal
+import subprocess
 import sys
 import time
-import subprocess
-import signal
-import logging
-import ctypes
 from ctypes.util import find_library
-from lutris.util.monitor import ProcessMonitor
+
 from lutris.util.log import logger
+from lutris.util.monitor import ProcessMonitor
 
 try:
     from setproctitle import setproctitle
 except ImportError:
     setproctitle = print
-
 
 PR_SET_CHILD_SUBREAPER = 36
 
@@ -49,7 +48,8 @@ def set_child_subreaper():
     Some init(1) frameworks (e.g., systemd(1)) employ a subreaper
     process for similar reasons.
     """
-    result = ctypes.CDLL(find_library('c')).prctl(PR_SET_CHILD_SUBREAPER, 1, 0, 0, 0, 0)
+    result = ctypes.CDLL(find_library("c")).prctl(PR_SET_CHILD_SUBREAPER, 1, 0,
+                                                  0, 0, 0)
     if result == -1:
         print("PR_SET_CHILD_SUBREAPER failed, process watching may fail")
 
@@ -141,17 +141,18 @@ def main():
 
         while True:
             try:
-                dead_pid, dead_returncode, _ = os.wait3(os.WNOHANG)
+                dead_pid, dead_returncode, usage = os.wait3(os.WNOHANG)
             except ChildProcessError:
                 # No processes remain. No need to check monitor.
                 raise NoMoreChildren from None
 
+            if returncode is None and dead_pid == initial_pid:
+                returncode = dead_returncode
+                log("Initial process has exited (return code: %s)" %
+                    dead_returncode)
+
             if dead_pid == 0:
                 break
-
-            if returncode is None and dead_pid == initial_pid:
-                log("Initial process has exited.")
-                returncode = dead_returncode
 
     try:
         # While we are inside this try..except, if at the time of any
@@ -167,7 +168,8 @@ def main():
         #  the initial process may have been excluded. Wait for the game
         #  to be considered "started".
         if not monitor.is_game_alive():
-            log("Waiting for game to start (first non-excluded process started)")
+            log("Waiting for game to start (first non-excluded process started)"
+                )
             while not monitor.is_game_alive():
                 async_reap_children()
                 time.sleep(0.1)
@@ -184,7 +186,6 @@ def main():
         log("Monitored process exited.")
         async_reap_children()
 
-
         # The exit wait loop:
         #  The game is no longer running. We ask monitored processes
         #  to exit and wait 30 seconds before sending more SIGTERMs.
@@ -192,12 +193,12 @@ def main():
             async_reap_children()
             child = None
             for child in monitor.iterate_monitored_processes():
-                log("Sending SIGTERM to PID %s (pid %s)" % (child.name, child.pid))
+                log("Sending SIGTERM to PID %s (pid %s)" %
+                    (child.name, child.pid))
                 try:
                     os.kill(child.pid, signal.SIGTERM)
                 except ProcessLookupError:  # process already dead
                     pass
-
 
             # Spend 60 seconds waiting for processes to clean up.
             async_reap_children()
@@ -229,9 +230,10 @@ if __name__ == "__main__":
     if os.path.isdir(os.path.join(LAUNCH_PATH, "../lutris")):
         logger.setLevel(logging.DEBUG)
         sys.dont_write_bytecode = True
-        SOURCE_PATH = os.path.normpath(os.path.join(LAUNCH_PATH, '..'))
+        SOURCE_PATH = os.path.normpath(os.path.join(LAUNCH_PATH, ".."))
         sys.path.insert(0, SOURCE_PATH)
     else:
-        sys.path.insert(0, os.path.normpath(os.path.join(LAUNCH_PATH, "../lib/lutris")))
+        sys.path.insert(
+            0, os.path.normpath(os.path.join(LAUNCH_PATH, "../lib/lutris")))
 
     main()

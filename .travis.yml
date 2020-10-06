@@ -1,4 +1,5 @@
 dist: bionic
+os: linux
 language: python
 python:
   - "3.6"
@@ -8,6 +9,9 @@ virtualenv:
   system_site_packages: true
 services:
   - xvfb
+cache:
+  directories:
+  - $HOME/.cache/pre-commit
 addons:
   apt:
     update: true
@@ -34,7 +38,7 @@ before_install:
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
   - sleep 3 # Give xvfb some time to start
 install:
-  - pip install --upgrade pip pypresence~=3.3.2 pipenv
+  - pip install --upgrade pip pypresence~=3.3.2 pipenv pre-commit
   - pipenv install --dev --deploy --ignore-pipfile
 script:
   - make check

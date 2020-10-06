@@ -6,18 +6,21 @@ import os
 from gettext import gettext as _
 
 import gi
-gi.require_version("WebKit2", "4.0")
-from gi.repository import GObject, Gtk, WebKit2
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import WebKit2
 
-from lutris import api, settings
+from lutris import api
+from lutris import settings
 from lutris.database import sources as sources_db
 from lutris.gui.widgets.log_text_view import LogTextView
 from lutris.util import datapath
 from lutris.util.log import logger
 
+gi.require_version("WebKit2", "4.0")
+
 
 class Dialog(Gtk.Dialog):
-
     def __init__(self, title=None, parent=None, flags=0, buttons=None):
         super().__init__(title, parent, flags, buttons)
         self.set_border_width(10)
@@ -81,7 +84,6 @@ class AboutDialog(GtkBuilderDialog):
 
 
 class NoticeDialog(Gtk.MessageDialog):
-
     """Display a message to the user."""
 
     def __init__(self, message, parent=None):
@@ -92,7 +94,6 @@ class NoticeDialog(Gtk.MessageDialog):
 
 
 class ErrorDialog(Gtk.MessageDialog):
-
     """Display an error message."""
 
     def __init__(self, message, secondary=None, parent=None):
@@ -105,14 +106,14 @@ class ErrorDialog(Gtk.MessageDialog):
 
 
 class QuestionDialog(Gtk.MessageDialog):
-
     """Ask the user a question."""
 
     YES = Gtk.ResponseType.YES
     NO = Gtk.ResponseType.NO
 
     def __init__(self, dialog_settings):
-        super().__init__(message_type=Gtk.MessageType.QUESTION, buttons=Gtk.ButtonsType.YES_NO)
+        super().__init__(message_type=Gtk.MessageType.QUESTION,
+                         buttons=Gtk.ButtonsType.YES_NO)
         self.set_markup(dialog_settings["question"])
         self.set_title(dialog_settings["title"])
         if "widgets" in dialog_settings:
@@ -123,14 +124,18 @@ class QuestionDialog(Gtk.MessageDialog):
 
 
 class DirectoryDialog(Gtk.FileChooserDialog):
-
     """Ask the user to select a directory."""
 
     def __init__(self, message, parent=None):
         super().__init__(
             title=message,
             action=Gtk.FileChooserAction.SELECT_FOLDER,
-            buttons=(_("_Cancel"), Gtk.ResponseType.CLOSE, _("_OK"), Gtk.ResponseType.OK),
+            buttons=(
+                _("_Cancel"),
+                Gtk.ResponseType.CLOSE,
+                _("_OK"),
+                Gtk.ResponseType.OK,
+            ),
             parent=parent,
         )
         self.result = self.run()
@@ -139,18 +144,22 @@ class DirectoryDialog(Gtk.FileChooserDialog):
 
 
 class FileDialog(Gtk.FileChooserDialog):
-
     """Ask the user to select a file."""
 
-    def __init__(self, message=None, default_path=None):
+    def __init__(self, message=None, default_path=None, mode="open"):
         self.filename = None
         if not message:
             message = _("Please choose a file")
+        if mode == "save":
+            action = Gtk.FileChooserAction.SAVE
+        else:
+            action = Gtk.FileChooserAction.OPEN
         super().__init__(
             message,
             None,
-            Gtk.FileChooserAction.OPEN,
-            (_("_Cancel"), Gtk.ResponseType.CANCEL, _("_OK"), Gtk.ResponseType.OK),
+            action,
+            (_("_Cancel"), Gtk.ResponseType.CANCEL, _("_OK"),
+             Gtk.ResponseType.OK),
         )
         if default_path and os.path.exists(default_path):
             self.set_current_folder(default_path)
@@ -163,7 +172,6 @@ class FileDialog(Gtk.FileChooserDialog):
 
 
 class InstallOrPlayDialog(Gtk.Dialog):
-
     def __init__(self, game_name):
         Gtk.Dialog.__init__(self, _("%s is already installed") % game_name)
         self.connect("delete-event", lambda *x: self.destroy())
@@ -176,7 +184,8 @@ class InstallOrPlayDialog(Gtk.Dialog):
         vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
         self.get_content_area().add(vbox)
 
-        play_button = Gtk.RadioButton.new_with_label_from_widget(None, _("Launch game"))
+        play_button = Gtk.RadioButton.new_with_label_from_widget(
+            None, _("Launch game"))
         play_button.connect("toggled", self.on_button_toggled, "play")
         vbox.pack_start(play_button, False, False, 0)
         install_button = Gtk.RadioButton.new_from_widget(play_button)
@@ -211,7 +220,8 @@ class PgaSourceDialog(GtkBuilderDialog):
         # GtkBuilder Objects
         self.sources_selection = self.builder.get_object("sources_selection")
         self.sources_treeview = self.builder.get_object("sources_treeview")
-        self.remove_source_button = self.builder.get_object("remove_source_button")
+        self.remove_source_button = self.builder.get_object(
+            "remove_source_button")
 
         # Treeview setup
         self.sources_liststore = Gtk.ListStore(str)
@@ -240,7 +250,8 @@ class PgaSourceDialog(GtkBuilderDialog):
             _("Select directory"),
             self.dialog,
             Gtk.FileChooserAction.SELECT_FOLDER,
-            (_("_Cancel"), Gtk.ResponseType.CANCEL, _("_OK"), Gtk.ResponseType.OK),
+            (_("_Cancel"), Gtk.ResponseType.CANCEL, _("_OK"),
+             Gtk.ResponseType.OK),
         )
         chooser.set_local_only(False)
         response = chooser.run()
@@ -267,8 +278,10 @@ class ClientLoginDialog(GtkBuilderDialog):
     glade_file = "dialog-lutris-login.ui"
     dialog_object = "lutris-login"
     __gsignals__ = {
-        "connected": (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_PYOBJECT, )),
-        "cancel": (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_PYOBJECT, )),
+        "connected":
+        (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_PYOBJECT, )),
+        "cancel":
+        (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_PYOBJECT, )),
     }
 
     def __init__(self, parent):
@@ -318,7 +331,8 @@ class WebConnectDialog(Dialog):
         self.context = WebKit2.WebContext.new()
         if "http_proxy" in os.environ:
             proxy = WebKit2.NetworkProxySettings.new(os.environ["http_proxy"])
-            self.context.set_network_proxy_settings(WebKit2.NetworkProxyMode.CUSTOM, proxy)
+            self.context.set_network_proxy_settings(
+                WebKit2.NetworkProxyMode.CUSTOM, proxy)
         WebKit2.CookieManager.set_persistent_storage(
             self.context.get_cookie_manager(),
             service.cookies_path,
@@ -326,7 +340,8 @@ class WebConnectDialog(Dialog):
         )
         self.service = service
 
-        super(WebConnectDialog, self).__init__(title=service.name, parent=parent)
+        super(WebConnectDialog, self).__init__(title=service.name,
+                                               parent=parent)
         self.set_border_width(0)
         self.set_default_size(390, 500)
 
@@ -377,7 +392,8 @@ class WebPopupDialog(Dialog):
     def __init__(self, webview, parent=None):
         # pylint: disable=no-member
         self.parent = parent
-        super(WebPopupDialog, self).__init__(title=_('Loading...'), parent=parent)
+        super(WebPopupDialog, self).__init__(title=_("Loading..."),
+                                             parent=parent)
         self.webview = webview
         self.webview.connect("ready-to-show", self.on_ready_webview)
         self.webview.connect("notify::title", self.on_available_webview_title)
@@ -408,11 +424,12 @@ class WebPopupDialog(Dialog):
 
 
 class InstallerSourceDialog(Gtk.Dialog):
-
     """Show install script source"""
 
     def __init__(self, code, name, parent):
-        Gtk.Dialog.__init__(self, _("Install script for {}").format(name), parent=parent)
+        Gtk.Dialog.__init__(self,
+                            _("Install script for {}").format(name),
+                            parent=parent)
         self.set_size_request(500, 350)
         self.set_border_width(0)
 
@@ -439,23 +456,24 @@ class InstallerSourceDialog(Gtk.Dialog):
 
 
 class DontShowAgainDialog(Gtk.MessageDialog):
-
     """Display a message to the user and offer an option not to display this dialog again."""
 
     def __init__(
-        self,
-        setting,
-        message,
-        secondary_message=None,
-        parent=None,
-        checkbox_message=None,
+            self,
+            setting,
+            message,
+            secondary_message=None,
+            parent=None,
+            checkbox_message=None,
     ):
         # pylint: disable=no-member
         if settings.read_setting(setting) == "True":
             logger.info("Dialog %s dismissed by user", setting)
             return
 
-        super().__init__(type=Gtk.MessageType.WARNING, buttons=Gtk.ButtonsType.OK, parent=parent)
+        super().__init__(type=Gtk.MessageType.WARNING,
+                         buttons=Gtk.ButtonsType.OK,
+                         parent=parent)
 
         self.set_border_width(12)
         self.set_markup("<b>%s</b>" % message)
@@ -479,19 +497,17 @@ class DontShowAgainDialog(Gtk.MessageDialog):
 
 
 class WineNotInstalledWarning(DontShowAgainDialog):
-
     """Display a warning if Wine is not detected on the system"""
 
     def __init__(self, parent=None):
         super().__init__(
             "hide-wine-systemwide-install-warning",
             _("Wine is not installed on your system."),
-            secondary_message=_(
-                "Having Wine installed on your system guarantees that "
-                "Wine builds from Lutris will have all required dependencies.\n\nPlease "
-                "follow the instructions given in the <a "
-                "href='https://github.com/lutris/lutris/wiki/Wine-Dependencies'>Lutris Wiki</a> to "
-                "install Wine."
-            ),
+            secondary_message=
+            _("Having Wine installed on your system guarantees that "
+              "Wine builds from Lutris will have all required dependencies.\n\nPlease "
+              "follow the instructions given in the <a "
+              "href='https://github.com/lutris/lutris/wiki/Wine-Dependencies'>Lutris Wiki</a> to "
+              "install Wine."),
             parent=parent,
         )

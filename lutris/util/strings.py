@@ -6,8 +6,9 @@ import shlex
 import unicodedata
 import uuid
 
-# Lutris Modules
 from lutris.util.log import logger
+
+# Lutris Modules
 
 NO_PLAYTIME = "Never played"
 
@@ -74,11 +75,10 @@ def parse_version(version):
     version_number = version_match.groups()[0]
     prefix = version[0:version_match.span()[0]]
     suffix = version[version_match.span()[1]:]
-    return [int(p) for p in version_number.split(".")], prefix, suffix
+    return [int(p) for p in version_number.split(".")], suffix, prefix
 
 
 def version_sort(versions, reverse=False):
-
     def version_key(version):
         version_list, prefix, suffix = parse_version(version)
         # Normalize the length of sub-versions
@@ -104,7 +104,9 @@ def unpack_dependencies(string):
     dependencies = [dep.strip() for dep in string.split(",") if dep.strip()]
     for index, dependency in enumerate(dependencies):
         if "|" in dependency:
-            dependencies[index] = tuple([option.strip() for option in dependency.split("|") if option.strip()])
+            dependencies[index] = tuple(option.strip()
+                                        for option in dependency.split("|")
+                                        if option.strip())
     return [dependency for dependency in dependencies if dependency]
 
 
@@ -113,7 +115,8 @@ def gtk_safe(string):
     if not string:
         string = ""
     string = str(string)
-    return string.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return string.replace("&", "&amp;").replace("<",
+                                                "&lt;").replace(">", "&gt;")
 
 
 def get_formatted_playtime(playtime):
@@ -123,18 +126,16 @@ def get_formatted_playtime(playtime):
 
     hours = math.floor(playtime)
 
-    if hours:
-        hours_text = "%d hour%s" % (hours, "s" if hours > 1 else "")
-    else:
-        hours_text = ""
-
+    hours_text = "%d hour%s" % (hours,
+                                "s" if hours > 1 else "") if hours else ""
     minutes = int((playtime - hours) * 60)
     if minutes:
         minutes_text = "%d minute%s" % (minutes, "s" if minutes > 1 else "")
     else:
         minutes_text = ""
 
-    formatted_time = " and ".join([text for text in (hours_text, minutes_text) if text])
+    formatted_time = " and ".join(
+        [text for text in (hours_text, minutes_text) if text])
     if formatted_time:
         return formatted_time
     return NO_PLAYTIME
@@ -150,5 +151,5 @@ def split_arguments(args):
     except ValueError as ex:
         message = ex.args[0]
         if message == "No closing quotation":
-            return split_arguments(args + "\"")
+            return split_arguments(args + '"')
         logger.error(message)

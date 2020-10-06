@@ -2,10 +2,12 @@
 # pylint: disable=no-member
 from gi.repository import Gtk
 
-from lutris.gui.views import COL_ICON, COL_NAME
+from lutris.gui.views import COL_ICON
+from lutris.gui.views import COL_NAME
 from lutris.gui.views.base import GameView
 from lutris.gui.widgets.cellrenderers import GridViewCellRendererText
-from lutris.util.log import logger
+
+# from lutris.util.log import logger
 
 
 class GameGridView(Gtk.IconView, GameView):
@@ -24,7 +26,7 @@ class GameGridView(Gtk.IconView, GameView):
         self.set_column_spacing(1)
         self.set_pixbuf_column(COL_ICON)
         self.set_item_padding(1)
-        self.cell_width = (max(service_media.size[0], self.min_width))
+        self.cell_width = max(service_media.size[0], self.min_width)
         self.cell_renderer = GridViewCellRendererText(self.cell_width)
         self.pack_end(self.cell_renderer, False)
         self.add_attribute(self.cell_renderer, "markup", COL_NAME)
@@ -48,21 +50,15 @@ class GameGridView(Gtk.IconView, GameView):
     def on_item_activated(self, _view, _path):
         """Handles double clicks"""
         selected_item = self.get_selected_item()
-        if selected_item:
-            selected_id = self.get_selected_id(selected_item)
-        else:
-            logger.debug("No game selected")
-            selected_id = None
+        selected_id = self.get_selected_id(
+            selected_item) if selected_item else None
         self.emit("game-activated", selected_id)
 
     def on_selection_changed(self, _view):
         """Handles selection changes"""
         selected_item = self.get_selected_item()
-        if selected_item:
-            selected_id = self.get_selected_id(selected_item)
-        else:
-            logger.debug("No game selected")
-            selected_id = None
+        selected_id = self.get_selected_id(
+            selected_item) if selected_item else None
         self.emit("game-selected", selected_id)
 
     def on_icons_changed(self, store):

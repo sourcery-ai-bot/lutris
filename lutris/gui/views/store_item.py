@@ -1,12 +1,15 @@
 """Game representation for views"""
 import time
 
+from lutris.database.games import get_service_games
 from lutris.game import Game
-from lutris.gui.widgets.utils import get_pixbuf, get_pixbuf_for_game
+from lutris.gui.widgets.utils import get_pixbuf
+from lutris.gui.widgets.utils import get_pixbuf_for_game
 from lutris.runners import RUNNER_NAMES
 from lutris.util import system
 from lutris.util.log import logger
-from lutris.util.strings import get_formatted_playtime, gtk_safe
+from lutris.util.strings import get_formatted_playtime
+from lutris.util.strings import gtk_safe
 
 
 class StoreItem:
@@ -79,6 +82,8 @@ class StoreItem:
     @property
     def installed(self):
         """Game is installed"""
+        if "service_id" not in self._game_data:
+            return self.id in get_service_games(self.service)
         if not self._game_data.get("runner"):
             return False
         return self._game_data.get("installed")
@@ -88,14 +93,15 @@ class StoreItem:
         if self._game_data.get("icon"):
             image_path = self._game_data["icon"]
         else:
-            image_path = self.service_media.get_absolute_path(self.slug or self.id)
+            image_path = self.service_media.get_absolute_path(self.slug
+                                                              or self.id)
         if system.path_exists(image_path):
-            return get_pixbuf(image_path, self.service_media.size)
-        return get_pixbuf_for_game(
-            self._game_data["slug"],
-            self._game_data["image_size"],
-            self.installed
-        )
+            return get_pixbuf(image_path,
+                              self.service_media.size,
+                              is_installed=self.installed)
+        return get_pixbuf_for_game(self._game_data["slug"],
+                                   self._game_data["image_size"],
+                                   self.installed)
 
     @property
     def installed_at(self):
@@ -106,9 +112,8 @@ class StoreItem:
     def installed_at_text(self):
         """Date of install (textual representation)"""
         return gtk_safe(
-            time.strftime("%X %x", time.localtime(self.installed_at)) if
-            self.installed_at else ""
-        )
+            time.strftime("%X %x", time.localtime(self.installed_at)) if self.
+            installed_at else "")
 
     @property
     def lastplayed(self):
@@ -119,11 +124,8 @@ class StoreItem:
     def lastplayed_text(self):
         """Date of last play (textual representation)"""
         return gtk_safe(
-            time.strftime(
-                "%X %x",
-                time.localtime(self.lastplayed)
-            ) if self.lastplayed else ""
-        )
+            time.strftime("%X %x", time.localtime(self.lastplayed)) if self.
+            lastplayed else "")
 
     @property
     def playtime(self):
@@ -136,6 +138,7 @@ class StoreItem:
         try:
             _playtime_text = get_formatted_playtime(self.playtime)
         except ValueError:
-            logger.warning("Invalid playtime value %s for %s", self.playtime, self)
+            logger.warning("Invalid playtime value %s for %s", self.playtime,
+                           self)
             _playtime_text = ""  # Do not show erroneous values
         return _playtime_text

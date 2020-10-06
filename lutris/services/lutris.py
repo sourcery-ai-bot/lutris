@@ -1,49 +1,51 @@
 import json
 import os
-from gettext import gettext as _
 import urllib.parse
+from gettext import gettext as _
 
 from gi.repository import Gio
 
 from lutris import settings
 from lutris.api import read_api_key
 from lutris.gui import dialogs
-from lutris.util import http
-from lutris.services.base import OnlineService
-from lutris.services.service_game import ServiceGame, ServiceMedia
 from lutris.installer import fetch_script
+from lutris.services.base import OnlineService
+from lutris.services.service_game import ServiceGame
+from lutris.services.service_game import ServiceMedia
+from lutris.util import http
 from lutris.util.log import logger
 
 
 class LutrisBanner(ServiceMedia):
-    service = 'lutris'
+    service = "lutris"
     size = (184, 69)
     small_size = (120, 45)
     dest_path = settings.BANNER_PATH
     file_pattern = "%s.jpg"
-    api_field = 'banner_url'
+    api_field = "banner_url"
 
 
 class LutrisIcon(ServiceMedia):
-    service = 'lutris'
+    service = "lutris"
     size = (32, 32)
     small_size = (20, 20)
     dest_path = settings.ICON_PATH
     file_pattern = "lutris_%s.png"
-    api_field = 'icon_url'
+    api_field = "icon_url"
 
 
 class LutrisGame(ServiceGame):
     """Service game created from the Lutris API"""
+
     service = "lutris"
 
     @classmethod
     def new_from_api(cls, api_payload):
         """Create an instance of LutrisGame from the API response"""
         service_game = LutrisGame()
-        service_game.appid = api_payload['slug']
-        service_game.slug = api_payload['slug']
-        service_game.name = api_payload['name']
+        service_game.appid = api_payload["slug"]
+        service_game.slug = api_payload["slug"]
+        service_game.name = api_payload["name"]
         service_game.details = json.dumps(api_payload)
         return service_game
 
@@ -55,10 +57,7 @@ class LutrisService(OnlineService):
     name = _("Lutris")
     icon = "lutris"
     online = True
-    medias = {
-        "banner": LutrisBanner,
-        "icon": LutrisIcon
-    }
+    medias = {"banner": LutrisBanner, "icon": LutrisIcon}
     default_format = "banner"
 
     api_url = settings.SITE_URL + "/api"
@@ -89,8 +88,10 @@ class LutrisService(OnlineService):
         credentials = read_api_key()
         if not credentials:
             return []
-        url = settings.SITE_URL + "/api/games/library/%s" % urllib.parse.quote(credentials["username"])
-        request = http.Request(url, headers={"Authorization": "Token " + credentials["token"]})
+        url = settings.SITE_URL + "/api/games/library/%s" % urllib.parse.quote(
+            credentials["username"])
+        request = http.Request(
+            url, headers={"Authorization": "Token " + credentials["token"]})
         try:
             response = request.get()
         except http.HTTPError as ex:

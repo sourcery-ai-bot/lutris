@@ -2,9 +2,11 @@
 import os
 import shutil
 
-from gi.repository import Gio, GObject
+from gi.repository import Gio
+from gi.repository import GObject
 
-from lutris import api, settings
+from lutris import api
+from lutris import settings
 from lutris.database import sql
 from lutris.database.services import ServiceGameCollection
 from lutris.installer import fetch_script
@@ -16,6 +18,7 @@ PGA_DB = settings.PGA_DB
 
 class BaseService(GObject.Object):
     """Base class for local services"""
+
     id = NotImplemented
     _matcher = None
     name = NotImplemented
@@ -45,9 +48,11 @@ class BaseService(GObject.Object):
     def match_games(self):
         """Matching of service games to lutris games"""
         service_games = {
-            str(game["appid"]): game for game in ServiceGameCollection.get_for_service(self.id)
+            str(game["appid"]): game
+            for game in ServiceGameCollection.get_for_service(self.id)
         }
-        lutris_games = api.get_api_games(list(service_games.keys()), service=self.id)
+        lutris_games = api.get_api_games(list(service_games.keys()),
+                                         service=self.id)
         for lutris_game in lutris_games:
             for provider_game in lutris_game["provider_games"]:
                 if provider_game["service"] != self.id:
@@ -55,12 +60,15 @@ class BaseService(GObject.Object):
                 service_game = service_games.get(provider_game["slug"])
                 if not service_game:
                     continue
-                conditions = {"appid": service_game["appid"], "service": self.id}
+                conditions = {
+                    "appid": service_game["appid"],
+                    "service": self.id
+                }
                 sql.db_update(
                     PGA_DB,
                     "service_games",
                     {"lutris_slug": lutris_game["slug"]},
-                    conditions=conditions
+                    conditions=conditions,
                 )
 
     def install(self, db_game):
@@ -82,7 +90,9 @@ class BaseService(GObject.Object):
 
         if service_installers:
             application = Gio.Application.get_default()
-            application.show_installer_window(service_installers, service=self, appid=appid)
+            application.show_installer_window(service_installers,
+                                              service=self,
+                                              appid=appid)
 
 
 class OnlineService(BaseService):
@@ -99,13 +109,12 @@ class OnlineService(BaseService):
 
     @property
     def credential_files(self):
-        """Return a list of all files used for authentication
-        """
+        """Return a list of all files used for authentication"""
         return [self.cookies_path]
 
     def is_authenticated(self):
         """Return whether the service is authenticated"""
-        return all([os.path.exists(path) for path in self.credential_files])
+        return all(os.path.exists(path) for path in self.credential_files)
 
     def wipe_game_cache(self):
         """Wipe the game cache, allowing it to be reloaded"""
@@ -129,9 +138,9 @@ class OnlineService(BaseService):
 
     def load_cookies(self):
         """Load cookies from disk"""
-        # logger.debug("Loading cookies from %s", self.cookies_path)
         if not os.path.exists(self.cookies_path):
-            logger.warning("No cookies found in %s, please authenticate first", self.cookies_path)
+            logger.warning("No cookies found in %s, please authenticate first",
+                           self.cookies_path)
             return
         cookiejar = WebkitCookieJar(self.cookies_path)
         cookiejar.load()

@@ -8,10 +8,29 @@ from lutris.util.linux import LINUX_SYSTEM
 from lutris.util.log import logger
 
 
+def get_mangohud_conf(system_config):
+    """Return correct launch arguments and environment variables for Mangohud."""
+    env = {"MANGOHUD": "1"}
+    mango_args = []
+    mangohud = system_config.get("mangohud") or ""
+    if mangohud and system.find_executable("mangohud"):
+        if mangohud == "gl64":
+            mango_args = ["mangohud"]
+            env["MANGOHUD_DLSYM"] = "1"
+        elif mangohud == "gl32":
+            mango_args = ["mangohud.x86"]
+            env["MANGOHUD_DLSYM"] = "1"
+        else:
+            mango_args = ["mangohud"]
+    return mango_args, env
+
+
 def get_launch_parameters(runner, gameplay_info):
     system_config = runner.system_config
     launch_arguments = gameplay_info["command"]
+    env = {}
 
+    # Optimus
     optimus = system_config.get("optimus")
     if optimus == "primusrun" and system.find_executable("primusrun"):
         launch_arguments.insert(0, "primusrun")
@@ -22,22 +41,26 @@ def get_launch_parameters(runner, gameplay_info):
     elif optimus == "pvkrun" and system.find_executable("pvkrun"):
         launch_arguments.insert(0, "pvkrun")
 
-    # Mangohud activation
-    mangohud = system_config.get("mangohud") or ""
-    if mangohud and system.find_executable("mangohud"):
-        launch_arguments = ["mangohud"] + launch_arguments
+    mango_args, mango_env = get_mangohud_conf(system_config)
+    if mango_args:
+        launch_arguments = mango_args + launch_arguments
+        env.update(mango_env)
 
+    # Libstrangle
     fps_limit = system_config.get("fps_limit") or ""
     if fps_limit:
         strangle_cmd = system.find_executable("strangle")
         if strangle_cmd:
             launch_arguments = [strangle_cmd, fps_limit] + launch_arguments
         else:
-            logger.warning("libstrangle is not available on this system, FPS limiter disabled")
+            logger.warning(
+                "libstrangle is not available on this system, FPS limiter disabled"
+            )
 
     prefix_command = system_config.get("prefix_command") or ""
     if prefix_command:
-        launch_arguments = (shlex.split(os.path.expandvars(prefix_command)) + launch_arguments)
+        launch_arguments = (shlex.split(os.path.expandvars(prefix_command)) +
+                            launch_arguments)
 
     single_cpu = system_config.get("single_cpu") or False
     if single_cpu:
@@ -46,7 +69,6 @@ def get_launch_parameters(runner, gameplay_info):
         launch_arguments.insert(0, "-c")
         launch_arguments.insert(0, "taskset")
 
-    env = {}
     env.update(runner.get_env())
 
     env.update(gameplay_info.get("env") or {})
@@ -64,18 +86,15 @@ def get_launch_parameters(runner, gameplay_info):
         ld_library_path = env.get("LD_LIBRARY_PATH")
         if not ld_library_path:
             ld_library_path = "$LD_LIBRARY_PATH"
-        env["LD_LIBRARY_PATH"] = ":".join([game_ld_libary_path, ld_library_path])
+        env["LD_LIBRARY_PATH"] = ":".join(
+            [game_ld_libary_path, ld_library_path])
 
     # Feral gamemode
-    gamemode = system_config.get("gamemode") and LINUX_SYSTEM.gamemode_available()
-    if gamemode:
-        if system.find_executable("gamemoderun"):
-            launch_arguments.insert(0, "gamemoderun")
-        else:
-            env["LD_PRELOAD"] = ":".join([path for path in [
-                env.get("LD_PRELOAD"),
-                "libgamemodeauto.so",
-            ] if path])
+    gamemode = system_config.get(
+        "gamemode") and LINUX_SYSTEM.gamemode_available()
+    if gamemode and system.find_executable("gamemoderun"):
+        launch_arguments.insert(0, "gamemoderun")
+
     return launch_arguments, env
 
 
@@ -87,7 +106,7 @@ def export_bash_script(runner, gameplay_info, script_path):
     script_content = "#!/bin/bash\n\n\n"
     script_content += "# Environment variables\n\n"
     for env_var in env:
-        script_content += "export %s=\"%s\"\n" % (env_var, env[env_var])
+        script_content += 'export %s="%s"\n' % (env_var, env[env_var])
     script_content += "\n\n# Command\n\n"
     script_content += shlex.quote(" ".join(command))
     with open(script_path, "w") as script_file:
