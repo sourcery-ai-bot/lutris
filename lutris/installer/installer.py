@@ -118,15 +118,13 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
                 errors.append("Missing field '%s'" % field)
 
         # Check that libretro installers have a core specified
-        if self.runner == "libretro" and (
-            "game" not in self.script or "core" not in self.script["game"]
-        ):
+        if self.runner == "libretro" and ("game" not in self.script or
+                                          "core" not in self.script["game"]):
             errors.append("Missing libretro core in game section")
 
         # Check that Steam games have an AppID
         if self.runner in ("steam", "winesteam") and not self.script.get(
-            "game", {}
-        ).get("appid"):
+                "game", {}).get("appid"):
             errors.append("Missing appid for Steam game")
 
         # Check that installers don't contain both 'requires' and 'extends'
@@ -153,8 +151,7 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
         if not self.service:
             return
         if not self.service_appid:
-            raise UnavailableGame("No ID for the game on %s" %
-                                  self.service)
+            raise UnavailableGame("No ID for the game on %s" % self.service)
         installer_file_id = self.pop_user_provided_file()
         if not installer_file_id:
             raise UnavailableGame("Installer has no user provided file")
