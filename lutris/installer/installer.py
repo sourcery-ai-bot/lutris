@@ -5,17 +5,22 @@ import os
 import yaml
 
 from lutris import settings
-from lutris.config import LutrisConfig, make_game_config_id
-from lutris.database.games import add_or_update, clear_service_cache, get_game_by_field
+from lutris.config import LutrisConfig
+from lutris.config import make_game_config_id
+from lutris.database.games import add_or_update
+from lutris.database.games import clear_service_cache
+from lutris.database.games import get_game_by_field
 from lutris.exceptions import UnavailableGame
 from lutris.game import Game
-from lutris.installer import AUTO_ELF_EXE, AUTO_WIN32_EXE
+from lutris.installer import AUTO_ELF_EXE
+from lutris.installer import AUTO_WIN32_EXE
 from lutris.installer.errors import ScriptingError
 from lutris.installer.installer_file import InstallerFile
 from lutris.installer.legacy import get_game_launcher
 from lutris.runners import import_runner
 from lutris.services import get_services
-from lutris.util.game_finder import find_linux_game_executable, find_windows_game_executable
+from lutris.util.game_finder import find_linux_game_executable
+from lutris.util.game_finder import find_windows_game_executable
 from lutris.util.log import logger
 
 
