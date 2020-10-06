@@ -17,8 +17,7 @@ class TestFileUtils(TestCase):
         self.assertEqual(system.python_identifier(file_id), "${foo_bar}")
 
         file_id = "${foo-bar} ${a-b}"
-        self.assertEqual(system.python_identifier(file_id),
-                         "${foo_bar} ${a_b}")
+        self.assertEqual(system.python_identifier(file_id), "${foo_bar} ${a_b}")
 
         file_id = "${foo-bar} a-b"
         self.assertEqual(system.python_identifier(file_id), "${foo_bar} a-b")
@@ -80,25 +79,24 @@ class TestStringUtils(TestCase):
         text = "foo http://lutris.net bar http://strycore.com"
         expected = (
             'foo <a href="http://lutris.net">http://lutris.net</a> '
-            'bar <a href="http://strycore.com">http://strycore.com</a>')
+            'bar <a href="http://strycore.com">http://strycore.com</a>'
+        )
         self.assertEqual(strings.add_url_tags(text), expected)
 
     def test_get_formatted_playtime(self):
-        self.assertEqual(strings.get_formatted_playtime(None),
-                         strings.NO_PLAYTIME)
+        self.assertEqual(strings.get_formatted_playtime(None), strings.NO_PLAYTIME)
         self.assertEqual(strings.get_formatted_playtime(1.0), "1 hour")
         self.assertEqual(strings.get_formatted_playtime(2.0), "2 hours")
         self.assertEqual(strings.get_formatted_playtime(0.5), "30 minutes")
-        self.assertEqual(strings.get_formatted_playtime(1.5),
-                         "1 hour and 30 minutes")
-        self.assertEqual(strings.get_formatted_playtime(45.90),
-                         "45 hours and 53 minutes")
+        self.assertEqual(strings.get_formatted_playtime(1.5), "1 hour and 30 minutes")
+        self.assertEqual(
+            strings.get_formatted_playtime(45.90), "45 hours and 53 minutes"
+        )
 
 
 class TestVersionSort(TestCase):
     def test_parse_version(self):
-        self.assertEqual(strings.parse_version("3.6-staging"),
-                         ([3, 6], "-staging", ""))
+        self.assertEqual(strings.parse_version("3.6-staging"), ([3, 6], "-staging", ""))
 
     def test_versions_are_correctly_sorted(self):
         versions = ["1.8", "1.7.4", "1.9.1", "1.9.10", "1.9.4"]
@@ -162,8 +160,7 @@ class TestUnpackDependencies(TestCase):
     def test_multiple_dependencies(self):
         string = "quake,  quake-1,quake-steam, quake-gog   "
         dependencies = strings.unpack_dependencies(string)
-        self.assertEqual(dependencies,
-                         ["quake", "quake-1", "quake-steam", "quake-gog"])
+        self.assertEqual(dependencies, ["quake", "quake-1", "quake-steam", "quake-gog"])
 
     def test_dependency_options(self):
         string = "quake,  quake-1,quake-steam | quake-gog|quake-humble   "
@@ -185,5 +182,6 @@ class TestUnpackDependencies(TestCase):
 class TestSubstitute(TestCase):
     def test_can_sub_game_files_with_dashes_in_key(self):
         replacements = {"steam-data": "/tmp"}
-        self.assertEqual(system.substitute("--path=$steam-data", replacements),
-                         "--path=/tmp")
+        self.assertEqual(
+            system.substitute("--path=$steam-data", replacements), "--path=/tmp"
+        )

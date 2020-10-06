@@ -40,8 +40,8 @@ def get_system_choices(include_year=True):
         )
         return []
     for system_id, info in sorted(
-            get_supported_systems(MAME_XML_PATH).items(),
-            key=lambda sys: (sys[1]["manufacturer"], sys[1]["description"]),
+        get_supported_systems(MAME_XML_PATH).items(),
+        key=lambda sys: (sys[1]["manufacturer"], sys[1]["description"]),
     ):
         if info["description"].startswith(info["manufacturer"]):
             template = ""
@@ -82,12 +82,9 @@ class mame(Runner):  # pylint: disable=invalid-name
             "help": _("The emulated machine."),
         },
         {
-            "option":
-            "device",
-            "type":
-            "choice_with_entry",
-            "label":
-            _("Storage type"),
+            "option": "device",
+            "type": "choice_with_entry",
+            "label": _("Storage type"),
             "choices": [
                 (_("Floppy disk"), "flop"),
                 (_("Floppy drive 1"), "flop1"),
@@ -125,15 +122,13 @@ class mame(Runner):  # pylint: disable=invalid-name
             "help": _("Command line arguments used when launching the game"),
         },
         {
-            "option":
-            "autoboot_command",
-            "type":
-            "string",
-            "label":
-            _("Autoboot command"),
-            "help":
-            _("Autotype this command when the system has started,"
-              "an enter keypress is automatically added."),
+            "option": "autoboot_command",
+            "type": "string",
+            "label": _("Autoboot command"),
+            "help": _(
+                "Autotype this command when the system has started,"
+                "an enter keypress is automatically added."
+            ),
         },
         {
             "option": "autoboot_delay",
@@ -146,16 +141,14 @@ class mame(Runner):  # pylint: disable=invalid-name
 
     runner_options = [
         {
-            "option":
-            "rompath",
-            "type":
-            "directory_chooser",
-            "label":
-            _("ROM/BIOS path"),
-            "help":
-            _("Choose the folder containing ROMs and BIOS files.\n"
-              "These files contain code from the original hardware "
-              "necessary to the emulation."),
+            "option": "rompath",
+            "type": "directory_chooser",
+            "label": _("ROM/BIOS path"),
+            "help": _(
+                "Choose the folder containing ROMs and BIOS files.\n"
+                "These files contain code from the original hardware "
+                "necessary to the emulation."
+            ),
         },
         {
             "option": "fullscreen",
@@ -164,12 +157,9 @@ class mame(Runner):  # pylint: disable=invalid-name
             "default": True,
         },
         {
-            "option":
-            "video",
-            "type":
-            "choice",
-            "label":
-            _("Video backend"),
+            "option": "video",
+            "type": "choice",
+            "label": _("Video backend"),
             "choices": (
                 (_("Auto"), ""),
                 ("OpenGL", "opengl"),
@@ -177,31 +167,23 @@ class mame(Runner):  # pylint: disable=invalid-name
                 ("SDL2", "accel"),
                 (_("Software"), "soft"),
             ),
-            "default":
-            "",
+            "default": "",
         },
         {
-            "option":
-            "waitvsync",
-            "type":
-            "bool",
-            "label":
-            _("Wait for VSync"),
-            "help":
-            _("Enable waiting for  the  start  of  VBLANK  before "
-              "flipping  screens; reduces tearing effects."),
-            "advanced":
-            True,
-            "default":
-            False,
+            "option": "waitvsync",
+            "type": "bool",
+            "label": _("Wait for VSync"),
+            "help": _(
+                "Enable waiting for  the  start  of  VBLANK  before "
+                "flipping  screens; reduces tearing effects."
+            ),
+            "advanced": True,
+            "default": False,
         },
         {
-            "option":
-            "uimodekey",
-            "type":
-            "choice_with_entry",
-            "label":
-            _("Menu mode key"),
+            "option": "uimodekey",
+            "type": "choice_with_entry",
+            "label": _("Menu mode key"),
             "choices": [
                 (_("Scroll Lock"), "SCRLOCK"),
                 (_("Num Lock"), "NUMLOCK"),
@@ -214,13 +196,12 @@ class mame(Runner):  # pylint: disable=invalid-name
                 (_("Right Super"), "RWIN"),
                 (_("Left Super"), "LWIN"),
             ],
-            "default":
-            "SCRLOCK",
-            "advanced":
-            True,
-            "help":
-            _("Key to switch between Full Keyboard Mode and "
-              "Partial Keyboard Mode (default: Scroll Lock)"),
+            "default": "SCRLOCK",
+            "advanced": True,
+            "help": _(
+                "Key to switch between Full Keyboard Mode and "
+                "Partial Keyboard Mode (default: Scroll Lock)"
+            ),
         },
     ]
 
@@ -242,9 +223,9 @@ class mame(Runner):  # pylint: disable=invalid-name
         def on_runner_installed(*args):
             AsyncCall(write_mame_xml, notify_mame_xml)
 
-        super().install(version=version,
-                        downloader=downloader,
-                        callback=on_runner_installed)
+        super().install(
+            version=version, downloader=downloader, callback=on_runner_installed
+        )
 
     def write_xml_list(self):
         """Write the full game list in XML to disk"""
@@ -280,20 +261,14 @@ class mame(Runner):  # pylint: disable=invalid-name
             except OSError:
                 pass
             subprocess.Popen(
-                [
-                    self.get_executable(), "-createconfig", "-inipath",
-                    self.config_dir
-                ],
+                [self.get_executable(), "-createconfig", "-inipath", self.config_dir],
                 stdout=subprocess.PIPE,
                 cwd=self.working_dir,
             )
         return True
 
     def play(self):
-        command = [
-            self.get_executable(), "-skip_gameinfo", "-inipath",
-            self.config_dir
-        ]
+        command = [self.get_executable(), "-skip_gameinfo", "-inipath", self.config_dir]
         if self.runner_config.get("video"):
             command += ["-video", self.runner_config["video"]]
         if not self.runner_config.get("fullscreen"):
@@ -311,11 +286,9 @@ class mame(Runner):  # pylint: disable=invalid-name
             device = self.game_config.get("device")
             if not device:
                 return {
-                    "error":
-                    "CUSTOM",
-                    "text":
-                    "No device is set for machine %s" %
-                    self.game_config["machine"],
+                    "error": "CUSTOM",
+                    "text": "No device is set for machine %s"
+                    % self.game_config["machine"],
                 }
             rom = self.game_config["main_file"]
             command += ["-" + device, rom]
@@ -334,10 +307,7 @@ class mame(Runner):  # pylint: disable=invalid-name
                 self.game_config["autoboot_command"] + "\\n",
             ]
             if self.game_config.get("autoboot_delay"):
-                command += [
-                    "-autoboot_delay",
-                    str(self.game_config["autoboot_delay"])
-                ]
+                command += ["-autoboot_delay", str(self.game_config["autoboot_delay"])]
 
         for arg in split_arguments(self.game_config.get("args")):
             command.append(arg)

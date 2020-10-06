@@ -14,7 +14,8 @@ if not os.path.isdir(CACHE_DIR):
 
 # Formatters
 FILE_FORMATTER = logging.Formatter(
-    "[%(levelname)s:%(asctime)s:%(module)s]: %(message)s")
+    "[%(levelname)s:%(asctime)s:%(module)s]: %(message)s"
+)
 
 SIMPLE_FORMATTER = logging.Formatter("%(asctime)s: %(message)s")
 
@@ -24,9 +25,9 @@ DEBUG_FORMATTER = logging.Formatter(
 
 # Log file setup
 LOG_FILENAME = os.path.join(CACHE_DIR, "lutris.log")
-loghandler = logging.handlers.RotatingFileHandler(LOG_FILENAME,
-                                                  maxBytes=20971520,
-                                                  backupCount=5)
+loghandler = logging.handlers.RotatingFileHandler(
+    LOG_FILENAME, maxBytes=20971520, backupCount=5
+)
 loghandler.setFormatter(FILE_FORMATTER)
 
 logger = logging.getLogger(__name__)

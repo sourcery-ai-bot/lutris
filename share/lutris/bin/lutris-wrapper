@@ -48,8 +48,7 @@ def set_child_subreaper():
     Some init(1) frameworks (e.g., systemd(1)) employ a subreaper
     process for similar reasons.
     """
-    result = ctypes.CDLL(find_library("c")).prctl(PR_SET_CHILD_SUBREAPER, 1, 0,
-                                                  0, 0, 0)
+    result = ctypes.CDLL(find_library("c")).prctl(PR_SET_CHILD_SUBREAPER, 1, 0, 0, 0, 0)
     if result == -1:
         print("PR_SET_CHILD_SUBREAPER failed, process watching may fail")
 
@@ -148,8 +147,7 @@ def main():
 
             if returncode is None and dead_pid == initial_pid:
                 returncode = dead_returncode
-                log("Initial process has exited (return code: %s)" %
-                    dead_returncode)
+                log("Initial process has exited (return code: %s)" % dead_returncode)
 
             if dead_pid == 0:
                 break
@@ -168,8 +166,7 @@ def main():
         #  the initial process may have been excluded. Wait for the game
         #  to be considered "started".
         if not monitor.is_game_alive():
-            log("Waiting for game to start (first non-excluded process started)"
-                )
+            log("Waiting for game to start (first non-excluded process started)")
             while not monitor.is_game_alive():
                 async_reap_children()
                 time.sleep(0.1)
@@ -193,8 +190,7 @@ def main():
             async_reap_children()
             child = None
             for child in monitor.iterate_monitored_processes():
-                log("Sending SIGTERM to PID %s (pid %s)" %
-                    (child.name, child.pid))
+                log("Sending SIGTERM to PID %s (pid %s)" % (child.name, child.pid))
                 try:
                     os.kill(child.pid, signal.SIGTERM)
                 except ProcessLookupError:  # process already dead
@@ -233,7 +229,6 @@ if __name__ == "__main__":
         SOURCE_PATH = os.path.normpath(os.path.join(LAUNCH_PATH, ".."))
         sys.path.insert(0, SOURCE_PATH)
     else:
-        sys.path.insert(
-            0, os.path.normpath(os.path.join(LAUNCH_PATH, "../lib/lutris")))
+        sys.path.insert(0, os.path.normpath(os.path.join(LAUNCH_PATH, "../lib/lutris")))
 
     main()
