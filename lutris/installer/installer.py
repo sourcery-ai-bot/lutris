@@ -102,9 +102,7 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
         command_names = [
             list(c.keys())[0] for c in self.script.get("installer", [])
         ]
-        if "insert-disc" in command_names:
-            return True
-        return False
+        return "insert-disc" in command_names
 
     def get_errors(self):
         """Return potential errors in the script"""
@@ -120,14 +118,16 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
                 errors.append("Missing field '%s'" % field)
 
         # Check that libretro installers have a core specified
-        if self.runner == "libretro":
-            if "game" not in self.script or "core" not in self.script["game"]:
-                errors.append("Missing libretro core in game section")
+        if self.runner == "libretro" and (
+            "game" not in self.script or "core" not in self.script["game"]
+        ):
+            errors.append("Missing libretro core in game section")
 
         # Check that Steam games have an AppID
-        if self.runner in ("steam", "winesteam"):
-            if not self.script.get("game", {}).get("appid"):
-                errors.append("Missing appid for Steam game")
+        if self.runner in ("steam", "winesteam") and not self.script.get(
+            "game", {}
+        ).get("appid"):
+            errors.append("Missing appid for Steam game")
 
         # Check that installers don't contain both 'requires' and 'extends'
         if self.script.get("requires") and self.script.get("extends"):
@@ -150,20 +150,21 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
     def prepare_game_files(self):
         """Gathers necessary files before iterating through them."""
         # If this is a GOG installer, download required files.
-        if self.service:
-            if not self.service_appid:
-                raise UnavailableGame("No ID for the game on %s" %
-                                      self.service)
-            installer_file_id = self.pop_user_provided_file()
-            if not installer_file_id:
-                raise UnavailableGame("Installer has no user provided file")
-            installer_files = self.service.get_installer_files(
-                self, installer_file_id)
-            if not installer_files:
-                raise UnavailableGame("Unable to get the game on %s" %
-                                      self.service.name)
-            for installer_file in installer_files:
-                self.files.append(installer_file)
+        if not self.service:
+            return
+        if not self.service_appid:
+            raise UnavailableGame("No ID for the game on %s" %
+                                  self.service)
+        installer_file_id = self.pop_user_provided_file()
+        if not installer_file_id:
+            raise UnavailableGame("Installer has no user provided file")
+        installer_files = self.service.get_installer_files(
+            self, installer_file_id)
+        if not installer_files:
+            raise UnavailableGame("Unable to get the game on %s" %
+                                  self.service.name)
+        for installer_file in installer_files:
+            self.files.append(installer_file)
 
     def _substitute_config(self, script_config):
         """Substitute values such as $GAMEDIR in a config dict."""
@@ -249,10 +250,7 @@ class LutrisInstaller:  # pylint: disable=too-many-instance-attributes
             return
         configpath = self.write_game_config()
         runner_inst = import_runner(self.runner)()
-        if self.service:
-            service_id = self.service.id
-        else:
-            service_id = None
+        service_id = self.service.id if self.service else None
         self.game_id = add_or_update(
             name=self.game_name,
             runner=self.runner,

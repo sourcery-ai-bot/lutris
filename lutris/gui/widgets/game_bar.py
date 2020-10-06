@@ -49,10 +49,7 @@ class GameBar(Gtk.Fixed):
             game = get_game_for_service(self.service.id, self.appid)
             if game:
                 game_id = game["id"]
-        if game_id:
-            self.game = Game(game_id)
-        else:
-            self.game = Game()
+        self.game = Game(game_id) if game_id else Game()
         self.game_name = db_game["name"]
         self.game_slug = db_game["slug"]
 

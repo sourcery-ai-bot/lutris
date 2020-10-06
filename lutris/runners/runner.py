@@ -269,10 +269,9 @@ class Runner:  # pylint: disable=too-many-public-methods
         """Run the runner alone."""
         if not self.runnable_alone:
             return
-        if not self.is_installed():
-            if not self.install_dialog():
-                logger.info("Runner install cancelled")
-                return
+        if not self.is_installed() and not self.install_dialog():
+            logger.info("Runner install cancelled")
+            return
 
         command_data = self.get_run_data()
         command = command_data.get("command")

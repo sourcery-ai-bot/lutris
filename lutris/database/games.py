@@ -47,7 +47,7 @@ def get_games_where(**conditions):
             if extra_condition == "isnull":
                 condition_fields.append("{} is {} null".format(
                     field, "" if value else "not"))
-            if extra_condition == "not":
+            elif extra_condition == "not":
                 condition_fields.append("{} != ?".format(field))
                 condition_values.append(value)
             if extra_condition == "in":

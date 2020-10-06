@@ -303,10 +303,10 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
 
     @property
     def sort_params(self):
-        _sort_params = [("installed", "DESC")]
-        _sort_params.append((self.view_sorting,
-                             "ASC" if self.view_sorting_ascending else "DESC"))
-        return _sort_params
+        return [
+            ("installed", "DESC"),
+            (self.view_sorting, "ASC" if self.view_sorting_ascending else "DESC"),
+        ]
 
     def get_running_games(self):
         """Return a list of currently running games"""
@@ -329,10 +329,10 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
         return api_games
 
     def game_matches(self, game):
-        if self.filters.get("installed"):
-            if game["appid"] not in games_db.get_service_games(
-                    self.service.id):
-                return False
+        if self.filters.get("installed") and game[
+            "appid"
+        ] not in games_db.get_service_games(self.service.id):
+            return False
         if not self.filters.get("text"):
             return True
         return self.filters["text"] in game["name"].lower()
@@ -412,10 +412,7 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
             sql_filters["platform"] = self.filters["platform"]
         if self.filters.get("installed"):
             sql_filters["installed"] = "1"
-        if self.filters.get("text"):
-            searches = {"name": self.filters["text"]}
-        else:
-            searches = None
+        searches = {"name": self.filters["text"]} if self.filters.get("text") else None
         if not self.filters.get("hidden"):
             sql_excludes["hidden"] = 1
         return searches, sql_filters, sql_excludes
@@ -695,10 +692,7 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
     @GtkTemplate.Callback
     def on_add_game_button_clicked(self, *_args):
         """Add a new game manually with the AddGameDialog."""
-        if "runner" in self.filters:
-            runner = self.filters["runner"]
-        else:
-            runner = None
+        runner = self.filters["runner"] if "runner" in self.filters else None
         AddGameDialog(self, runner=runner)
         return True
 

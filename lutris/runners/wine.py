@@ -165,7 +165,7 @@ class wine(Runner):
             }
             versions = get_wine_versions()
             for version in versions:
-                if version in labels.keys():
+                if version in labels:
                     version_number = get_system_wine_version(
                         WINE_PATHS[version])
                     label = labels[version].format(version_number)
@@ -218,9 +218,10 @@ class wine(Runner):
 
         def dxvk_vulkan_callback(widget, option, config):
             response = True
-            if not is_vulkan_supported():
-                if not thread_safe_call(display_vulkan_error):
-                    response = False
+            if not is_vulkan_supported() and not thread_safe_call(
+                display_vulkan_error
+            ):
+                response = False
             return widget, option, response
 
         self.runner_options = [
@@ -904,7 +905,7 @@ class wine(Runner):
             if not value or value == "auto" and key not in managed_keys.keys():
                 prefix_manager.clear_registry_subkeys(path, key)
             elif key in self.runner_config:
-                if key in managed_keys.keys():
+                if key in managed_keys:
                     # Do not pass fallback 'auto' value to managed keys
                     if value == "auto":
                         value = None
@@ -1005,10 +1006,10 @@ class wine(Runner):
         if self.prefix_path:
             env["WINEPREFIX"] = self.prefix_path
 
-        if not ("WINEESYNC" in env and env["WINEESYNC"] == "1"):
+        if "WINEESYNC" not in env or env["WINEESYNC"] != "1":
             env["WINEESYNC"] = "1" if self.runner_config.get("esync") else "0"
 
-        if not ("WINEFSYNC" in env and env["WINEFSYNC"] == "1"):
+        if "WINEFSYNC" not in env or env["WINEFSYNC"] != "1":
             env["WINEFSYNC"] = "1" if self.runner_config.get("fsync") else "0"
 
         # On AMD, mimic the video memory management behavior of Windows DX12
@@ -1045,10 +1046,7 @@ class wine(Runner):
 
     def get_pids(self, wine_path=None):
         """Return a list of pids of processes using the current wine exe."""
-        if wine_path:
-            exe = wine_path
-        else:
-            exe = self.get_executable()
+        exe = wine_path if wine_path else self.get_executable()
         if not exe.startswith("/"):
             exe = system.find_executable(exe)
         pids = system.get_pids_using_file(exe)
@@ -1131,9 +1129,8 @@ class wine(Runner):
         if using_dxvk:
             # Set this to 1 to enable access to more RAM for 32bit applications
             launch_info["env"]["WINE_LARGE_ADDRESS_AWARE"] = "1"
-            if not is_vulkan_supported():
-                if not display_vulkan_error(True):
-                    return {"error": "VULKAN_NOT_FOUND"}
+            if not is_vulkan_supported() and not display_vulkan_error(True):
+                return {"error": "VULKAN_NOT_FOUND"}
 
         if not system.path_exists(game_exe):
             return {"error": "FILE_NOT_FOUND", "file": game_exe}
@@ -1149,9 +1146,8 @@ class wine(Runner):
             if not is_esync_limit_set():
                 esync_display_limit_warning()
                 return {"error": "ESYNC_LIMIT_NOT_SET"}
-            if not wine_ver:
-                if not esync_display_version_warning(True):
-                    return {"error": "NON_ESYNC_WINE_VERSION"}
+            if not wine_ver and not esync_display_version_warning(True):
+                return {"error": "NON_ESYNC_WINE_VERSION"}
 
         if launch_info["env"].get("WINEFSYNC") == "1":
             fsync_supported = is_fsync_supported()
@@ -1164,9 +1160,8 @@ class wine(Runner):
             if not fsync_supported:
                 fsync_display_support_warning()
                 return {"error": "FSYNC_NOT_SUPPORTED"}
-            if not wine_ver:
-                if not fsync_display_version_warning(True):
-                    return {"error": "NON_FSYNC_WINE_VERSION"}
+            if not wine_ver and not fsync_display_version_warning(True):
+                return {"error": "NON_FSYNC_WINE_VERSION"}
 
         command = [self.get_executable()]
 
@@ -1174,7 +1169,7 @@ class wine(Runner):
             game_exe, self.working_dir)
         command.append(game_exe)
         if args:
-            command = command + args
+            command += args
 
         if arguments:
             for arg in split_arguments(arguments):
