@@ -9,9 +9,6 @@ virtualenv:
   system_site_packages: true
 services:
   - xvfb
-cache:
-  directories:
-  - $HOME/.cache/pre-commit
 addons:
   apt:
     update: true
@@ -45,4 +42,7 @@ script:
   - nosetests
 
 # Cache the pip dependencies
-cache: pip
+cache: 
+  - pip
+    directories:
+      - $HOME/.cache/pre-commit
