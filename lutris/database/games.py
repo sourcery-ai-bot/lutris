@@ -188,7 +188,7 @@ def get_matching_game(params):
                 return game["id"]
         else:
             if game["runner"] == params.get("runner") or not all(
-                [params.get("runner"), game["runner"]]):
+                    [params.get("runner"), game["runner"]]):
                 return game["id"]
     return None
 
