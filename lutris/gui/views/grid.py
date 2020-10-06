@@ -2,8 +2,7 @@
 # pylint: disable=no-member
 from gi.repository import Gtk
 
-from lutris.gui.views import COL_ICON
-from lutris.gui.views import COL_NAME
+from lutris.gui.views import COL_ICON, COL_NAME
 from lutris.gui.views.base import GameView
 from lutris.gui.widgets.cellrenderers import GridViewCellRendererText
 

@@ -10,8 +10,7 @@ from lutris.api import read_api_key
 from lutris.gui import dialogs
 from lutris.installer import fetch_script
 from lutris.services.base import OnlineService
-from lutris.services.service_game import ServiceGame
-from lutris.services.service_game import ServiceMedia
+from lutris.services.service_game import ServiceGame, ServiceMedia
 from lutris.util import http
 from lutris.util.log import logger
 

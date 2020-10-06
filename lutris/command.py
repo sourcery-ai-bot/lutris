@@ -11,8 +11,7 @@ from textwrap import dedent
 
 from gi.repository import GLib
 
-from lutris import runtime
-from lutris import settings
+from lutris import runtime, settings
 from lutris.util import system
 from lutris.util.log import logger
 
