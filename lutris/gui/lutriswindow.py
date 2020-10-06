@@ -10,6 +10,7 @@ from lutris import api, services, settings
 from lutris.database import categories as categories_db
 from lutris.database import games as games_db
 from lutris.database.services import ServiceGameCollection
+from lutris.game import Game
 from lutris.game_actions import GameActions
 from lutris.gui import dialogs
 from lutris.gui.config.add_game import AddGameDialog
@@ -101,8 +102,9 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
         lutris_icon = Gtk.Image.new_from_icon_name("lutris", Gtk.IconSize.MENU)
         lutris_icon.set_margin_right(3)
         self.selected_category = settings.read_setting("selected_category", default="runner:all")
-        category, value = self.selected_category.split(":")
-        self.filters = {category: value}  # Type of filter corresponding to the selected sidebar element
+
+        self.filters = self.load_filters()
+
         self.sidebar = LutrisSidebar(self.application, selected=self.selected_category)
         self.sidebar.set_size_request(250, -1)
         self.sidebar.connect("selected-rows-changed", self.on_sidebar_changed)
@@ -187,10 +189,21 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
         self.view.contextual_menu = ContextualMenu(self.game_actions.get_game_actions())
         self.update_runtime()
 
+    def load_filters(self):
+        """Load the initial filters when creating the view"""
+        category, value = self.selected_category.split(":")
+        filters = {
+            category: value
+        }  # Type of filter corresponding to the selected sidebar element
+        filters["hidden"] = settings.read_setting("show_hidden_games").lower() == "true"
+        filters["installed"] = settings.read_setting("filter_installed").lower() == "true"
+        return filters
+
     def hidden_state_change(self, action, value):
         """Hides or shows the hidden games"""
         action.set_state(value)
-        settings.write_setting("show_hidden_games", str(self.show_hidden_games).lower(), section="lutris")
+        settings.write_setting("show_hidden_games", str(value).lower(), section="lutris")
+        self.filters["hidden"] = value
         self.emit("view-updated")
 
     @property
@@ -270,6 +283,9 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
         return api_games
 
     def game_matches(self, game):
+        if self.filters.get("installed"):
+            if game["appid"] not in games_db.get_service_games(self.service.id):
+                return False
         if not self.filters.get("text"):
             return True
         return self.filters["text"] in game["name"].lower()
@@ -344,7 +360,7 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
             searches = {"name": self.filters["text"]}
         else:
             searches = None
-        if not self.show_hidden_games:
+        if not self.filters.get("hidden"):
             sql_excludes["hidden"] = 1
         return searches, sql_filters, sql_excludes
 
@@ -424,7 +440,7 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
 
     def on_zoom_changed(self, adjustment):
         """Handler for zoom modification"""
-        media_index = int(adjustment.props.value)
+        media_index = round(adjustment.props.value)
         adjustment.props.value = media_index
         service = self.service if self.service else LutrisService
         media_services = list(service.medias.keys())
@@ -499,6 +515,7 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
         self.view = view_class(self.game_store, self.game_store.service_media)
 
         self.view.connect("game-selected", self.on_game_selection_changed)
+        self.view.connect("game-activated", self.on_game_activated)
         self.view.contextual_menu = ContextualMenu(self.game_actions.get_game_actions())
         for child in self.games_scrollwindow.get_children():
             child.destroy()
@@ -681,3 +698,13 @@ class LutrisWindow(Gtk.ApplicationWindow):  # pylint: disable=too-many-public-me
             game = games_db.get_game_by_field(int(game_id), "id")
         GLib.idle_add(self.update_revealer, game)
         return False
+
+    def on_game_activated(self, view, game_id):
+        """Handles view activations (double click, enter press)"""
+        if self.service:
+            logger.error("TODO")
+            return
+        game = Game(game_id)
+        if game.is_installed:
+            logger.info("Game is installed")
+        game.emit("game-launch")

@@ -27,8 +27,9 @@ from lutris.util.display import (
 from lutris.util.graphics.xephyr import get_xephyr_command
 from lutris.util.graphics.xrandr import turn_off_except
 from lutris.util.linux import LINUX_SYSTEM
-from lutris.util.log import logger
+from lutris.util.log import LOG_BUFFERS, logger
 from lutris.util.timer import Timer
+from lutris.util.wine.dxvk import wait_for_dxvk_init
 
 HEARTBEAT_DELAY = 2000
 
@@ -44,12 +45,14 @@ class Game(GObject.Object):
 
     __gsignals__ = {
         "game-error": (GObject.SIGNAL_RUN_FIRST, None, (str, )),
+        "game-launch": (GObject.SIGNAL_RUN_FIRST, None, ()),
         "game-start": (GObject.SIGNAL_RUN_FIRST, None, ()),
         "game-started": (GObject.SIGNAL_RUN_FIRST, None, ()),
         "game-stop": (GObject.SIGNAL_RUN_FIRST, None, ()),
         "game-stopped": (GObject.SIGNAL_RUN_FIRST, None, ()),
         "game-removed": (GObject.SIGNAL_RUN_FIRST, None, ()),
         "game-updated": (GObject.SIGNAL_RUN_FIRST, None, ()),
+        "game-install": (GObject.SIGNAL_RUN_FIRST, None, ()),
         "game-installed": (GObject.SIGNAL_RUN_FIRST, None, ()),
     }
 
@@ -139,13 +142,16 @@ class Game(GObject.Object):
     @property
     def log_buffer(self):
         """Access the log buffer object, creating it if necessary"""
-        if self._log_buffer is None:
-            self._log_buffer = Gtk.TextBuffer()
-            self._log_buffer.create_tag("warning", foreground="red")
-            if self.game_thread:
-                self.game_thread.set_log_buffer(self._log_buffer)
-                self._log_buffer.set_text(self.game_thread.stdout)
-        return self._log_buffer
+        _log_buffer = LOG_BUFFERS.get(self.id)
+        if _log_buffer:
+            return _log_buffer
+        _log_buffer = Gtk.TextBuffer()
+        _log_buffer.create_tag("warning", foreground="red")
+        if self.game_thread:
+            self.game_thread.set_log_buffer(self._log_buffer)
+            _log_buffer.set_text(self.game_thread.stdout)
+        LOG_BUFFERS[self.id] = _log_buffer
+        return _log_buffer
 
     @property
     def formatted_playtime(self):
@@ -270,8 +276,6 @@ class Game(GObject.Object):
             configpath = self.config.game_config_id
             if save_config:
                 self.config.save()
-            else:
-                logger.debug("Not saving config")
         else:
             logger.warning("Saving %s without a configuration", self)
             configpath = ""
@@ -310,19 +314,6 @@ class Game(GObject.Object):
             root_window = None
             dialogs.WineNotInstalledWarning(parent=root_window)
         return True
-
-    def play(self):
-        """Launch the game."""
-        if not self.runner:
-            dialogs.ErrorDialog(_("Invalid game configuration: Missing runner"))
-            return
-
-        if not self.is_launchable():
-            logger.error("Game is not launchable")
-            return
-        self.state = self.STATE_LAUNCHING
-        self.emit("game-start")
-        jobs.AsyncCall(self.runner.prelaunch, self.configure_game)
 
     def restrict_to_display(self, display):
         outputs = DISPLAY_MANAGER.get_config()
@@ -487,6 +478,23 @@ class Game(GObject.Object):
         else:
             self.start_game()
 
+    def launch(self):
+        """Request launching a game. The game may not be installed yet."""
+        if not self.is_installed:
+            self.emit("game-install")
+            return
+        wait_for_dxvk_init()
+        self.load_config()  # Reload the config before launching it.
+        if not self.runner:
+            dialogs.ErrorDialog(_("Invalid game configuration: Missing runner"))
+            return
+        if not self.is_launchable():
+            logger.error("Game is not launchable")
+            return
+        self.state = self.STATE_LAUNCHING
+        self.emit("game-start")
+        jobs.AsyncCall(self.runner.prelaunch, self.configure_game)
+
     def start_game(self):
         """Run a background command to lauch the game"""
         self.game_thread = MonitoredCommand(
@@ -495,7 +503,7 @@ class Game(GObject.Object):
             runner=self.runner,
             env=self.game_runtime_config["env"],
             term=self.game_runtime_config["terminal"],
-            log_buffer=self._log_buffer,
+            log_buffer=self.log_buffer,
             include_processes=self.game_runtime_config["include_processes"],
             exclude_processes=self.game_runtime_config["exclude_processes"],
         )
